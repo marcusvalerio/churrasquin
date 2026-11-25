@@ -40,7 +40,7 @@ p.lead{font-size:clamp(18px,1.7vw,23px);line-height:1.42;max-width:640px}
 .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
 .pills span{border:2px solid var(--coal);border-radius:99px;padding:7px 14px;font-family:'DM Mono',monospace;font-size:12px;text-transform:uppercase}
 .mascot{background:var(--pink);border-radius:28px;aspect-ratio:1;display:grid;place-items:center;padding:12%;position:relative}
-.mascot .tag{position:absolute;left:20px;bottom:18px;color:var(--coal)}
+.mascot .tag{background:var(--cream);padding:6px 10px;border-radius:8px;right:20px;position:absolute;left:20px;bottom:18px;color:var(--coal)}
 /* construction */
 .dark{background:var(--coal);color:var(--cream)}
 .cons{background:var(--cream);border-radius:22px;padding:24px}
@@ -75,8 +75,8 @@ p.lead{font-size:clamp(18px,1.7vw,23px);line-height:1.42;max-width:640px}
 .a-post{grid-column:span 12}
 .apps svg{width:100%;height:100%;display:block}
 /* phone */
-.phone{position:absolute;left:50%;top:7%;transform:translateX(-50%) rotate(-4deg);width:58%;aspect-ratio:9/19.3;background:#111;border-radius:13% / 6.2%;padding:3.2%;box-shadow:30px 50px 60px rgba(42,14,20,.35)}
-.screen{width:100%;height:100%;border-radius:11% / 5.2%;background:var(--cream);overflow:hidden;position:relative;font-size:clamp(7px,0.95vw,13px)}
+.phone{position:absolute;left:50%;top:6%;transform:translateX(-50%) rotate(-4deg);width:52%;aspect-ratio:9/19.3;background:#111;border-radius:13% / 6.2%;padding:3.2%;box-shadow:30px 50px 60px rgba(42,14,20,.35)}
+.screen{color:var(--coal);width:100%;height:100%;border-radius:11% / 5.2%;background:var(--cream);overflow:hidden;position:relative;font-size:clamp(7px,0.95vw,13px)}
 .scr-top{background:var(--cobalt);color:var(--cream);padding:18% 8% 9%;position:relative}
 .scr-top img{width:62%}
 .scr-top .hi{margin-top:9%;font-weight:800;font-size:1.9em;line-height:.95;letter-spacing:-.03em}
@@ -151,14 +151,14 @@ footer .row{display:flex;justify-content:space-between;margin-top:40px;flex-wrap
    <p class="cap" style="color:var(--cream)">Símbolo · círculo R330 + 2 gotas de 150 u. Concordâncias calculadas tangentes ao círculo e ao pescoço.</p>
   </div>
   <div class="cons" style="background:var(--sun);display:flex;flex-direction:column;justify-content:space-between">
-   <span class="mono">Redução</span>
+   <span class="mono" style="color:var(--coal)">Redução</span>
    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:4%">
     <figure><img src="favicon.svg" style="width:180px"><figcaption class="cap" style="color:var(--coal)">180</figcaption></figure>
     <figure><img src="favicon.svg" style="width:64px"><figcaption class="cap" style="color:var(--coal)">64</figcaption></figure>
     <figure><img src="favicon.svg" style="width:32px"><figcaption class="cap" style="color:var(--coal)">32</figcaption></figure>
     <figure><img src="favicon.svg" style="width:16px"><figcaption class="cap" style="color:var(--coal)">16</figcaption></figure>
    </div>
-   <p style="font-size:clamp(22px,2.2vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.05">Do outdoor a 16 px: duas gotas de comprimentos diferentes mantêm a leitura mesmo quando tudo vira mancha.</p>
+   <p style="color:var(--coal);font-size:clamp(22px,2.2vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.05">Do outdoor a 16 px: duas gotas de comprimentos diferentes mantêm a leitura mesmo quando tudo vira mancha.</p>
   </div>
   </div>
  </div>
@@ -262,10 +262,11 @@ footer .row{display:flex;justify-content:space-between;margin-top:40px;flex-wrap
     <ellipse cx="200" cy="420" rx="110" ry="16" fill="#2A0E14" opacity=".25"/>
     <g clip-path="url(#cc)">
      <rect x="120" y="70" width="160" height="350" fill="#2230F5"/>
-     <rect x="120" y="300" width="160" height="120" fill="#FFD12E"/>
-     <g transform="translate(225 110) rotate(90)"><image href="wordmark-positivo.svg" x="0" y="0" width="300" height="72"/></g>
-     <image href="simbolo-mono-preto.svg" x="140" y="315" width="60" height="60" opacity=".9"/>
-     <text x="146" y="398" font-family="DM Mono" font-size="11" fill="#2A0E14">LAGER GELADA · 350ML</text>
+     <rect x="120" y="345" width="160" height="75" fill="#FFD12E"/>
+     <g transform="translate(232 92) rotate(90)"><image href="wordmark-rosa.svg" x="0" y="0" width="245" height="56"/></g>
+     <image href="simbolo-cobalto.svg" x="132" y="96" width="44" height="44"/>
+     <text x="138" y="372" font-family="Bricolage Grotesque" font-weight="800" font-size="17" fill="#2A0E14">Lager de Laje</text>
+     <text x="138" y="390" font-family="DM Mono" font-size="9" fill="#2A0E14">GELADA · 350 ML · 4,6%</text>
      <rect x="120" y="70" width="160" height="350" fill="url(#cyl)"/>
     </g>
     <ellipse cx="200" cy="80" rx="80" ry="12" fill="url(#lid)"/><ellipse cx="200" cy="80" rx="62" ry="8" fill="#b9bec6"/>
@@ -337,8 +338,8 @@ footer .row{display:flex;justify-content:space-between;margin-top:40px;flex-wrap
   <div class="a-post">
    <div class="posts">
     <div class="post" style="background:var(--pink)"><span class="mono">@churrasquin</span><div class="t">Quanto de carne pra 15 pessoas?<br><span style="color:var(--cobalt)">5,4 kg. De nada.</span></div><img src="lockup-h-mono-preto.svg" style="width:60%"></div>
-    <div class="post" style="background:var(--cobalt);color:var(--cream)"><span class="mono">Corte da semana</span><div class="t" style="color:var(--sun)">Vacío,<br>flank,<br>fraldinha.</div><div class="mono">Mesmo corte · 3 países · 1 grelha</div><img src="simbolo-positivo.svg" style="position:absolute;right:8%;bottom:7%;width:22%"></div>
-    <div class="post" style="background:var(--gingham)"><div style="background:var(--sun);border-radius:18px;padding:10%;height:100%;display:flex;flex-direction:column;justify-content:space-between"><span class="mono">Domingo · 12h</span><img src="mascote-solzao.svg" style="width:62%;margin:0 auto"><div class="t" style="font-size:clamp(26px,2.8vw,40px)">Tá calor? <span style="color:var(--pink)">Ótimo.</span></div></div></div>
+    <div class="post" style="background:var(--cobalt);color:var(--cream)"><span class="mono">Corte da semana</span><div class="t" style="color:var(--sun)">Vacío,<br>flank,<br>fraldinha.</div><div class="mono" style="max-width:62%">Mesmo corte · 3 países</div><img src="simbolo-positivo.svg" style="position:absolute;right:8%;bottom:7%;width:22%"></div>
+    <div class="post" style="background:var(--gingham)"><div style="background:var(--cobalt);color:var(--cream);border-radius:18px;padding:10%;height:100%;display:flex;flex-direction:column;justify-content:space-between"><span class="mono">Domingo · 12h</span><img src="mascote-solzao.svg" style="width:62%;margin:0 auto"><div class="t" style="font-size:clamp(26px,2.8vw,40px)"><span style="color:var(--sun)">Tá calor?</span> <span style="color:var(--pink)">Ótimo.</span></div></div></div>
    </div>
    <p class="cap" style="color:var(--cream)">Posts de rede social · 1080×1350</p>
   </div>
