@@ -1,294 +1,598 @@
-/* churrasquin — ilustrações SVG dos cortes crus (viewBox 0 0 320 220).
-   Cada peça é desenhada à mão com primitivas: carne, gordura, osso, marmoreio. */
+/* churrasquin — ilustrações SVG dos cortes servidos (viewBox 0 0 320 220).
+   Cada corte aparece assado no ponto ideal, deitado numa tábua, com fatias
+   tombadas mostrando o interior: crosta tostada, anel cinza, centro no ponto.
+   Sistema comum (tábua, luz, sal, ervas, fatias) + peça própria de cada corte. */
 (function () {
   'use strict';
   var A = {};
-  // gerador pseudoaleatório determinístico (marmoreio estável por corte)
-  function rng(seed) { var s = 0; for (var i = 0; i < seed.length; i++) s = (s * 31 + seed.charCodeAt(i)) >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+  function rng(seed) { var s = 7; for (var i = 0; i < seed.length; i++) s = (s * 31 + seed.charCodeAt(i)) >>> 0; return function () { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
+  function f(n) { return Math.round(n * 10) / 10; }
 
-  function defs(p, kind) {
-    var meat = {
-      boi: ['#c8414a', '#9e2633', '#6f1622'],
-      porco: ['#eaa199', '#d77f78', '#b55c58'],
-      cordeiro: ['#c4505a', '#9b3240', '#6e1d2a'],
-      frango: ['#f2c2a8', '#e3a184', '#c27a5e'],
-      embutido: ['#b4523d', '#8a3527', '#5c1f17'],
-      morcilla: ['#4a1c1f', '#2f1013', '#1a0708'],
-      miudo: ['#9b2a35', '#6e1622', '#430b13']
-    }[kind];
+  /* ---------- paletas ---------- */
+  // pontos: [centro, meio, anel cinza, crosta]
+  var DONE = {
+    r1: ['#b3172c', '#c42e3e', '#8e5a52', '#3a1a0d'],   // mal passado
+    r2: ['#c8384a', '#d25a63', '#94665a', '#3d1c0e'],   // mal a ao ponto / jugoso
+    r3: ['#d9807a', '#cf8f84', '#9a7366', '#40200f'],   // ao ponto
+    r4: ['#b08066', '#a2735a', '#8a6048', '#2f150a'],   // bem passado
+    p3: ['#f0c2b4', '#e8c4b2', '#d6b39c', '#6b3412'],   // suíno ao ponto
+    p4: ['#eccfb8', '#e6c7ad', '#d8b394', '#6b3412'],   // suíno bem
+    l2: ['#d0546a', '#d8727c', '#a07a6c', '#3f1e10'],   // cordeiro rosado
+    l3: ['#cf8b84', '#c79484', '#a0806c', '#40200f'],
+    c4: ['#f6e6cf', '#f0dcc0', '#e3c6a2', '#9a5a1c'],   // frango
+    sa: ['#c7735a', '#b8644c', '#a45a44', '#4a1f10'],   // linguiça
+    mo: ['#2a0e0e', '#321211', '#3a1614', '#140606']    // morcilla
+  };
+  function level(ponto) {
+    var t = (ponto || '').toLowerCase();
+    if (/mal passado$/.test(t)) return 'r1';
+    if (/bem/.test(t)) return 'r4';
+    if (/mal|jugoso|para menos/.test(t)) return 'r2';
+    return 'r3';
+  }
+
+  /* ---------- forma paramétrica ---------- */
+  function shapePts(rx, ry, form, n) {
+    n = n || 56; var pts = [];
+    for (var i = 0; i < n; i++) {
+      var t = i / n * Math.PI * 2, c = Math.cos(t), s = Math.sin(t);
+      var x = Math.sign(c) * Math.pow(Math.abs(c), .8), y = Math.sign(s) * Math.pow(Math.abs(s), .8);
+      if (form === 'oval') { x = c; y = s; }
+      if (form === 'wedge') { x *= 1 - .32 * (y + 1) / 2; if (y < 0) y *= .8; }
+      if (form === 'dome') { if (y > 0) y *= .45; x *= 1 - .15 * (y + 1) / 2; }
+      if (form === 'tri') { var r = 1 + .16 * Math.cos(3 * t + 1.57); x = c * r; y = s * r; }
+      if (form === 'bean') { y += .28 * x * x - .14; }
+      if (form === 'long') { x = Math.sign(c) * Math.pow(Math.abs(c), .4); y = Math.sign(s) * Math.pow(Math.abs(s), .4); }
+      if (form === 'tear') { x *= 1 - .45 * (x + 1) / 2 * (x > 0 ? 1 : 0); y *= 1 - .4 * Math.max(0, x); }
+      pts.push([x * rx, y * ry]);
+    }
+    return pts;
+  }
+  function path(pts, dx, dy) {
+    dx = dx || 0; dy = dy || 0; var n = pts.length, d = '';
+    for (var i = 0; i < n; i++) {
+      var p0 = pts[i], p1 = pts[(i + 1) % n], m0 = [(pts[(i - 1 + n) % n][0] + p0[0]) / 2, (pts[(i - 1 + n) % n][1] + p0[1]) / 2], m1 = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2];
+      if (!i) d += 'M' + f(m0[0] + dx) + ' ' + f(m0[1] + dy);
+      d += 'Q' + f(p0[0] + dx) + ' ' + f(p0[1] + dy) + ' ' + f(m1[0] + dx) + ' ' + f(m1[1] + dy);
+    }
+    return d + 'Z';
+  }
+
+  /* ---------- defs ---------- */
+  function defs(p, o) {
+    var d = DONE[o.done], cr = o.crust;
     return '<defs>' +
-      '<radialGradient id="' + p + 'm" cx="45%" cy="38%" r="70%"><stop offset="0" stop-color="' + meat[0] + '"/><stop offset=".6" stop-color="' + meat[1] + '"/><stop offset="1" stop-color="' + meat[2] + '"/></radialGradient>' +
-      '<linearGradient id="' + p + 'f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf1dc"/><stop offset="1" stop-color="#e6cfa3"/></linearGradient>' +
-      '<linearGradient id="' + p + 'b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbf6ec"/><stop offset=".55" stop-color="#e9dcc4"/><stop offset="1" stop-color="#c9b48f"/></linearGradient>' +
-      '<radialGradient id="' + p + 'g" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="' + p + 'wd" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="' + o.wood[0] + '"/><stop offset="1" stop-color="' + o.wood[1] + '"/></linearGradient>' +
+      '<linearGradient id="' + p + 'we" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + o.wood[2] + '"/><stop offset="1" stop-color="#3a1f10"/></linearGradient>' +
+      '<radialGradient id="' + p + 'lt" cx="35%" cy="20%" r="75%"><stop offset="0" stop-color="#fff3d6" stop-opacity=".35"/><stop offset="1" stop-color="#fff3d6" stop-opacity="0"/></radialGradient>' +
+      '<radialGradient id="' + p + 'd" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="' + d[0] + '"/><stop offset=".55" stop-color="' + d[1] + '"/><stop offset=".78" stop-color="' + d[2] + '"/><stop offset=".9" stop-color="' + d[2] + '"/><stop offset="1" stop-color="' + d[3] + '"/></radialGradient>' +
+      '<linearGradient id="' + p + 's" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="' + d[3] + '"/><stop offset=".09" stop-color="' + d[2] + '"/><stop offset=".22" stop-color="' + d[1] + '"/><stop offset=".5" stop-color="' + d[0] + '"/><stop offset=".78" stop-color="' + d[1] + '"/><stop offset=".91" stop-color="' + d[2] + '"/><stop offset="1" stop-color="' + d[3] + '"/></linearGradient>' +
+      '<linearGradient id="' + p + 'cr" x1="0" y1="0" x2=".2" y2="1"><stop offset="0" stop-color="' + cr[0] + '"/><stop offset=".45" stop-color="' + cr[1] + '"/><stop offset="1" stop-color="' + cr[2] + '"/></linearGradient>' +
+      '<linearGradient id="' + p + 'ft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b0661f"/><stop offset=".3" stop-color="#e3a650"/><stop offset=".7" stop-color="#f4dca6"/><stop offset="1" stop-color="#fbeed0"/></linearGradient>' +
+      '<linearGradient id="' + p + 'fs" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a85e1c"/><stop offset=".35" stop-color="#e2a24c"/><stop offset="1" stop-color="#f8e6bb"/></linearGradient>' +
+      '<linearGradient id="' + p + 'bn" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbf3e2"/><stop offset=".6" stop-color="#e6d3b0"/><stop offset="1" stop-color="#b8996c"/></linearGradient>' +
+      '<linearGradient id="' + p + 'hl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
       '</defs>';
   }
-  function svg(id, kind, label, body) {
-    var p = 'ca-' + id + '-';
-    body = body.replace(/\$/g, p);
-    return '<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustração do corte cru: ' + label + '">' + defs(p, kind) +
-      '<ellipse cx="160" cy="196" rx="128" ry="12" fill="#000" opacity=".18"/>' + body + '</svg>';
-  }
-  var M = 'fill="url(#$m)"', F = 'fill="url(#$f)"', B = 'fill="url(#$b)"', G = 'fill="url(#$g)"';
-  var EDGE = ' stroke="#3d0c12" stroke-opacity=".35" stroke-width="1.5"';
-  // marmoreio: riscos brancos finos dentro de uma caixa
-  function marble(seed, x, y, w, h, n, op) {
-    var r = rng(seed), out = '<g stroke="#fbeedd" stroke-linecap="round" fill="none" opacity="' + (op || .7) + '">';
-    for (var i = 0; i < n; i++) {
-      var sx = x + r() * w, sy = y + r() * h, l = 6 + r() * 16, a = r() * Math.PI;
-      var ex = sx + Math.cos(a) * l, ey = sy + Math.sin(a) * l * .6;
-      out += '<path d="M' + sx.toFixed(1) + ' ' + sy.toFixed(1) + 'q' + ((ex - sx) / 2 + 3).toFixed(1) + ' ' + ((ey - sy) / 2 - 3).toFixed(1) + ' ' + (ex - sx).toFixed(1) + ' ' + (ey - sy).toFixed(1) + '" stroke-width="' + (0.8 + r() * 1.6).toFixed(1) + '"/>';
+
+  /* ---------- cenário ---------- */
+  function board(p, r, round) {
+    var g = '';
+    if (round) {
+      g += '<ellipse cx="160" cy="160" rx="150" ry="52" fill="#000" opacity=".35"/>' +
+        '<ellipse cx="160" cy="150" rx="148" ry="58" fill="url(#' + p + 'we)"/>' +
+        '<ellipse cx="160" cy="143" rx="148" ry="58" fill="url(#' + p + 'wd)"/>';
+      for (var i = 1; i < 6; i++) g += '<ellipse cx="160" cy="143" rx="' + (148 - i * 24) + '" ry="' + (58 - i * 9.4) + '" fill="none" stroke="#5c3418" stroke-opacity=".16" stroke-width="1"/>';
+      g += '<ellipse cx="160" cy="143" rx="148" ry="58" fill="url(#' + p + 'lt)"/>';
+      return g;
     }
-    return out + '</g>';
+    g += '<path d="M22 200 Q160 212 300 200 L300 192 L22 192Z" fill="#000" opacity=".35"/>' +
+      '<path d="M30 84 Q26 84 24 90 L12 186 Q11 194 20 194 L300 194 Q309 194 308 186 L296 90 Q294 84 290 84Z" fill="url(#' + p + 'wd)"/>' +
+      '<path d="M12 186 Q11 194 20 194 L300 194 Q309 194 308 186 L308 196 Q308 204 299 204 L21 204 Q12 204 12 196Z" fill="url(#' + p + 'we)"/>';
+    var gr = '<g fill="none" stroke="#4a2810" stroke-linecap="round">';
+    for (var j = 0; j < 9; j++) {
+      var y = 92 + j * 11 + r() * 4, w = .4 + r() * .7;
+      gr += '<path d="M' + f(20 + r() * 30) + ' ' + f(y) + ' C' + f(100 + r() * 30) + ' ' + f(y + r() * 6 - 3) + ' ' + f(200) + ' ' + f(y + r() * 6 - 3) + ' ' + f(280 + r() * 20) + ' ' + f(y + r() * 3) + '" stroke-width="' + f(w) + '" opacity="' + f(.15 + r() * .15) + '"/>';
+    }
+    gr += '<ellipse cx="' + f(60 + r() * 180) + '" cy="' + f(150 + r() * 25) + '" rx="7" ry="2.4" stroke-width=".8" opacity=".25"/></g>';
+    // canaleta de suco
+    g += gr + '<path d="M36 96 L284 96 Q290 96 291 102 L300 180 Q300 186 294 186 L26 186 Q20 186 21 180 L30 102 Q31 96 36 96Z" fill="none" stroke="#3a1d0b" stroke-opacity=".28" stroke-width="2"/>' +
+      '<path d="M30 85 L290 85" stroke="#fff2d0" stroke-opacity=".35" stroke-width="1.2"/>' +
+      '<path d="M30 84 Q26 84 24 90 L12 186 Q11 194 20 194 L300 194 Q309 194 308 186 L296 90 Q294 84 290 84Z" fill="url(#' + p + 'lt)"/>';
+    return g;
   }
-  // fibras (linhas paralelas) para cortes de fibra longa
-  function fibers(x1, y1, x2, y2, n, dx, dy, op) {
-    var o = '<g stroke="#3d0c12" stroke-opacity="' + (op || .22) + '" stroke-width="1.2" fill="none">';
-    for (var i = 0; i < n; i++) o += '<path d="M' + (x1 + dx * i) + ' ' + (y1 + dy * i) + ' Q' + ((x1 + x2) / 2 + dx * i) + ' ' + ((y1 + y2) / 2 + dy * i - 6) + ' ' + (x2 + dx * i) + ' ' + (y2 + dy * i) + '"/>';
-    return o + '</g>';
+  function salt(r, n, x0, y0, w, h) {
+    var g = '<g>';
+    for (var i = 0; i < n; i++) {
+      var x = x0 + r() * w, y = y0 + r() * h, s = 1 + r() * 1.8, a = r() * 90;
+      g += '<rect x="' + f(x) + '" y="' + f(y) + '" width="' + f(s) + '" height="' + f(s) + '" transform="rotate(' + f(a) + ' ' + f(x) + ' ' + f(y) + ')" fill="#fffdf5" opacity="' + f(.7 + r() * .3) + '"/>';
+    }
+    return g + '</g>';
   }
-  function shine(cx, cy, rx, ry) { return '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" ' + G + '/>'; }
-
-  // ---------- BOI BR ----------
-  A.picanha = svg('picanha', 'boi', 'picanha', // triângulo com capa de gordura grossa no topo
-    '<path d="M40 70 Q160 40 284 62 Q250 120 168 182 Q120 150 40 70Z" ' + M + EDGE + '/>' +
-    '<path d="M36 70 Q160 36 288 60 L282 80 Q160 58 46 88Z" ' + F + '/>' +
-    '<path d="M46 88 Q160 58 282 80" stroke="#d8b98a" stroke-width="2" fill="none"/>' +
-    fibers(80, 100, 230, 98, 6, -4, 12) + marble('picanha', 90, 100, 130, 50, 8, .5) + shine(140, 110, 50, 18));
-
-  A.maminha = svg('maminha', 'boi', 'maminha', // gota alongada, ponta afinando
-    '<path d="M30 120 Q60 60 160 66 Q250 70 296 112 Q250 150 160 156 Q70 160 30 120Z" ' + M + EDGE + '/>' +
-    '<path d="M30 120 Q60 60 160 66 Q120 78 70 108Z" ' + F + ' opacity=".85"/>' +
-    fibers(70, 110, 280, 112, 5, 0, 8) + marble('maminha', 80, 90, 180, 50, 10, .45) + shine(150, 100, 60, 16));
-
-  A.fraldinha = svg('fraldinha', 'boi', 'fraldinha', // leque achatado, fibras grossas em leque
-    '<path d="M30 150 Q40 70 140 56 Q240 46 292 96 Q270 160 170 172 Q80 182 30 150Z" ' + M + EDGE + '/>' +
-    '<g stroke="#3d0c12" stroke-opacity=".28" stroke-width="2" fill="none">' +
-    [0, 1, 2, 3, 4, 5, 6, 7, 8].map(function (i) { return '<path d="M60 168 Q' + (110 + i * 18) + ' ' + (110 - i * 4) + ' ' + (110 + i * 22) + ' ' + (62 - (i > 5 ? -(i - 5) * 8 : 0)) + '"/>'; }).join('') +
-    '</g>' + '<path d="M30 150 Q60 172 120 176" stroke="url(#$f)" stroke-width="8" fill="none" stroke-linecap="round"/>' + shine(170, 100, 60, 18));
-
-  A.contrafile = svg('contrafile', 'boi', 'contrafilé', // bloco retangular com faixa de gordura lateral
-    '<path d="M40 70 Q40 52 60 52 L270 52 Q286 52 286 70 L286 160 Q286 176 268 176 L60 176 Q40 176 40 158Z" ' + M + EDGE + '/>' +
-    '<path d="M40 70 Q40 52 60 52 L270 52 Q286 52 286 70 L286 80 L40 80Z" ' + F + '/>' +
-    '<path d="M40 80 Q160 86 286 80" stroke="#d8b98a" stroke-width="2" fill="none"/>' +
-    marble('contrafile', 56, 92, 216, 76, 16, .55) + shine(150, 115, 80, 20));
-
-  A.ancho = svg('ancho', 'boi', 'ancho (bife ancho)', // bife redondo com olho de gordura central
-    '<path d="M60 110 Q56 46 160 40 Q268 44 266 112 Q262 184 160 184 Q62 182 60 110Z" ' + F + '/>' +
-    '<path d="M72 112 Q70 58 160 54 Q252 58 252 112 Q250 172 160 172 Q74 170 72 112Z" ' + M + EDGE + '/>' +
-    '<path d="M150 84 Q174 80 180 104 Q186 128 162 132 Q138 132 136 110 Q136 90 150 84Z" ' + F + '/>' +
-    '<path d="M100 96 Q130 70 150 84 M180 104 Q220 110 236 140 M140 130 Q120 150 96 150" stroke="url(#$f)" stroke-width="5" fill="none" stroke-linecap="round"/>' +
-    marble('ancho', 84, 66, 160, 100, 22, .65) + shine(130, 80, 40, 12));
-
-  A['file-mignon'] = svg('file-mignon', 'boi', 'filé mignon', // peça cilíndrica inteira com cabeça, corpo e ponta
-    '<path d="M22 120 Q26 70 92 68 Q160 66 222 82 Q280 96 300 120 Q284 140 230 148 Q160 160 92 166 Q24 168 22 120Z" ' + M + EDGE + '/>' +
-    '<path d="M60 76 Q120 64 200 78" stroke="#ece0cc" stroke-width="4" fill="none" opacity=".7" stroke-linecap="round"/>' +
-    '<path d="M92 68 Q100 116 92 166" stroke="#3d0c12" stroke-opacity=".2" stroke-width="2" fill="none"/>' +
-    marble('mignon', 40, 90, 220, 50, 6, .35) + shine(120, 100, 70, 18));
-
-  A.alcatra = svg('alcatra', 'boi', 'alcatra', // peça grande irregular com fibras cruzadas e película
-    '<path d="M36 98 Q50 52 130 50 Q210 44 274 70 Q298 110 270 150 Q220 184 140 178 Q56 172 40 140Z" ' + M + EDGE + '/>' +
-    '<path d="M150 50 Q170 110 140 178" stroke="#efe4d1" stroke-width="3" fill="none" opacity=".75"/>' +
-    fibers(50, 90, 140, 100, 6, 0, 13) + fibers(170, 70, 270, 80, 6, -2, 14) + shine(110, 90, 50, 14) + shine(220, 90, 40, 14));
-
-  A.cupim = svg('cupim', 'boi', 'cupim', // corcova arredondada, muito marmorizada
-    '<path d="M40 170 Q30 90 110 52 Q170 26 230 60 Q296 100 284 170 Z" ' + M + EDGE + '/>' +
-    '<path d="M40 170 Q160 184 284 170 L284 178 Q160 194 40 178Z" ' + F + '/>' +
-    marble('cupim', 60, 60, 210, 106, 46, .8) + shine(150, 80, 50, 16));
-
-  function ribs(seed, n, x0, gap, y1, y2, extra) { // ossos de costela (barras com ponta arredondada)
-    var o = '';
-    for (var i = 0; i < n; i++) { var x = x0 + i * gap; o += '<rect x="' + x + '" y="' + y1 + '" width="' + (gap * .38) + '" height="' + (y2 - y1) + '" rx="' + (gap * .19) + '" ' + B + ' stroke="#b29d76" stroke-width="1"/>'; }
-    return o;
+  function leaf(x, y, a, s, col) {
+    col = col || '#3f7a2e';
+    return '<g transform="translate(' + x + ' ' + y + ') rotate(' + a + ') scale(' + s + ')">' +
+      '<path d="M0 0 C6 -9 18 -10 26 -2 C18 6 6 7 0 0Z" fill="' + col + '"/><path d="M0 0 C6 -9 18 -10 26 -2 C18 -4 8 -4 0 0Z" fill="#fff" opacity=".18"/>' +
+      '<path d="M-6 3 L22 -2" stroke="#1f4a16" stroke-width="1" stroke-linecap="round" opacity=".7"/></g>';
   }
-  A.costela = svg('costela', 'boi', 'costela bovina', // placa grossa com ossos aparentes
-    '<path d="M24 60 L296 52 L300 170 L20 178Z" ' + M + EDGE + '/>' +
-    '<path d="M24 60 L296 52 L297 72 L24 82Z" ' + F + '/>' +
-    ribs('c', 6, 36, 46, 84, 172) + marble('costela', 30, 86, 260, 84, 16, .5) +
-    '<g fill="url(#$m)" opacity=".9">' + [0, 1, 2, 3, 4].map(function (i) { return '<rect x="' + (54 + i * 46) + '" y="84" width="24" height="88"/>'; }).join('') + '</g>' + marble('costela2', 54, 90, 230, 80, 10, .45));
+  function chimi(x, y) { // colherada de chimichurri
+    var r = rng('ch' + x + y), g = '<g><ellipse cx="' + x + '" cy="' + y + '" rx="18" ry="7" fill="#5c4a12" opacity=".55"/><ellipse cx="' + x + '" cy="' + (y - 1) + '" rx="16" ry="5.5" fill="#6d7a22" opacity=".9"/>';
+    for (var i = 0; i < 16; i++) g += '<circle cx="' + f(x - 13 + r() * 26) + '" cy="' + f(y - 4 + r() * 7) + '" r="' + f(.8 + r() * 1.3) + '" fill="' + (r() > .7 ? '#b8331d' : '#2f5e1a') + '"/>';
+    return g + '<ellipse cx="' + (x - 5) + '" cy="' + (y - 3) + '" rx="6" ry="1.5" fill="#fff" opacity=".35"/></g>';
+  }
+  function rosemary(x, y, a) {
+    var g = '<g transform="translate(' + x + ' ' + y + ') rotate(' + a + ')"><path d="M0 0 L46 0" stroke="#5a4a22" stroke-width="1.6"/>';
+    for (var i = 0; i < 9; i++) { var xx = 4 + i * 4.6; g += '<path d="M' + xx + ' 0 l5 -6 M' + xx + ' 0 l5 6" stroke="#4a6e3a" stroke-width="2.2" stroke-linecap="round"/>'; }
+    return g + '</g>';
+  }
+  function juice(x, y, rx) { return '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + f(rx * .28) + '" fill="#6e1a14" opacity=".35"/>'; }
 
-  A['costela-janela'] = svg('costela-janela', 'boi', 'costela janela', // costela fina com ossos curvos e "janelas" de carne entre eles
-    '<path d="M20 70 Q160 50 300 70 L300 160 Q160 140 20 160Z" ' + M + EDGE + '/>' +
-    [0, 1, 2, 3, 4].map(function (i) { var x = 46 + i * 56; return '<path d="M' + x + ' 64 Q' + (x + 8) + ' 110 ' + x + ' 156" stroke="url(#$b)" stroke-width="16" fill="none" stroke-linecap="round"/><path d="M' + x + ' 64 Q' + (x + 8) + ' 110 ' + x + ' 156" stroke="#b29d76" stroke-width="1" fill="none" transform="translate(6 0)"/>'; }).join('') +
-    marble('janela', 30, 76, 260, 70, 12, .45));
+  /* ---------- interior ---------- */
+  var CID = 0;
+  function marble(r, rx, ry, n, op, col) {
+    var g = '<g stroke="' + (col || '#f7e7cf') + '" stroke-linecap="round" fill="none" opacity="' + (op || .75) + '">';
+    for (var i = 0; i < n; i++) {
+      var a = r() * Math.PI * 2, d = Math.sqrt(r()) * .78, x = Math.cos(a) * rx * d, y = Math.sin(a) * ry * d, l = 3 + r() * 9, an = r() * Math.PI;
+      g += '<path d="M' + f(x) + ' ' + f(y) + ' q' + f(Math.cos(an) * l / 2 + r() * 3 - 1.5) + ' ' + f(Math.sin(an) * l / 2 + r() * 3 - 1.5) + ' ' + f(Math.cos(an) * l) + ' ' + f(Math.sin(an) * l) + '" stroke-width="' + f(.5 + r() * 1.3) + '"/>';
+    }
+    return g + '</g>';
+  }
+  function grainLines(rx, ry, n, col) {
+    var g = '<g stroke="' + (col || '#5a1a18') + '" stroke-opacity=".22" stroke-width=".7" fill="none">';
+    for (var i = 1; i < n; i++) { var y = -ry + i * 2 * ry / n; g += '<path d="M' + f(-rx) + ' ' + f(y) + ' Q0 ' + f(y + 2) + ' ' + f(rx) + ' ' + f(y) + '"/>'; }
+    return g + '</g>';
+  }
+  function speckle(r, rx, ry, n, cols) {
+    var g = '<g>';
+    for (var i = 0; i < n; i++) { var a = r() * 6.283, d = Math.sqrt(r()) * .85; g += '<circle cx="' + f(Math.cos(a) * rx * d) + '" cy="' + f(Math.sin(a) * ry * d) + '" r="' + f(.6 + r() * 1.5) + '" fill="' + cols[Math.floor(r() * cols.length)] + '"/>'; }
+    return g + '</g>';
+  }
 
-  A.acem = svg('acem', 'boi', 'acém', // bloco irregular com nervos e veios
-    '<path d="M34 90 Q40 50 110 54 Q170 40 240 56 Q296 70 288 128 Q280 176 200 176 Q120 184 60 166 Q26 140 34 90Z" ' + M + EDGE + '/>' +
-    '<path d="M70 70 Q140 120 110 176 M190 56 Q170 120 230 176" stroke="#efe4d1" stroke-width="4" fill="none" opacity=".7"/>' +
-    marble('acem', 50, 66, 230, 100, 18, .5) + shine(150, 95, 50, 14));
+  // fatia redonda tombada (medalhão). o: {x,y,rx,ry,a,form,th,fat,marb,bone,sausage}
+  function slice(p, r, s, c) {
+    var pts = shapePts(s.rx, s.ry, s.form || c.form), id = p + 'k' + (CID++), th = s.th || c.th || 6;
+    var g = '<g transform="translate(' + s.x + ' ' + s.y + ') rotate(' + (s.a || 0) + ')">' +
+      '<path d="' + path(pts, 1, th + 3) + '" fill="#1a0a04" opacity=".35"/>' +
+      '<path d="' + path(pts, 0, th) + '" fill="url(#' + p + 'cr)"/>' +
+      '<path d="' + path(pts, 0, th / 2) + '" fill="url(#' + p + 'cr)"/>' +
+      '<clipPath id="' + id + '"><path d="' + path(pts) + '"/></clipPath>' +
+      '<g clip-path="url(#' + id + ')"><path d="' + path(pts) + '" fill="url(#' + p + 'd)"/>';
+    if (c.layers) { // barriga: camadas de gordura e carne
+      for (var L = 0; L < c.layers; L++) { var yy = -s.ry + (L + .5) * 2 * s.ry / c.layers; if (L % 2) g += '<path d="M' + (-s.rx - 4) + ' ' + f(yy - 2.5) + ' Q0 ' + f(yy + 1.5) + ' ' + (s.rx + 4) + ' ' + f(yy - 2) + ' L' + (s.rx + 4) + ' ' + f(yy + 3) + ' Q0 ' + f(yy + 6) + ' ' + (-s.rx - 4) + ' ' + f(yy + 2.5) + 'Z" fill="#f8ead2" opacity=".92"/>'; }
+    }
+    if (c.marb) g += marble(r, s.rx, s.ry, c.marb, c.marbOp);
+    if (c.grain) g += grainLines(s.rx, s.ry, c.grain);
+    if (c.speck) g += speckle(r, s.rx, s.ry, c.speck, c.speckCols);
+    if (c.eye) g += '<path d="M' + f(-s.rx * .9) + ' ' + f(-s.ry * .1) + ' Q' + f(-s.rx * .2) + ' ' + f(-s.ry * .9) + ' ' + f(s.rx * .5) + ' ' + f(-s.ry * .55) + '" stroke="#f6e3c3" stroke-width="2.4" fill="none" opacity=".85"/>';
+    if (c.fat) { var fy = -s.ry + c.fat * s.ry / 7; g += '<path d="M' + (-s.rx - 6) + ' ' + (-s.ry - 6) + ' H' + (s.rx + 6) + ' V' + f(fy - 3) + ' Q0 ' + f(fy + 4) + ' ' + (-s.rx - 6) + ' ' + f(fy - 3) + 'Z" fill="url(#' + p + 'ft)"/><path d="M' + (-s.rx - 6) + ' ' + f(fy - 3) + ' Q0 ' + f(fy + 4) + ' ' + (s.rx + 6) + ' ' + f(fy - 3) + '" stroke="#9a6a50" stroke-width="1.2" fill="none" opacity=".6"/>'; }
+    if (c.ring) g += '<path d="' + path(pts) + '" fill="none" stroke="#d1505a" stroke-width="3" opacity=".55"/>'; // anel de fumaça
+    if (c.skin) g += '<path d="M' + (-s.rx - 6) + ' ' + (-s.ry - 6) + ' H' + (s.rx + 6) + ' V' + f(-s.ry + 4) + ' Q0 ' + f(-s.ry + 7) + ' ' + (-s.rx - 6) + ' ' + f(-s.ry + 4) + 'Z" fill="#c8761f"/>';
+    g += '<path d="' + path(pts) + '" fill="none" stroke="' + DONE[c.done][3] + '" stroke-width="' + (c.casing ? 3.2 : 2) + '" opacity=".9"/></g>';
+    if (s.bone) g += '<ellipse cx="' + f(s.bone[0]) + '" cy="' + f(s.bone[1]) + '" rx="' + s.bone[2] + '" ry="' + f(s.bone[2] * .62) + '" fill="url(#' + p + 'bn)" stroke="#9c7f56" stroke-width="1"/><ellipse cx="' + f(s.bone[0]) + '" cy="' + f(s.bone[1]) + '" rx="' + f(s.bone[2] * .45) + '" ry="' + f(s.bone[2] * .26) + '" fill="#c9875e" opacity=".55"/>';
+    g += '<path d="M' + f(-s.rx * .55) + ' ' + f(-s.ry * .55) + ' Q' + f(-s.rx * .1) + ' ' + f(-s.ry * .85) + ' ' + f(s.rx * .35) + ' ' + f(-s.ry * .6) + '" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none" opacity=".35"/>';
+    return g + '</g>';
+  }
+  // tira de bife tombada (fatia longa). s: {x,y,w,l,a}
+  function strip(p, r, s, c) {
+    var w = s.w, l = s.l, id = p + 'k' + (CID++);
+    var d = 'M' + (-w / 2) + ' ' + (-l / 2 + 4) + ' Q' + (-w / 2) + ' ' + (-l / 2) + ' 0 ' + (-l / 2 - 1) + ' Q' + (w / 2) + ' ' + (-l / 2) + ' ' + (w / 2) + ' ' + (-l / 2 + 4) + ' L' + f(w / 2 + 1) + ' ' + (l / 2 - 4) + ' Q' + (w / 2) + ' ' + (l / 2 + 1) + ' 0 ' + (l / 2 + 1) + ' Q' + (-w / 2) + ' ' + (l / 2 + 1) + ' ' + f(-w / 2 - 1) + ' ' + (l / 2 - 4) + 'Z';
+    var g = '<g transform="translate(' + s.x + ' ' + s.y + ') rotate(' + s.a + ')">' +
+      '<path d="' + d + '" transform="translate(3 4)" fill="#1a0a04" opacity=".35"/>' +
+      '<path d="' + d + '" transform="translate(2.5 1)" fill="url(#' + p + 'cr)"/>' +
+      '<clipPath id="' + id + '"><path d="' + d + '"/></clipPath><g clip-path="url(#' + id + ')">' +
+      '<path d="' + d + '" fill="url(#' + p + 's)"/>';
+    if (c.marb) g += marble(r, w / 2, l / 2, Math.round(c.marb / 2), c.marbOp);
+    if (c.grain) { g += '<g stroke="#5a1a18" stroke-opacity=".25" stroke-width=".7">'; for (var i = 0; i < 4; i++) g += '<path d="M' + f(-w / 2 + (i + 1) * w / 5) + ' ' + (-l / 2) + ' V' + (l / 2) + '"/>'; g += '</g>'; }
+    if (s.fatEnd || c.fat) g += '<rect x="' + (-w / 2 - 2) + '" y="' + (-l / 2 - 2) + '" width="' + (w + 4) + '" height="' + (c.fat ? 3 + c.fat * .9 : 7) + '" fill="url(#' + p + 'ft)"/>';
+    if (s.fatSide) g += '<rect x="' + f(w / 2 - s.fatSide) + '" y="' + (-l / 2) + '" width="' + (s.fatSide + 2) + '" height="' + l + '" fill="url(#' + p + 'fs)"/>';
+    g += '</g><path d="' + d + '" fill="none" stroke="' + DONE[c.done][3] + '" stroke-width="1.4"/>' +
+      '<path d="M' + f(-w / 4) + ' ' + f(-l / 2 + 6) + ' V' + f(l / 2 - 8) + '" stroke="#fff" stroke-opacity=".22" stroke-width="1.4" stroke-linecap="round"/></g>';
+    return g;
+  }
+  function grill(n, x0, y0, len, a, sp) {
+    var g = '<g stroke="#1e0a03" stroke-width="3.2" stroke-linecap="round" opacity=".55">';
+    for (var i = 0; i < n; i++) g += '<path d="M' + (x0 + i * sp) + ' ' + y0 + ' l' + f(Math.cos(a) * len) + ' ' + f(Math.sin(a) * len) + '"/>';
+    return g + '</g>';
+  }
+  function crustTex(r, x0, y0, w, h, n) { // granulado da crosta
+    var g = '<g>';
+    for (var i = 0; i < n; i++) g += '<circle cx="' + f(x0 + r() * w) + '" cy="' + f(y0 + r() * h) + '" r="' + f(.5 + r() * 1.2) + '" fill="' + (r() > .5 ? '#1c0a03' : '#c9813f') + '" opacity="' + f(.3 + r() * .4) + '"/>';
+    return g + '</g>';
+  }
 
-  A.peito = svg('peito', 'boi', 'peito (brisket)', // placa longa e plana com gordura espessa embaixo
-    '<path d="M20 86 Q30 60 80 60 L250 56 Q300 60 300 96 L296 150 Q160 160 24 150Z" ' + M + EDGE + '/>' +
-    '<path d="M24 130 Q160 140 296 130 L296 156 Q160 170 22 156Z" ' + F + '/>' +
-    fibers(40, 80, 280, 76, 5, 0, 10) + shine(150, 86, 90, 14));
+  // peça assada inteira deitada, com face cortada à direita
+  // o: {x0,x1,yb,h,frx,form,top: fn extra}
+  function roast(p, r, o, c) {
+    var x0 = o.x0, x1 = o.x1, yb = o.yb, h = o.h, ry = h / 2, cy = yb - ry, id = p + 'k' + (CID++), L = x1 - x0;
+    var top = o.topY || (yb - h - (o.hump || 6));
+    var body = 'M' + x1 + ' ' + f(yb - h) + ' C' + f(x1 - L * .35) + ' ' + f(top) + ' ' + f(x0 + L * .15) + ' ' + f(top + 2) + ' ' + f(x0 + 6) + ' ' + f(cy - ry * .3) + ' C' + f(x0 - 4) + ' ' + f(cy + ry * .5) + ' ' + f(x0 + 6) + ' ' + yb + ' ' + f(x0 + 26) + ' ' + yb + ' L' + x1 + ' ' + yb + 'Z';
+    var g = '<ellipse cx="' + f((x0 + x1) / 2 + 4) + '" cy="' + (yb + 3) + '" rx="' + f(L / 2 + 10) + '" ry="7" fill="#1a0a04" opacity=".4"/>' +
+      '<clipPath id="' + id + '"><path d="' + body + '"/></clipPath><path d="' + body + '" fill="url(#' + p + 'cr)"/><g clip-path="url(#' + id + ')">';
+    if (c.fat && !o.noFatTop) {
+      g += '<path d="M' + (x0 - 10) + ' ' + (top - 10) + ' H' + (x1 + 10) + ' V' + f(yb - h + c.fat * 1.4) + ' C' + f(x1 - L * .4) + ' ' + f(top + c.fat * 2) + ' ' + f(x0 + 20) + ' ' + f(top + c.fat * 2.4) + ' ' + (x0 - 10) + ' ' + f(cy) + 'Z" fill="#c98a3a"/>' +
+        '<g stroke="#7a3d12" stroke-width="1.2" opacity=".55">';
+      for (var i = 0; i < 10; i++) g += '<path d="M' + f(x0 + 10 + i * L / 9) + ' ' + f(top - 4) + ' l14 ' + f(c.fat * 2) + ' M' + f(x0 + 24 + i * L / 9) + ' ' + f(top - 4) + ' l-14 ' + f(c.fat * 2) + '"/>';
+      g += '</g>';
+    }
+    if (o.skin) g += '<path d="M' + (x0 - 10) + ' ' + (top - 10) + ' H' + (x1 + 10) + ' V' + f(yb - h + 9) + ' C' + f(x1 - L * .4) + ' ' + f(top + 9) + ' ' + (x0 + 20) + ' ' + f(top + 11) + ' ' + (x0 - 10) + ' ' + f(cy - 6) + 'Z" fill="#d8923a"/>' + speckle(r, 1, 1, 0, []) + crustTex(r, x0, top - 4, L, 14, 40).replace(/#c9813f/g, '#f3c470');
+    if (o.grill !== false) g += grill(o.gn || 5, x0 + 8, yb - h - 10, h * 1.4, 1.15, L / (o.gn || 5));
+    g += crustTex(r, x0, top, L, h + 10, 50) +
+      '<path d="M' + f(x0 + 14) + ' ' + f(top + 7) + ' C' + f(x0 + L * .35) + ' ' + f(top + 2) + ' ' + f(x1 - L * .3) + ' ' + f(top + 3) + ' ' + f(x1 - 8) + ' ' + f(yb - h + 3) + '" stroke="url(#' + p + 'hl)" stroke-width="5" stroke-linecap="round" fill="none" opacity=".8"/></g>';
+    if (o.extra) g += o.extra;
+    // face cortada
+    var fpts = shapePts(o.frx || h * .3, ry, c.form), fid = p + 'k' + (CID++);
+    g += '<g transform="translate(' + x1 + ' ' + f(cy) + ')"><clipPath id="' + fid + '"><path d="' + path(fpts) + '"/></clipPath><g clip-path="url(#' + fid + ')"><path d="' + path(fpts) + '" fill="url(#' + p + 'd)"/>';
+    if (c.layers) for (var Lr = 1; Lr < c.layers; Lr += 2) g += '<rect x="-40" y="' + f(-ry + Lr * h / c.layers) + '" width="80" height="' + f(h / c.layers * .8) + '" fill="#f8ead2" opacity=".9"/>';
+    if (c.marb) g += marble(r, o.frx || h * .3, ry, Math.round(c.marb * .6), c.marbOp);
+    if (c.speck) g += speckle(r, o.frx || h * .3, ry, Math.round(c.speck * .6), c.speckCols);
+    if (c.fat) g += '<rect x="-40" y="' + f(-ry - 4) + '" width="80" height="' + f(4 + c.fat * ry / 7) + '" fill="url(#' + p + 'ft)"/>';
+    if (c.skin) g += '<rect x="-40" y="' + f(-ry - 4) + '" width="80" height="8" fill="#c8761f"/>';
+    g += '</g><path d="' + path(fpts) + '" fill="none" stroke="' + DONE[c.done][3] + '" stroke-width="2"/></g>';
+    return g;
+  }
 
-  // ---------- AR/UY ----------
-  A.vazio = svg('vazio', 'boi', 'vacío', // membrana fina, larga, com membrana branca e borda de gordura
-    '<path d="M20 110 Q40 50 150 52 Q270 50 302 100 Q290 160 180 170 Q60 176 20 110Z" ' + M + EDGE + '/>' +
-    '<path d="M24 108 Q40 56 150 58 Q220 58 270 76" stroke="#f1e7d6" stroke-width="10" fill="none" opacity=".55" stroke-linecap="round"/>' +
-    '<path d="M30 130 Q90 172 180 168" stroke="url(#$f)" stroke-width="9" fill="none" stroke-linecap="round"/>' +
-    fibers(60, 96, 280, 100, 5, 0, 12) + shine(170, 110, 70, 14));
+  /* ---------- montagem ---------- */
+  var KIND = {
+    boi: { crust: ['#8f4d22', '#5e2a10', '#2e1206'] },
+    porco: { crust: ['#c07a34', '#8c4a1c', '#4e230b'] },
+    cordeiro: { crust: ['#93522a', '#62301a', '#2f1408'] },
+    frango: { crust: ['#e6ad4e', '#c27a26', '#7a3f10'] },
+    emb: { crust: ['#9a3d22', '#6e2414', '#3a0e06'] },
+    mor: { crust: ['#3a1412', '#220a0a', '#0e0404'] }
+  };
+  var WOODS = [['#c98f58', '#a2683a', '#7a4826'], ['#b77a47', '#8c5530', '#6a3a1c'], ['#d4a26b', '#b07a46', '#865227']];
 
-  A.entrana = svg('entrana', 'boi', 'entraña (diafragma)', // tira comprida e fina com película
-    '<path d="M14 118 Q60 84 160 96 Q260 104 306 86 L308 118 Q260 140 160 130 Q60 124 14 148Z" ' + M + EDGE + '/>' +
-    '<path d="M14 118 Q60 84 160 96 Q260 104 306 86" stroke="#f3ecdf" stroke-width="5" fill="none" opacity=".8"/>' +
-    '<g stroke="#3d0c12" stroke-opacity=".3" stroke-width="1.4">' + Array.from({ length: 24 }, function (_, i) { var x = 26 + i * 11.5; return '<path d="M' + x + ' ' + (106 - Math.sin(i / 4) * 6) + ' l4 24"/>'; }).join('') + '</g>');
+  function make(id, label, c, draw) {
+    var p = 'ca-' + id + '-', r = rng(id), k = KIND[c.kind || 'boi'];
+    CID = 0;
+    var o = { done: c.done, crust: c.crustCol || k.crust, wood: WOODS[c.wood != null ? c.wood : Math.floor(r() * 3)] };
+    var body = board(p, r, c.round) + draw(p, r, c);
+    body += salt(r, c.salt != null ? c.salt : 26, 30, 100, 260, 85);
+    return '<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustração do corte servido: ' + label + ', assado e fatiado na tábua">' + defs(p, o) + body + '</svg>';
+  }
 
-  A['tira-de-asado'] = svg('tira-de-asado', 'boi', 'tira de asado', // tira longa com cortes transversais de osso (3-4 discos)
-    '<path d="M14 80 L306 74 L306 148 L14 154Z" ' + M + EDGE + '/>' +
-    '<path d="M14 80 L306 74 L306 88 L14 94Z" ' + F + '/>' +
-    [0, 1, 2, 3].map(function (i) { var x = 52 + i * 72; return '<ellipse cx="' + x + '" cy="120" rx="16" ry="22" ' + B + ' stroke="#b29d76"/><ellipse cx="' + x + '" cy="120" rx="7" ry="11" fill="#c9a57a" opacity=".7"/>'; }).join('') +
-    marble('tira', 20, 96, 280, 50, 16, .55));
+  // composição padrão: peça à esquerda + medalhões tombados à direita
+  function roastPlate(o) {
+    return function (p, r, c) {
+      var g = juice(o.jx || 210, o.jy || 172, 60) + roast(p, r, o, c), sl = o.slices;
+      for (var i = 0; i < sl.length; i++) g += slice(p, r, sl[i], c);
+      if (o.post) g += o.post(p, r, c);
+      return g;
+    };
+  }
+  function fan(n, x, y, dx, dy, rx, ry, a0, da, extra) {
+    var out = [];
+    for (var i = 0; i < n; i++) { var s = { x: x + i * dx, y: y + i * dy, rx: rx, ry: ry, a: a0 + i * da }; for (var k in extra) s[k] = extra[k]; out.push(s); }
+    return out;
+  }
+  // bife inteiro visto de cima com tiras fatiadas
+  function steakPlate(o) {
+    return function (p, r, c) {
+      var pts = shapePts(o.rx, o.ry, o.form || 'oval'), id = p + 'k' + (CID++);
+      var g = juice(200, 175, 70) + '<g transform="translate(' + o.x + ' ' + o.y + ') rotate(' + (o.a || 0) + ')">' +
+        '<path d="' + path(pts, 2, 12) + '" fill="#1a0a04" opacity=".4"/><path d="' + path(pts, 0, 8) + '" fill="url(#' + p + 'cr)"/><path d="' + path(pts, 0, 4) + '" fill="' + KIND[c.kind || 'boi'].crust[2] + '"/>' +
+        '<clipPath id="' + id + '"><path d="' + path(pts) + '"/></clipPath><path d="' + path(pts) + '" fill="url(#' + p + 'cr)"/><g clip-path="url(#' + id + ')">';
+      if (o.fatEdge) g += '<path d="' + path(pts) + '" fill="none" stroke="#d29444" stroke-width="' + o.fatEdge + '" transform="translate(' + (o.fatDx || 0) + ' ' + (o.fatDy || -4) + ')"/>';
+      g += grill(6, -o.rx, -o.ry - 10, o.ry * 2.6, 1.0, o.rx * .38) + crustTex(r, -o.rx, -o.ry, o.rx * 2, o.ry * 2, 60) +
+        '<ellipse cx="' + f(-o.rx * .25) + '" cy="' + f(-o.ry * .45) + '" rx="' + f(o.rx * .5) + '" ry="' + f(o.ry * .25) + '" fill="#fff" opacity=".12"/>';
+      if (o.inner) g += o.inner(p, r, c);
+      g += '</g>' + (o.over ? o.over(p, r, c) : '') + '</g>';
+      for (var i = 0; i < o.strips.length; i++) g += strip(p, r, o.strips[i], c);
+      if (o.post) g += o.post(p, r, c);
+      return g;
+    };
+  }
+  function strips(n, x, y, dx, dy, w, l, a0, da, extra) {
+    var out = [];
+    for (var i = 0; i < n; i++) { var s = { x: x + i * dx, y: y + i * dy, w: w, l: l, a: a0 + i * da }; for (var k in extra) s[k] = extra[k]; out.push(s); }
+    return out;
+  }
+  function boneT(p) { return '<path d="M-58 -30 Q0 -40 58 -32 L58 -22 Q12 -26 6 -22 Q2 10 8 44 L-4 46 Q-8 10 -6 -22 Q-12 -26 -58 -20Z" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width="1.2"/><path d="M-50 -28 Q0 -36 50 -29" stroke="#fff" stroke-width="1.5" opacity=".6" fill="none"/>'; }
 
-  A.matambre = svg('matambre', 'boi', 'matambre', // manta fina e larga, quase translúcida
-    '<path d="M16 70 Q80 50 160 60 Q250 48 304 72 Q296 120 306 160 Q230 176 160 164 Q70 178 14 160 Q26 116 16 70Z" ' + M + EDGE + ' opacity=".92"/>' +
-    '<path d="M16 70 Q80 50 160 60 Q250 48 304 72" stroke="url(#$f)" stroke-width="7" fill="none"/>' +
-    fibers(30, 80, 290, 84, 7, 0, 11, .16) + shine(160, 110, 110, 30));
+  var C = {};
+  window.CORTES && [].concat(window.CORTES).forEach(function (x) { C[x.id] = x; });
+  function D(id, fb) { return level(C[id] ? C[id].ponto : '') || fb; }
+  function nm(id, fb) { return C[id] ? C[id].nome : fb; }
 
-  A['ojo-de-bife'] = svg('ojo-de-bife', 'boi', 'ojo de bife', // bife grosso oval, sem tampa, bem marmorizado
-    '<path d="M60 116 Q62 52 160 50 Q262 52 264 116 Q262 176 160 178 Q58 176 60 116Z" ' + M + EDGE + '/>' +
-    '<path d="M60 116 Q62 52 160 50 Q262 52 264 116" stroke="url(#$f)" stroke-width="6" fill="none"/>' +
-    marble('ojo', 76, 66, 172, 100, 26, .6) + shine(130, 84, 40, 12));
+  /* ---------- cortes bovinos: peças assadas ---------- */
+  A.picanha = make('picanha', nm('picanha', 'Picanha'), { done: 'r2', form: 'wedge', fat: 5, marb: 6, th: 7 }, roastPlate({
+    x0: 34, x1: 150, yb: 168, h: 58, frx: 18, hump: 12,
+    slices: fan(3, 192, 128, 32, 9, 30, 22, -14, 10, { form: 'wedge' }),
+    post: function () { return leaf(56, 182, -20, .8) + chimi(272, 112); }
+  }));
+  A.maminha = make('maminha', nm('maminha', 'Maminha'), { done: 'r2', form: 'tri', fat: 2, marb: 10, grain: 7 }, roastPlate({
+    x0: 30, x1: 146, yb: 168, h: 50, frx: 16, hump: 4,
+    slices: fan(4, 182, 132, 28, 7, 24, 19, -20, 9, {})
+  }));
+  A.fraldinha = make('fraldinha', nm('fraldinha', 'Fraldinha'), { done: 'r3', grain: 6, marb: 6 }, steakPlate({
+    x: 92, y: 140, rx: 70, ry: 26, form: 'long', a: -8,
+    strips: strips(5, 196, 138, 18, 4, 14, 74, 58, 4, {}),
+    post: function () { return chimi(270, 104); }
+  }));
+  A.contrafile = make('contrafile', nm('contrafile', 'Contrafilé'), { done: 'r2', form: 'dome', fat: 3, marb: 8, th: 7 }, roastPlate({
+    x0: 28, x1: 152, yb: 166, h: 52, frx: 20, hump: 2,
+    slices: fan(4, 188, 132, 28, 7, 28, 18, -16, 8, { form: 'dome' })
+  }));
+  A.ancho = make('ancho', nm('ancho', 'Ancho'), { done: 'r2', form: 'oval', fat: 3, marb: 26, marbOp: .85, eye: 1, th: 8, wood: 1 }, roastPlate({
+    x0: 32, x1: 146, yb: 168, h: 60, frx: 22, hump: 6,
+    slices: fan(3, 190, 130, 34, 10, 32, 23, -12, 10, {}),
+    post: function () { return leaf(60, 186, -10, .9); }
+  }));
+  A['file-mignon'] = make('file-mignon', nm('file-mignon', 'Filé-mignon'), { done: 'r1', form: 'oval', th: 10, salt: 34, round: true }, roastPlate({
+    x0: 40, x1: 140, yb: 166, h: 46, frx: 16, hump: 2, gn: 4,
+    slices: [{ x: 186, y: 134, rx: 24, ry: 20, a: -6 }, { x: 236, y: 140, rx: 24, ry: 20, a: 8 }, { x: 212, y: 170, rx: 24, ry: 20, a: -4 }],
+    post: function () { return rosemary(150, 108, -12); }
+  }));
+  A.alcatra = make('alcatra', nm('alcatra', 'Alcatra'), { done: 'r2', form: 'oval', marb: 8, grain: 5, th: 7 }, roastPlate({
+    x0: 30, x1: 148, yb: 168, h: 54, frx: 20, hump: 8,
+    slices: fan(4, 188, 130, 28, 8, 28, 20, -18, 9, {})
+  }));
+  A.cupim = make('cupim', nm('cupim', 'Cupim'), { done: 'r4', form: 'dome', marb: 30, marbOp: .6, grain: 9, th: 9, crustCol: ['#7a3a16', '#4a1e0a', '#200a03'] }, roastPlate({
+    x0: 30, x1: 150, yb: 172, h: 70, frx: 24, hump: 22, grill: false,
+    slices: fan(3, 196, 136, 34, 8, 30, 22, -10, 9, { form: 'dome' })
+  }));
+  A.acem = make('acem', nm('acem', 'Acém'), { done: 'r3', form: 'oval', marb: 22, marbOp: .7, th: 7 }, roastPlate({
+    x0: 30, x1: 148, yb: 168, h: 50, frx: 18, hump: 6,
+    slices: fan(4, 186, 132, 28, 8, 27, 19, -14, 9, {})
+  }));
+  A.peito = make('peito', nm('peito', 'Peito'), { done: 'r4', form: 'long', ring: 1, grain: 7, fat: 2, th: 9, crustCol: ['#3a1a0c', '#1e0c05', '#0c0402'] }, roastPlate({
+    x0: 24, x1: 156, yb: 166, h: 40, frx: 14, hump: 4, grill: false,
+    slices: fan(5, 186, 130, 22, 8, 22, 14, -24, 7, { th: 8 }),
+    post: function () { return chimi(276, 176).replace(/#6d7a22/, '#a8521a'); }
+  }));
+  A.vazio = make('vazio', nm('vazio', 'Vazio'), { done: 'r3', grain: 7, marb: 8, fat: 2 }, steakPlate({
+    x: 92, y: 138, rx: 68, ry: 32, form: 'bean', a: 6,
+    strips: strips(5, 192, 136, 19, 5, 15, 70, 62, 3, {}),
+    post: function () { return leaf(272, 104, 20, .9); }
+  }));
+  A.entrana = make('entrana', nm('entrana', 'Entraña'), { done: 'r2', grain: 9, wood: 2 }, steakPlate({
+    x: 96, y: 136, rx: 80, ry: 14, form: 'long', a: -14,
+    inner: function () { return '<g stroke="#2a0d05" stroke-opacity=".35" stroke-width="1">' + [-60, -40, -20, 0, 20, 40, 60].map(function (x) { return '<path d="M' + x + ' -14 l-6 28"/>'; }).join('') + '</g>'; },
+    strips: strips(5, 190, 150, 20, -2, 12, 60, 70, -6, {}),
+    post: function () { return chimi(80, 174) + leaf(270, 182, -30, .8); }
+  }));
+  A.matambre = make('matambre', nm('matambre', 'Matambre'), { done: 'r4', form: 'oval', th: 10, crustCol: ['#a35a26', '#6e3412', '#341606'], round: true }, roastPlate({
+    x0: 36, x1: 140, yb: 168, h: 52, frx: 22, hump: 2,
+    slices: fan(3, 186, 132, 34, 10, 26, 22, -8, 8, {}),
+    post: function (p) { // espiral do rocambole nas fatias e na face
+      var sp = function (x, y, s) { return '<path d="M' + x + ' ' + y + ' m0 0 a3 2.4 0 1 1 6 0 a6 5 0 1 1 -12 0 a9 7.5 0 1 1 18 0 a12 10 0 1 1 -24 0 a15 12 0 1 1 30 0" transform="translate(' + x + ' ' + y + ') scale(' + s + ') translate(' + (-x) + ' ' + (-y) + ')" fill="none" stroke="#f3d7a8" stroke-width="2.2" opacity=".85"/><path d="M' + x + ' ' + y + ' m-2 1 l3 -2 m6 4 l3 1 m-14 -3 l-2 3" stroke="#3f8a2e" stroke-width="2" stroke-linecap="round"/>'; };
+      return sp(140, 142, .7) + sp(184, 132, .8) + sp(218, 142, .8) + sp(252, 152, .8);
+    }
+  }));
+  A['colita-de-cuadril'] = make('colita-de-cuadril', nm('colita-de-cuadril', 'Colita de cuadril'), { done: 'r2', form: 'tri', marb: 8, fat: 1, wood: 2 }, roastPlate({
+    x0: 40, x1: 140, yb: 168, h: 46, frx: 16, hump: 2,
+    slices: fan(4, 176, 130, 30, 9, 22, 18, -10, 10, { form: 'tri' }),
+    post: function () { return chimi(266, 104) + leaf(52, 186, 0, .8); }
+  }));
+  A['tri-tip'] = make('tri-tip', nm('tri-tip', 'Tri-tip'), { done: 'r2', form: 'tear', marb: 10, grain: 5, crustCol: ['#5a2a12', '#33150a', '#140603'] }, roastPlate({
+    x0: 30, x1: 150, yb: 168, h: 50, frx: 18, hump: 14,
+    slices: fan(4, 186, 128, 30, 10, 28, 17, -30, 14, { form: 'tear' }),
+    post: function () { return rosemary(36, 110, 8); }
+  }));
+  A.denver = make('denver', nm('denver', 'Denver steak'), { done: 'r2', marb: 22, marbOp: .8 }, steakPlate({
+    x: 92, y: 140, rx: 58, ry: 34, form: 'oval', a: -4,
+    strips: strips(4, 196, 136, 22, 6, 18, 64, 52, 6, {}),
+    post: function () { return leaf(272, 100, 10, .8); }
+  }));
+  A['flat-iron'] = make('flat-iron', nm('flat-iron', 'Flat iron'), { done: 'r2', marb: 18, marbOp: .8 }, steakPlate({
+    x: 96, y: 138, rx: 70, ry: 28, form: 'long', a: 2,
+    inner: function () { return '<path d="M-66 2 Q0 -2 66 2" stroke="#2a0d05" stroke-width="1.6" opacity=".5" fill="none"/>'; },
+    strips: strips(5, 196, 140, 18, 3, 15, 54, 30, 5, {})
+  }));
 
-  A['bife-de-chorizo'] = svg('bife-de-chorizo', 'boi', 'bife de chorizo', // bife alto retangular com tira de gordura em um lado
-    '<path d="M70 52 Q70 40 84 40 L246 40 Q260 40 260 54 L262 174 Q262 186 248 186 L84 186 Q68 186 68 172Z" ' + M + EDGE + '/>' +
-    '<path d="M228 40 L246 40 Q260 40 260 54 L262 174 Q262 186 248 186 L230 186 Q240 112 228 40Z" ' + F + '/>' +
-    marble('chorizo-b', 84, 54, 140, 120, 18, .55) + shine(140, 80, 40, 14));
+  /* ---------- bifes (tiras fatiadas) ---------- */
+  function bife(id, fb, conf, sh) { A[id] = make(id, nm(id, fb), conf, steakPlate(sh)); }
+  bife('ojo-de-bife', 'Ojo de bife', { done: 'r2', marb: 20, marbOp: .8, wood: 0 }, {
+    x: 90, y: 140, rx: 56, ry: 40, form: 'oval',
+    inner: function () { return '<ellipse cx="-24" cy="-10" rx="20" ry="14" fill="none" stroke="#c9873e" stroke-width="3" opacity=".6"/>'; },
+    strips: strips(4, 196, 136, 22, 6, 19, 66, 46, 7, {}),
+    post: function () { return chimi(270, 100); }
+  });
+  bife('bife-de-chorizo', 'Bife de chorizo', { done: 'r2', marb: 12, fat: 3, wood: 2 }, {
+    x: 88, y: 140, rx: 60, ry: 36, form: 'dome', fatEdge: 10, fatDy: -2,
+    strips: strips(4, 196, 138, 22, 6, 19, 64, 40, 8, { fatEnd: 1 }),
+    post: function () { return leaf(56, 186, -14, .9) + leaf(270, 100, 30, .7); }
+  });
+  bife('entrecot', 'Entrecot', { done: 'r2', marb: 24, marbOp: .85, wood: 1 }, {
+    x: 90, y: 140, rx: 58, ry: 38, form: 'bean', fatEdge: 6,
+    strips: strips(4, 198, 136, 22, 7, 18, 64, 50, 8, { fatSide: 3 }),
+    post: function () { return rosemary(220, 104, 8); }
+  });
+  bife('ribeye', 'Ribeye', { done: 'r2', marb: 30, marbOp: .9, wood: 0 }, {
+    x: 90, y: 140, rx: 58, ry: 40, form: 'oval', fatEdge: 7,
+    inner: function () { return '<path d="M-50 -6 Q-20 -36 30 -28" stroke="#d6964a" stroke-width="4" fill="none" opacity=".7"/>'; },
+    strips: strips(4, 198, 136, 22, 6, 20, 64, 44, 7, { fatSide: 4 }),
+    post: function () { return chimi(276, 102); }
+  });
+  bife('ny-strip', 'NY strip', { done: 'r2', marb: 12, fat: 4, wood: 2 }, {
+    x: 88, y: 140, rx: 62, ry: 32, form: 'long', fatEdge: 12, fatDy: -3,
+    strips: strips(5, 192, 140, 19, 5, 16, 60, 36, 6, { fatEnd: 1 })
+  });
 
-  A['colita-de-cuadril'] = svg('colita-de-cuadril', 'boi', 'colita de cuadril', // triângulo curvo tipo bumerangue
-    '<path d="M24 150 Q60 64 160 70 Q236 74 298 46 Q284 120 210 150 Q130 178 24 150Z" ' + M + EDGE + '/>' +
-    '<path d="M24 150 Q130 178 210 150 Q130 164 30 142Z" ' + F + '/>' +
-    fibers(60, 140, 270, 70, 5, 4, -8) + shine(150, 110, 60, 14));
+  /* ---------- com osso ---------- */
+  A['t-bone'] = make('t-bone', nm('t-bone', 'T-bone'), { done: 'r2', marb: 12, fat: 3, wood: 0 }, steakPlate({
+    x: 96, y: 138, rx: 70, ry: 46, form: 'oval', fatEdge: 8,
+    inner: function (p) { return '<g transform="translate(-8 0)">' + boneT(p) + '</g>'; },
+    strips: strips(4, 206, 138, 21, 6, 17, 56, 44, 8, { fatEnd: 1 }),
+    post: function () { return leaf(272, 186, -20, .8); }
+  }));
+  A.porterhouse = make('porterhouse', nm('porterhouse', 'Porterhouse'), { done: 'r2', marb: 12, fat: 3, wood: 1 }, steakPlate({
+    x: 96, y: 138, rx: 74, ry: 48, form: 'bean', fatEdge: 8,
+    inner: function (p) { return '<g transform="translate(-20 0) scale(1.05)">' + boneT(p) + '</g><ellipse cx="22" cy="20" rx="26" ry="16" fill="#5a2710" opacity=".35"/>'; },
+    strips: strips(3, 210, 132, 24, 8, 20, 50, 40, 10, {}).concat(strips(2, 214, 176, 26, 0, 16, 40, 84, 4, {})),
+    post: function () { return rosemary(222, 102, 6); }
+  }));
+  A.tomahawk = make('tomahawk', nm('tomahawk', 'Tomahawk'), { done: 'r2', marb: 26, marbOp: .85, fat: 2, wood: 1 }, steakPlate({
+    x: 86, y: 150, rx: 52, ry: 38, form: 'oval', a: 0, fatEdge: 7,
+    over: function (p) { return '<path d="M36 -26 Q90 -60 150 -92 Q160 -98 166 -90 Q170 -82 160 -76 Q100 -44 46 -8Z" fill="#1a0a04" opacity=".3" transform="translate(4 6)"/><path d="M36 -26 Q90 -60 150 -92 Q160 -98 166 -90 Q170 -82 160 -76 Q100 -44 46 -8Z" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width="1.2"/><path d="M40 -24 Q60 -36 74 -40 L80 -26 Q62 -18 46 -10Z" fill="#7a3c18" opacity=".8"/><path d="M60 -38 Q110 -64 150 -86" stroke="#fff" stroke-width="2" opacity=".55" fill="none"/>'; },
+    strips: strips(4, 200, 158, 22, 4, 18, 56, 60, 6, { fatSide: 3 })
+  }));
 
-  A.entrecot = svg('entrecot', 'boi', 'entrecot', // bife com vértice de gordura e cordão de "tapa"
-    '<path d="M50 120 Q46 54 150 48 Q250 46 272 104 Q282 170 180 182 Q60 188 50 120Z" ' + M + EDGE + '/>' +
-    '<path d="M150 48 Q250 46 272 104 Q262 92 238 88 Q206 64 150 60Z" ' + F + '/>' +
-    '<path d="M110 70 Q150 120 220 128" stroke="url(#$f)" stroke-width="5" fill="none" stroke-linecap="round"/>' +
-    marble('entrecot', 64, 70, 190, 100, 22, .55));
+  // costelas: ripa com ossos + pedaços cortados entre ossos
+  function ribs(id, fb, c, o) {
+    A[id] = make(id, nm(id, fb), c, function (p, r, cc) {
+      var g = juice(200, 176, 80), n = o.n, x0 = o.x0, w = o.w, y = o.y, h = o.h, id2 = p + 'k' + (CID++);
+      var seg = (w - 20) / (n - 1), top = 'M' + x0 + ' ' + (y + 10) + ' Q' + x0 + ' ' + y + ' ' + (x0 + 10) + ' ' + y;
+      for (var q = 0; q < n - 1; q++) { var qx = x0 + 10 + q * seg; top += ' Q' + f(qx + seg / 2) + ' ' + f(y - 12 - r() * 4) + ' ' + f(qx + seg) + ' ' + f(y + 1); }
+      var body = top + ' Q' + (x0 + w) + ' ' + y + ' ' + (x0 + w) + ' ' + (y + 8) + ' L' + (x0 + w + 6) + ' ' + (y + h) + ' Q' + (x0 + w / 2) + ' ' + (y + h + 8) + ' ' + (x0 - 4) + ' ' + (y + h) + 'Z';
+      // ossos saindo por baixo
+      for (var i = 0; i < n; i++) { var bx = x0 + 10 + i * (w - 20) / (n - 1); g += '<path d="M' + f(bx - o.bw / 2) + ' ' + (y + h - 6) + ' l' + f(o.tilt) + ' ' + o.bl + ' q' + f(o.bw / 2) + ' 6 ' + o.bw + ' 0 l' + f(-o.tilt) + ' ' + (-o.bl) + 'Z" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width="1"/>'; }
+      g += '<path d="' + body + '" transform="translate(3 6)" fill="#1a0a04" opacity=".4"/><clipPath id="' + id2 + '"><path d="' + body + '"/></clipPath><path d="' + body + '" fill="url(#' + p + 'cr)"/><g clip-path="url(#' + id2 + ')">';
+      for (var j = 1; j < n; j++) { var sx = x0 + 10 + (j - .5) * (w - 20) / (n - 1); g += '<path d="M' + f(sx) + ' ' + (y - 10) + ' q4 ' + (h / 2) + ' 0 ' + (h + 20) + '" stroke="#1a0802" stroke-width="3" opacity=".55" fill="none"/>'; }
+      if (cc.glaze) g += '<path d="' + body + '" fill="#a8320e" opacity=".35"/><path d="M' + (x0 + 6) + ' ' + (y + 10) + ' Q' + (x0 + w / 2) + ' ' + (y + 2) + ' ' + (x0 + w - 6) + ' ' + (y + 8) + '" stroke="#ffd9a0" stroke-width="2" opacity=".5" fill="none"/>';
+      g += crustTex(r, x0, y - 8, w, h + 10, 70) + '<path d="' + top + '" transform="translate(0 4)" stroke="#ffe2b0" stroke-width="2" opacity=".3" fill="none"/></g>';
+      for (var tb = 0; tb < n; tb++) { var tx = x0 + 10 + tb * seg; g += '<ellipse cx="' + f(tx) + '" cy="' + (y + 3) + '" rx="' + f(o.bw * .45) + '" ry="' + f(o.bw * .3) + '" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width=".8"/>'; }
+      // pedaços cortados
+      for (var k = 0; k < o.cut.length; k++) {
+        var s = o.cut[k];
+        g += slice(p, r, { x: s[0], y: s[1], rx: o.srx, ry: o.sry, a: s[2], form: o.sform || 'long', bone: [o.srx * .55, o.sry * .45, o.bone] }, cc);
+      }
+      if (o.post) g += o.post(p, r, cc);
+      return g;
+    });
+  }
+  ribs('costela', 'Costela', { done: 'r4', form: 'long', marb: 22, marbOp: .55, grain: 6, th: 10, fat: 3, crustCol: ['#7a3612', '#4a1c08', '#1e0803'] },
+    { n: 4, x0: 30, w: 140, y: 100, h: 56, bw: 12, bl: 22, tilt: -2, srx: 30, sry: 20, bone: 9, cut: [[212, 128, -10], [246, 162, 8]] });
+  ribs('costela-janela', 'Costela janela', { done: 'r4', form: 'long', marb: 18, marbOp: .55, th: 12, fat: 2, crustCol: ['#7a3612', '#4a1c08', '#1e0803'], wood: 2 },
+    { n: 3, x0: 34, w: 130, y: 92, h: 70, bw: 16, bl: 18, tilt: 0, srx: 30, sry: 26, bone: 11, cut: [[214, 130, -6], [250, 166, 6]],
+      post: function () { return chimi(276, 106); } });
+  ribs('short-rib', 'Short rib', { done: 'r4', form: 'dome', marb: 20, marbOp: .5, th: 14, glaze: 1, crustCol: ['#5a200c', '#3a1206', '#160502'], wood: 1 },
+    { n: 3, x0: 40, w: 110, y: 98, h: 60, bw: 14, bl: 16, tilt: 2, srx: 28, sry: 24, sform: 'dome', bone: 10, cut: [[200, 132, -8], [244, 150, 6], [214, 176, 0]] });
+  ribs('costelinha-suina', 'Costelinha suína', { kind: 'porco', done: 'p4', form: 'long', th: 7, glaze: 1, crustCol: ['#c0601e', '#8a3410', '#4a1606'] },
+    { n: 6, x0: 26, w: 160, y: 104, h: 44, bw: 8, bl: 20, tilt: -3, srx: 22, sry: 13, bone: 6, cut: [[214, 132, -24], [240, 152, -14], [266, 174, -4]],
+      post: function () { return leaf(64, 186, -6, .8); } });
 
-  // ---------- STEAKS US ----------
-  A['t-bone'] = svg('t-bone', 'boi', 't-bone', // osso em T separando contrafilé (maior) e filé (menor)
-    '<path d="M40 110 Q40 46 140 44 L250 44 Q290 50 290 110 Q290 176 200 182 L120 182 Q40 180 40 110Z" ' + F + '/>' +
-    '<path d="M52 112 Q54 58 140 56 L172 56 L172 172 L120 172 Q52 170 52 112Z" ' + M + EDGE + '/>' +
-    '<path d="M188 92 L250 92 Q278 100 278 132 Q276 168 220 170 L188 170Z" ' + M + EDGE + '/>' +
-    '<path d="M170 50 L190 50 L190 82 L282 82 L282 94 L190 94 L190 178 L170 178Z" ' + B + ' stroke="#b29d76"/>' +
-    marble('tbone', 64, 66, 100, 100, 16, .55) + marble('tbone2', 196, 100, 76, 64, 5, .35));
+  A['tira-de-asado'] = make('tira-de-asado', nm('tira-de-asado', 'Tira de asado'), { done: 'r3', marb: 10, fat: 1, th: 6, crustCol: ['#8f4a1e', '#5e2a10', '#2a1005'], wood: 0 }, function (p, r, c) {
+    var g = juice(160, 176, 120);
+    // tiras longas cortadas transversalmente: ossos ovais em linha
+    [[52, 118, -6], [46, 148, -3], [180, 178, 4]].forEach(function (t, ti) {
+      var id = p + 'k' + (CID++), d = 'M0 0 Q60 -6 120 -2 Q130 4 126 16 Q60 22 2 20 Q-8 12 0 0Z';
+      if (ti === 2) d = 'M0 0 Q50 -5 96 -2 Q106 4 102 16 Q50 21 2 20 Q-8 12 0 0Z';
+      g += '<g transform="translate(' + t[0] + ' ' + t[1] + ') rotate(' + t[2] + ')"><path d="' + d + '" transform="translate(2 7)" fill="#1a0a04" opacity=".4"/><path d="' + d + '" transform="translate(0 4)" fill="url(#' + p + 'cr)"/><clipPath id="' + id + '"><path d="' + d + '"/></clipPath><path d="' + d + '" fill="url(#' + p + 'cr)"/><g clip-path="url(#' + id + ')">' + crustTex(r, 0, -4, 130, 26, 30) + grill(6, 6, -6, 30, 1.2, 20) + '</g>';
+      for (var b = 0; b < (ti === 2 ? 3 : 4); b++) g += '<ellipse cx="' + (16 + b * 32) + '" cy="9" rx="7" ry="8.5" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width="1"/><ellipse cx="' + (16 + b * 32) + '" cy="9" rx="3" ry="4" fill="#b8704a" opacity=".6"/>';
+      g += '</g>';
+    });
+    g += slice(p, r, { x: 220, y: 120, rx: 18, ry: 13, a: -10, form: 'long', bone: [10, 0, 6] }, c) + slice(p, r, { x: 262, y: 136, rx: 18, ry: 13, a: 8, form: 'long', bone: [10, 0, 6] }, c);
+    return g + chimi(70, 182);
+  });
 
-  A.porterhouse = svg('porterhouse', 'boi', 'porterhouse', // como t-bone, filé bem maior
-    '<path d="M30 110 Q30 40 130 40 L250 40 Q300 50 300 112 Q298 184 200 186 L120 186 Q30 184 30 110Z" ' + F + '/>' +
-    '<path d="M42 112 Q44 52 130 52 L160 52 L160 176 L120 176 Q42 174 42 112Z" ' + M + EDGE + '/>' +
-    '<path d="M178 80 L248 80 Q290 92 290 130 Q288 176 220 176 L178 176Z" ' + M + EDGE + '/>' +
-    '<path d="M158 46 L178 46 L178 70 L294 70 L294 82 L178 82 L178 182 L158 182Z" ' + B + ' stroke="#b29d76"/>' +
-    marble('porter', 54, 64, 100, 104, 16, .55) + marble('porter2', 186, 92, 96, 78, 6, .35));
+  /* ---------- suínos ---------- */
+  function belly(id, fb, wood) {
+    A[id] = make(id, nm(id, fb), { kind: 'porco', done: 'p4', form: 'long', layers: 5, skin: 1, th: 8, wood: wood }, roastPlate({
+      x0: 28, x1: 150, yb: 170, h: 54, frx: 14, hump: 0, topY: 112, skin: 1, grill: false,
+      extra: (function () { var r = rng(id + 'x'), g = '<g fill="#fbe1a6">'; for (var i = 0; i < 40; i++) g += '<circle cx="' + f(40 + r() * 104) + '" cy="' + f(112 + r() * 10) + '" r="' + f(1 + r() * 2.2) + '" opacity=".75"/>'; return g + '</g>'; })(),
+      slices: fan(3, 192, 132, 32, 10, 28, 22, -10, 8, { form: 'long' }),
+      post: function () { return leaf(274, 104, 30, .8); }
+    }));
+  }
+  belly('pancetta-suina', 'Pancetta suína', 0);
+  belly('panceta', 'Panceta', 2);
+  A['lombo-suino'] = make('lombo-suino', nm('lombo-suino', 'Lombo suíno'), { kind: 'porco', done: 'p3', form: 'oval', fat: 2, th: 8, marb: 4 }, roastPlate({
+    x0: 30, x1: 150, yb: 168, h: 50, frx: 18, hump: 4,
+    slices: fan(4, 186, 130, 28, 8, 26, 20, -12, 8, {}),
+    post: function () { return rosemary(40, 108, 4) + rosemary(214, 186, -6); }
+  }));
+  A['copa-lombo'] = make('copa-lombo', nm('copa-lombo', 'Copa-lombo'), { kind: 'porco', done: 'p4', form: 'oval', marb: 20, marbOp: .55, th: 8, wood: 1 }, roastPlate({
+    x0: 32, x1: 148, yb: 168, h: 54, frx: 20, hump: 6,
+    slices: fan(3, 190, 130, 32, 10, 30, 23, -10, 9, {}),
+    post: function () { return leaf(60, 186, -6, .8); }
+  }));
 
-  A.tomahawk = svg('tomahawk', 'boi', 'tomahawk', // bife alto com osso longo exposto
-    '<path d="M22 120 Q22 52 100 50 Q170 50 176 120 Q176 186 100 188 Q22 186 22 120Z" ' + F + '/>' +
-    '<path d="M34 120 Q36 64 100 62 Q162 64 164 120 Q162 174 100 176 Q36 174 34 120Z" ' + M + EDGE + '/>' +
-    '<path d="M100 88 Q120 90 122 110 Q118 126 100 124 Q86 120 88 104Z" ' + F + ' opacity=".9"/>' +
-    '<path d="M150 104 L292 70 Q306 66 308 80 Q310 94 296 98 L156 134Z" ' + B + ' stroke="#b29d76"/>' +
-    '<ellipse cx="300" cy="84" rx="12" ry="16" ' + B + ' stroke="#b29d76"/>' +
-    marble('toma', 44, 72, 116, 96, 20, .6));
+  /* ---------- embutidos ---------- */
+  function sausage(id, fb, c, o) {
+    A[id] = make(id, nm(id, fb), c, function (p, r, cc) {
+      var g = juice(180, 178, 90);
+      // gomos inteiros
+      o.links.forEach(function (l) {
+        var d = 'M' + l[0] + ' ' + l[1] + ' C' + l[2] + ' ' + l[3] + ' ' + l[4] + ' ' + l[5] + ' ' + l[6] + ' ' + l[7];
+        g += '<path d="' + d + '" transform="translate(2 7)" stroke="#1a0a04" stroke-opacity=".4" stroke-width="' + (o.thick + 2) + '" fill="none" stroke-linecap="round"/>' +
+          '<path d="' + d + '" stroke="url(#' + p + 'cr)" stroke-width="' + o.thick + '" fill="none" stroke-linecap="round"/>' +
+          '<path d="' + d + '" transform="translate(-1 ' + (-o.thick * .25) + ')" stroke="#fff" stroke-opacity=".3" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="30 14"/>' +
+          (o.grill ? '<path d="' + d + '" stroke="#1a0802" stroke-opacity=".55" stroke-width="' + (o.thick - 4) + '" fill="none" stroke-dasharray="3 16"/>' : '');
+      });
+      o.rounds.forEach(function (s) { g += slice(p, r, { x: s[0], y: s[1], rx: o.rr, ry: o.rr * .78, a: s[2], th: 7, form: 'oval' }, cc); });
+      // barbante nas pontas
+      o.ties.forEach(function (t) { g += '<path d="M' + t[0] + ' ' + t[1] + ' q6 -4 10 2 m-5 -1 l4 8" stroke="#e8d6b0" stroke-width="2" fill="none" stroke-linecap="round"/>'; });
+      return g + (o.post ? o.post() : '');
+    });
+  }
+  sausage('linguica-toscana', 'Linguiça toscana', { kind: 'emb', done: 'sa', speck: 38, speckCols: ['#f3dcc0', '#f6e6d0', '#8a2a1a', '#e9c49a'], casing: 1, crustCol: ['#b86a34', '#8a4220', '#4a1e0c'] },
+    { thick: 24, grill: 1, rr: 19, links: [[40, 110, 80, 96, 120, 100, 160, 112], [34, 150, 74, 136, 118, 140, 150, 156]], rounds: [[192, 124, -8], [232, 134, 6], [270, 150, -4], [212, 166, 4], [252, 178, -6]], ties: [[158, 108], [148, 152]], post: function () { return leaf(74, 184, -8, .8); } });
+  sausage('chorizo', 'Chorizo', { kind: 'emb', done: 'sa', speck: 44, speckCols: ['#f5e2c6', '#a61f10', '#7a1408', '#e8b78c'], casing: 1, crustCol: ['#a8401c', '#701e0c', '#3a0a04'], wood: 2 },
+    { thick: 26, grill: 1, rr: 20, links: [[36, 118, 70, 100, 120, 104, 156, 118]], rounds: [[64, 162, -6], [108, 168, 8], [190, 130, -4], [232, 142, 6], [212, 178, 0], [262, 172, -10]], ties: [[154, 114]], post: function () { return chimi(276, 108); } });
+  sausage('morcilla', 'Morcilla', { kind: 'mor', done: 'mo', speck: 60, speckCols: ['#f1e2c8', '#d9c29a', '#6e2a22', '#5a1a16'], casing: 1, wood: 0 },
+    { thick: 26, grill: 0, rr: 20, links: [[40, 120, 60, 92, 140, 92, 158, 122]], rounds: [[70, 166, -4], [192, 132, 6], [236, 140, -6], [214, 176, 4], [262, 178, 8]], ties: [[36, 122], [156, 124]], post: function () { return leaf(120, 160, -20, .8) + leaf(278, 108, 30, .7); } });
 
-  A.ribeye = svg('ribeye', 'boi', 'ribeye', // bife com olho central + tampa (spinalis) em crescente
-    '<path d="M50 116 Q48 50 160 46 Q272 50 270 116 Q268 182 160 184 Q52 182 50 116Z" ' + F + '/>' +
-    '<path d="M62 118 Q64 62 160 60 Q256 62 258 118 Q256 132 240 120 Q226 82 160 84 Q96 84 82 124 Q66 134 62 118Z" ' + M + EDGE + ' opacity=".95"/>' +
-    '<path d="M86 128 Q94 92 160 92 Q224 92 232 128 Q228 170 160 172 Q92 170 86 128Z" ' + M + EDGE + '/>' +
-    '<ellipse cx="160" cy="124" rx="12" ry="9" ' + F + '/>' +
-    marble('ribeye', 92, 98, 136, 70, 18, .6) + marble('ribeye2', 70, 64, 180, 30, 10, .5));
+  /* ---------- cordeiro ---------- */
+  A['carre-cordeiro'] = make('carre-cordeiro', nm('carre-cordeiro', 'Carré de cordeiro'), { kind: 'cordeiro', done: 'l2', form: 'oval', fat: 3, eye: 0, th: 8, wood: 1 }, function (p, r, c) {
+    var g = juice(190, 176, 80);
+    // rack com ossos limpos (frenched) apontando para cima
+    var id = p + 'k' + (CID++), body = 'M30 168 Q28 128 54 124 L156 120 Q172 126 172 166 Q100 176 30 168Z';
+    for (var i = 0; i < 5; i++) { var bx = 52 + i * 24; g += '<path d="M' + bx + ' 128 L' + (bx + 14) + ' 84 Q' + (bx + 18) + ' 76 ' + (bx + 24) + ' 82 L' + (bx + 12) + ' 128Z" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width="1"/>'; }
+    g += '<path d="' + body + '" transform="translate(3 6)" fill="#1a0a04" opacity=".4"/><clipPath id="' + id + '"><path d="' + body + '"/></clipPath><path d="' + body + '" fill="url(#' + p + 'cr)"/><g clip-path="url(#' + id + ')"><path d="M20 112 H180 V134 Q100 140 20 138Z" fill="#c78a3c" opacity=".75"/>' + crustTex(r, 28, 118, 146, 54, 60) + '</g>';
+    g += '<path d="M40 130 Q100 122 160 126" stroke="#3f7a2e" stroke-width="3" stroke-dasharray="2 4" fill="none" opacity=".8"/>';
+    // costeletas tombadas (pirulitos)
+    [[210, 132, -20], [238, 160, 10], [190, 172, -4]].forEach(function (t) {
+      g += '<g transform="translate(' + t[0] + ' ' + t[1] + ') rotate(' + t[2] + ')"><path d="M14 -4 L64 -10 Q72 -10 72 -4 Q72 2 64 2 L14 4Z" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width="1"/></g>';
+      g += slice(p, r, { x: t[0], y: t[1], rx: 20, ry: 15, a: t[2] }, c);
+    });
+    return g + rosemary(40, 186, -4) + chimi(282, 112);
+  });
+  A['pernil-cordeiro'] = make('pernil-cordeiro', nm('pernil-cordeiro', 'Pernil de cordeiro'), { kind: 'cordeiro', done: 'l3', form: 'oval', fat: 1, th: 8, marb: 6 }, roastPlate({
+    x0: 46, x1: 156, yb: 170, h: 62, frx: 22, hump: 14,
+    extra: '', jx: 210,
+    slices: fan(3, 196, 130, 32, 10, 28, 21, -10, 9, {}),
+    post: function (p) { return '<path d="M48 140 Q30 134 18 126 Q10 120 14 114 Q20 108 28 114 Q40 124 54 128Z" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width="1"/>' + rosemary(70, 104, -4) + rosemary(214, 186, -8); }
+  }));
 
-  A['ny-strip'] = svg('ny-strip', 'boi', 'NY strip', // bife em formato de "bota" com tira de gordura
-    '<path d="M40 70 Q40 52 60 52 L240 52 Q286 56 288 100 Q290 150 248 176 L60 180 Q40 180 40 160Z" ' + M + EDGE + '/>' +
-    '<path d="M40 70 Q40 52 60 52 L240 52 Q286 56 288 100 L272 104 Q268 70 236 68 L40 68Z" ' + F + '/>' +
-    marble('ny', 54, 78, 220, 90, 16, .5) + shine(130, 104, 60, 14));
-
-  A['flat-iron'] = svg('flat-iron', 'boi', 'flat iron', // retângulo achatado com nervo central visível
-    '<path d="M24 86 Q24 66 50 66 L276 62 Q298 64 298 88 L298 140 Q296 160 272 160 L48 164 Q24 164 24 140Z" ' + M + EDGE + '/>' +
-    '<path d="M30 113 L292 111" stroke="#f1e6d2" stroke-width="5" fill="none" opacity=".85"/>' +
-    marble('flat', 34, 72, 256, 84, 22, .55));
-
-  A.denver = svg('denver', 'boi', 'denver steak', // bife retangular com fibras diagonais e veios
-    '<path d="M50 66 L270 58 Q286 60 284 80 L276 162 Q274 176 258 176 L60 180 Q44 180 44 164Z" ' + M + EDGE + '/>' +
-    fibers(60, 70, 160, 170, 10, 22, 0, .2) + marble('denver', 56, 70, 220, 100, 14, .5));
-
-  A['tri-tip'] = svg('tri-tip', 'boi', 'tri-tip', // bumerangue triangular sem tampa
-    '<path d="M18 160 Q60 80 150 64 Q240 50 302 66 Q262 108 212 140 Q130 186 18 160Z" ' + M + EDGE + '/>' +
-    '<path d="M150 64 Q240 50 302 66 Q240 66 180 80Z" ' + F + '/>' +
-    fibers(50, 150, 180, 80, 6, 18, 6) + fibers(200, 80, 290, 70, 4, -4, 12) + shine(150, 110, 50, 14));
-
-  A['short-rib'] = svg('short-rib', 'boi', 'short rib', // blocos de carne alta sobre osso curto
-    [0, 1, 2].map(function (i) { var x = 30 + i * 92; return '<rect x="' + x + '" y="60" width="80" height="102" rx="12" ' + M + EDGE + '/>' + '<rect x="' + x + '" y="60" width="80" height="18" rx="9" ' + F + '/>' + '<rect x="' + (x + 4) + '" y="156" width="72" height="22" rx="10" ' + B + ' stroke="#b29d76"/>' + marble('sr' + i, x + 6, 80, 68, 72, 9, .6); }).join(''));
-
-  // ---------- PORCO ----------
-  A['pancetta-suina'] = svg('pancetta-suina', 'porco', 'pancetta (barriga suína)', // camadas alternadas carne/gordura + couro
-    '<path d="M20 64 L300 58 L302 172 L18 176Z" ' + F + EDGE + '/>' +
-    '<path d="M20 64 L300 58 L300 70 L20 76Z" fill="#e7c49a"/>' +
-    '<path d="M20 92 Q160 84 302 92 L302 112 Q160 104 20 116Z" ' + M + '/>' +
-    '<path d="M18 136 Q160 128 302 138 L302 160 Q160 150 18 162Z" ' + M + '/>');
-
-  A['costelinha-suina'] = svg('costelinha-suina', 'porco', 'costelinha suína', // ripa com muitos ossos finos
-    '<path d="M18 74 Q160 60 302 80 L296 158 Q160 146 22 162Z" ' + M + EDGE + '/>' +
-    Array.from({ length: 8 }, function (_, i) { var x = 34 + i * 35; return '<path d="M' + x + ' 72 L' + (x + 4) + ' 158" stroke="url(#$b)" stroke-width="10" stroke-linecap="round"/>'; }).join('') +
-    '<path d="M18 74 Q160 60 302 80" stroke="url(#$f)" stroke-width="8" fill="none"/>');
-
-  A['lombo-suino'] = svg('lombo-suino', 'porco', 'lombo suíno', // peça cilíndrica longa com capa fina de gordura
-    '<path d="M20 90 Q20 62 56 62 L270 62 Q304 64 302 112 Q300 162 268 162 L56 162 Q20 162 20 134Z" ' + M + EDGE + '/>' +
-    '<path d="M20 90 Q20 62 56 62 L270 62 Q304 64 302 100 L20 82Z" ' + F + ' opacity=".9"/>' +
-    shine(150, 116, 110, 18) + '<ellipse cx="290" cy="112" rx="12" ry="46" fill="#c4675f" opacity=".5"/>');
-
-  A['copa-lombo'] = svg('copa-lombo', 'porco', 'copa-lombo (sobrepaleta)', // seção redonda bem marmorizada
-    '<path d="M50 116 Q50 48 160 46 Q270 48 270 116 Q270 184 160 184 Q50 184 50 116Z" ' + M + EDGE + '/>' +
-    '<path d="M90 80 Q150 120 120 176 M200 60 Q180 120 240 150" stroke="url(#$f)" stroke-width="7" fill="none" stroke-linecap="round"/>' +
-    marble('copa', 66, 62, 190, 116, 28, .75));
-
-  A.panceta = svg('panceta', 'porco', 'panceta (corte em tiras)', // tiras grossas com couro, empilhadas
-    [0, 1, 2].map(function (i) { var y = 56 + i * 44; return '<g transform="rotate(' + (i - 1) * 4 + ' 160 ' + (y + 18) + ')"><rect x="30" y="' + y + '" width="260" height="38" rx="8" ' + F + EDGE + '/><rect x="30" y="' + (y + 10) + '" width="260" height="10" ' + M + '/><rect x="30" y="' + (y + 26) + '" width="260" height="7" ' + M + '/><rect x="30" y="' + y + '" width="260" height="5" rx="3" fill="#d9a873"/></g>'; }).join(''));
-
-  A['linguica-toscana'] = svg('linguica-toscana', 'embutido', 'linguiça toscana', // gomos em espiral/corrente
-    [0, 1, 2, 3].map(function (i) { var x = 30 + i * 66; return '<rect x="' + x + '" y="' + (90 + (i % 2) * 14) + '" width="64" height="40" rx="20" ' + M + EDGE + '/><ellipse cx="' + (x + 26) + '" cy="' + (100 + (i % 2) * 14) + '" rx="18" ry="5" fill="#fff" opacity=".3"/>' + '<g fill="#f2d8c0" opacity=".7">' + [10, 24, 38, 50].map(function (d, k) { return '<circle cx="' + (x + d) + '" cy="' + (110 + (i % 2) * 14 + (k % 2 ? 6 : -4)) + '" r="2.4"/>'; }).join('') + '</g>'; }).join('') +
-    [0, 1, 2].map(function (i) { var x = 92 + i * 66; return '<path d="M' + x + ' ' + (104 + (i % 2) * 6) + ' l4 6 l-4 6" stroke="#e4d2b4" stroke-width="3" fill="none"/>'; }).join(''));
-
-  // ---------- CORDEIRO ----------
-  A['carre-cordeiro'] = svg('carre-cordeiro', 'cordeiro', 'carré de cordeiro', // costeletas com ossos limpos (frenched) apontando pra cima
-    '<path d="M30 130 Q30 116 46 114 L276 110 Q292 112 292 130 L290 180 L32 182Z" ' + M + EDGE + '/>' +
-    '<path d="M30 130 Q30 116 46 114 L276 110 Q292 112 292 130 L292 140 L30 142Z" ' + F + '/>' +
-    Array.from({ length: 7 }, function (_, i) { var x = 48 + i * 36; return '<path d="M' + x + ' 116 L' + (x + 10) + ' 34" stroke="url(#$b)" stroke-width="12" stroke-linecap="round"/><circle cx="' + (x + 10) + '" cy="34" r="7" ' + B + '/>'; }).join('') +
-    marble('carre', 40, 146, 240, 30, 10, .5));
-
-  A['pernil-cordeiro'] = svg('pernil-cordeiro', 'cordeiro', 'pernil de cordeiro', // pernil em gota com osso saindo pela ponta
-    '<path d="M24 120 Q30 52 120 50 Q210 52 238 110 Q240 160 180 180 Q90 196 40 166 Q20 150 24 120Z" ' + M + EDGE + '/>' +
-    '<path d="M28 110 Q40 56 120 54 Q190 56 220 90" stroke="url(#$f)" stroke-width="12" fill="none" opacity=".9" stroke-linecap="round"/>' +
-    '<path d="M222 126 L292 106" stroke="url(#$b)" stroke-width="16" stroke-linecap="round"/><circle cx="296" cy="104" r="11" ' + B + ' stroke="#b29d76"/>' +
-    shine(110, 110, 60, 20));
-
-  // ---------- FRANGO ----------
-  A['coracao-frango'] = svg('coracao-frango', 'miudo', 'coração de frango', // vários coraçõezinhos em cone, com gordura no topo
-    [[70, 100], [130, 88], [190, 104], [250, 92], [100, 148], [160, 146], [220, 150]].map(function (c) {
-      return '<g transform="translate(' + c[0] + ' ' + c[1] + ')"><path d="M-18 -8 Q-20 -22 0 -22 Q20 -22 18 -8 Q14 16 0 26 Q-14 16 -18 -8Z" ' + M + EDGE + '/><path d="M-17 -12 Q0 -26 17 -12 Q0 -6 -17 -12Z" ' + F + '/><ellipse cx="-6" cy="0" rx="4" ry="8" fill="#fff" opacity=".22"/></g>';
-    }).join(''));
-
-  A['coxa-sobrecoxa'] = svg('coxa-sobrecoxa', 'frango', 'coxa e sobrecoxa', // perna inteira com pele e osso na ponta
-    '<path d="M30 110 Q34 52 110 52 Q180 54 196 100 Q214 126 248 132 L250 150 Q210 160 180 160 Q120 190 60 170 Q26 150 30 110Z" ' + M + EDGE + '/>' +
-    '<path d="M40 90 Q70 60 120 62" stroke="#fff" stroke-width="10" opacity=".25" fill="none" stroke-linecap="round"/>' +
-    '<path d="M244 140 L292 132" stroke="url(#$b)" stroke-width="13" stroke-linecap="round"/><circle cx="296" cy="128" r="9" ' + B + '/><circle cx="294" cy="141" r="8" ' + B + '/>' +
-    '<g fill="#d79474" opacity=".5">' + Array.from({ length: 14 }, function (_, i) { return '<circle cx="' + (60 + (i * 37) % 130) + '" cy="' + (80 + (i * 23) % 80) + '" r="1.8"/>'; }).join('') + '</g>');
-
-  A['asa-frango'] = svg('asa-frango', 'frango', 'asa de frango', // três falanges: tulipa, meio-da-asa, ponta
-    '<path d="M24 150 Q20 120 52 116 Q96 112 118 128 Q130 150 106 162 Q60 176 24 150Z" ' + M + EDGE + '/>' +
-    '<path d="M112 130 Q150 88 210 80 Q236 80 238 98 Q236 116 206 122 Q160 134 128 154Z" ' + M + EDGE + '/>' +
-    '<path d="M228 86 Q262 56 300 50 Q306 60 296 70 Q264 96 238 104Z" ' + M + EDGE + '/>' +
-    '<circle cx="118" cy="140" r="8" fill="#e8c0a6"/><circle cx="232" cy="96" r="7" fill="#e8c0a6"/>' +
-    '<g fill="#d79474" opacity=".5">' + Array.from({ length: 12 }, function (_, i) { return '<circle cx="' + (40 + i * 20) + '" cy="' + (150 - i * 6) + '" r="1.6"/>'; }).join('') + '</g>');
-
-  // ---------- EMBUTIDOS ----------
-  A.chorizo = svg('chorizo', 'embutido', 'chorizo parrillero', // gomos curtos e gordos amarrados
-    [0, 1, 2].map(function (i) { var x = 34 + i * 88; return '<path d="M' + x + ' 110 Q' + x + ' 76 ' + (x + 40) + ' 76 Q' + (x + 82) + ' 76 ' + (x + 82) + ' 110 Q' + (x + 82) + ' 148 ' + (x + 40) + ' 148 Q' + x + ' 148 ' + x + ' 110Z" ' + M + EDGE + '/><ellipse cx="' + (x + 32) + '" cy="90" rx="22" ry="6" fill="#fff" opacity=".28"/>' + '<g fill="#f5dcc0" opacity=".75">' + [[16, 100], [40, 120], [62, 104], [30, 134], [56, 132], [24, 116]].map(function (p) { return '<circle cx="' + (x + p[0]) + '" cy="' + p[1] + '" r="3"/>'; }).join('') + '</g>'; }).join('') +
-    [0, 1].map(function (i) { var x = 117 + i * 88; return '<path d="M' + x + ' 104 l4 6 l-4 6" stroke="#e4d2b4" stroke-width="3" fill="none"/>'; }).join(''));
-
-  A.morcilla = svg('morcilla', 'morcilla', 'morcilla', // embutido escuro em ferradura
-    '<path d="M60 160 Q24 110 70 70 Q160 20 250 70 Q296 110 260 160" stroke="url(#$m)" stroke-width="44" fill="none" stroke-linecap="round"/>' +
-    '<path d="M64 140 Q40 104 80 76 Q160 36 240 76" stroke="#fff" stroke-width="5" opacity=".18" fill="none" stroke-linecap="round"/>' +
-    '<path d="M50 168 l20 -6 M250 168 l20 -6" stroke="#e4d2b4" stroke-width="4" stroke-linecap="round"/>' +
-    '<g fill="#7a3a34" opacity=".7">' + Array.from({ length: 16 }, function (_, i) { var t = i / 15 * Math.PI; return '<circle cx="' + (160 - Math.cos(t) * 100).toFixed(0) + '" cy="' + (140 - Math.sin(t) * 76).toFixed(0) + '" r="2.4"/>'; }).join('') + '</g>');
+  /* ---------- frango ---------- */
+  A['coracao-frango'] = make('coracao-frango', nm('coracao-frango', 'Coraçãozinho de frango'), { kind: 'emb', done: 'r4', form: 'tear', th: 5, crustCol: ['#a0522a', '#6a2a12', '#2e0e05'], wood: 2 }, function (p, r, c) {
+    var g = '';
+    // dois espetos
+    [[24, 120, 296, 108], [30, 162, 290, 154]].forEach(function (sk, si) {
+      g += '<path d="M' + sk[0] + ' ' + (sk[1] + 8) + ' L' + sk[2] + ' ' + (sk[3] + 8) + '" stroke="#1a0a04" stroke-opacity=".35" stroke-width="5"/><path d="M' + sk[0] + ' ' + sk[1] + ' L' + sk[2] + ' ' + sk[3] + '" stroke="#c9ccd0" stroke-width="3.4" stroke-linecap="round"/><path d="M' + sk[0] + ' ' + (sk[1] - 1) + ' L' + sk[2] + ' ' + (sk[3] - 1) + '" stroke="#fff" stroke-width="1" opacity=".7"/>';
+      g += '<rect x="' + (sk[0] - 14) + '" y="' + (sk[1] - 6) + '" width="20" height="12" rx="4" fill="#6a3d1e"/>';
+      for (var i = 0; i < 9; i++) {
+        var t = .12 + i * .085, x = sk[0] + (sk[2] - sk[0]) * t, y = sk[1] + (sk[3] - sk[1]) * t;
+        if (si === 1 && i > 5) continue;
+        var a = r() * 30 - 15;
+        g += '<g transform="translate(' + f(x) + ' ' + f(y) + ') rotate(' + f(90 + a) + ')"><path d="M-12 -4 Q-12 -14 0 -14 Q12 -14 12 -4 Q11 8 0 15 Q-11 8 -12 -4Z" fill="url(#' + p + 'cr)"/><path d="M-11 -7 Q0 -15 11 -7 L11 -5 Q0 -10 -11 -5Z" fill="#d9a058"/><circle cx="-4" cy="-3" r="3" fill="#fff" opacity=".18"/><path d="M-4 -2 Q-2 6 2 10" stroke="#fff" stroke-width="1.4" opacity=".3" fill="none"/></g>';
+      }
+    });
+    // corações abertos ao meio mostrando interior
+    g += slice(p, r, { x: 236, y: 170, rx: 11, ry: 14, a: 80 }, c) + slice(p, r, { x: 266, y: 178, rx: 11, ry: 14, a: 100 }, c) + slice(p, r, { x: 250, y: 150, rx: 11, ry: 14, a: 90 }, c);
+    return g + leaf(60, 190, -10, .8);
+  });
+  function chickenSkin(p, r, d) {
+    return '<path d="' + d + '" transform="translate(3 7)" fill="#1a0a04" opacity=".4"/><path d="' + d + '" fill="url(#' + p + 'cr)"/>' +
+      '<path d="' + d + '" fill="none" stroke="#7a3a0c" stroke-width="1.4" opacity=".6"/>';
+  }
+  A['coxa-sobrecoxa'] = make('coxa-sobrecoxa', nm('coxa-sobrecoxa', 'Coxa e sobrecoxa'), { kind: 'frango', done: 'c4', form: 'oval', skin: 1, th: 6, wood: 0 }, function (p, r, c) {
+    var g = juice(170, 178, 90);
+    var leg = 'M0 0 C-6 -30 30 -48 62 -40 C88 -34 96 -10 86 10 C76 30 40 34 22 22 L-20 30 Q-34 34 -36 26 Q-40 20 -32 16Z';
+    [[66, 134, -4], [86, 172, 6]].forEach(function (t, i) {
+      g += '<g transform="translate(' + t[0] + ' ' + t[1] + ') rotate(' + t[2] + ') scale(.82)">' + chickenSkin(p, r, leg) +
+        '<path d="M-36 26 Q-48 30 -52 24 Q-56 16 -48 14 Q-40 12 -32 16" fill="url(#' + p + 'bn)" stroke="#8c6c44" stroke-width="1"/>' +
+        crustTex(r, 0, -40, 90, 60, 30) +
+        '<path d="M20 -34 C46 -42 76 -34 84 -14" stroke="#fff6d8" stroke-width="4" stroke-linecap="round" fill="none" opacity=".45"/></g>';
+    });
+    // sobrecoxa fatiada: carne clara com osso
+    g += slice(p, r, { x: 220, y: 128, rx: 30, ry: 20, a: -10, bone: [8, 4, 6] }, c) + slice(p, r, { x: 254, y: 162, rx: 28, ry: 19, a: 10 }, c);
+    return g + leaf(276, 102, 20, .8) + rosemary(150, 190, -10);
+  });
+  A['asa-frango'] = make('asa-frango', nm('asa-frango', 'Asa de frango'), { kind: 'frango', done: 'c4', form: 'oval', skin: 1, th: 5, wood: 2, crustCol: ['#eab04a', '#c4741e', '#7a3a0a'] }, function (p, r, c) {
+    var g = juice(160, 176, 110);
+    // tulipas (drumettes) e meio da asa
+    var tul = 'M0 0 C0 -20 34 -26 46 -12 C54 -2 48 14 30 16 L-14 8 Q-24 8 -24 2 Q-24 -4 -14 -4Z';
+    var mid = 'M0 0 C10 -16 60 -16 70 -2 C74 8 64 18 50 16 L10 16 C-2 16 -4 8 0 0Z';
+    [[50, 116, 10, tul], [56, 156, -8, tul], [140, 120, 6, mid], [150, 168, -4, mid], [224, 110, 16, tul]].forEach(function (t) {
+      g += '<g transform="translate(' + t[0] + ' ' + t[1] + ') rotate(' + t[2] + ')">' + chickenSkin(p, r, t[3]) +
+        (t[3] === tul ? '<path d="M-24 2 Q-30 -4 -26 -8 Q-20 -10 -14 -4" fill="url(#' + p + 'bn)"/>' : '') +
+        crustTex(r, 0, -16, 60, 30, 18) + '<path d="M8 -10 C24 -16 40 -14 50 -6" stroke="#fff4d0" stroke-width="3" stroke-linecap="round" fill="none" opacity=".5"/></g>';
+    });
+    g += slice(p, r, { x: 244, y: 160, rx: 20, ry: 14, a: -8, bone: [0, 0, 4] }, c);
+    return g + chimi(272, 108).replace(/#6d7a22/, '#c0411a') + leaf(230, 190, -12, .8);
+  });
 
   window.CUT_ART = A;
 })();
