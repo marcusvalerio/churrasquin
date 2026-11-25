@@ -1,0 +1,18 @@
+/* churrasquin — tokens de marca. Contrastes (WCAG): osso/carvao 15.9, sal/carvao 8.1, sal/carvao-2 7.1,
+   carvao sobre brasa 5.2 (texto de botão = --c-carvao), ervas/carvao 6.4, carne/osso 5.5. Não use texto osso sobre brasa (3.1). */
+:root{
+  --c-carvao:#1C1512;   /* fundo escuro */
+  --c-carvao-2:#2B211C; /* superfície/cards */
+  --c-brasa:#E85D24;    /* primária/ação (texto em cima: carvao) */
+  --c-brasa-2:#FF7A3D;  /* hover */
+  --c-osso:#F7F0E6;     /* fundo claro / texto no escuro */
+  --c-sal:#B9ACA0;      /* texto suave */
+  --c-ervas:#8BA35A;    /* acento verde (chimichurri) */
+  --c-gordura:#F2E2C4;  /* creme */
+  --c-carne:#B42B3C;    /* carne crua */
+  --font-display:"Rockwell","Roboto Slab","Caladea","Georgia","Cambria",serif;
+  --font-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r-sm:6px; --r-md:12px; --r-lg:22px;
+  --ease-brasa:cubic-bezier(.2,.8,.2,1.15); /* acende rápido, assenta com leve faísca */
+  --dur-1:140ms; --dur-2:260ms; --dur-3:520ms;
+}

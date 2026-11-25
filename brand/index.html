@@ -1,0 +1,66 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>churrasquin — marca</title><link rel="stylesheet" href="tokens.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:var(--c-carvao);color:var(--c-osso);font-family:var(--font-body);line-height:1.55}
+main{max-width:1120px;margin:auto;padding:48px 20px}
+h1,h2,h3{font-family:var(--font-display);line-height:1.15;margin:0 0 .4em}h1{font-size:clamp(2rem,5vw,3.2rem)}
+.lead{color:var(--c-sal);max-width:60ch}
+.hero{text-align:center;padding:24px 0 48px}.hero img{width:min(560px,90%);height:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:24px}
+.card{background:var(--c-carvao-2);border-radius:var(--r-lg);padding:24px;transition:transform var(--dur-2) var(--ease-brasa)}
+.card:hover{transform:translateY(-3px)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.pair div{border-radius:var(--r-md);display:grid;place-items:center;padding:18px;min-height:130px}
+.pair img{max-width:100%;max-height:110px;height:auto}
+.dk{background:var(--c-carvao);border:1px solid #3a2e28}.lt{background:var(--c-osso)}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--c-brasa);color:var(--c-carvao);padding:3px 10px;border-radius:99px}
+.rec{outline:3px solid var(--c-brasa)}
+.card p{color:var(--c-sal);margin:.3em 0}
+section{margin-top:64px}
+.sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sw div{border-radius:var(--r-md);padding:70px 12px 12px;font-size:.85rem;font-weight:600}
+.sw small{display:block;font-weight:400;opacity:.85}
+.btn{font:700 1rem var(--font-body);background:var(--c-brasa);color:var(--c-carvao);border:0;border-radius:var(--r-md);padding:12px 22px;cursor:pointer;transition:background var(--dur-1) var(--ease-brasa),transform var(--dur-1) var(--ease-brasa)}
+.btn:hover{background:var(--c-brasa-2);transform:scale(1.04)}
+ul{color:var(--c-sal)}li b{color:var(--c-osso)}
+@media (max-width:420px){.pair{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><main>
+<header class="hero"><img src="logo.svg" alt="churrasquin"><h1>Marca churrasquin</h1>
+<p class="lead" style="margin:auto">Churrasco de amigo, informação de açougueiro. Quatro caminhos de logo, uma paleta tirada da grelha.</p></header>
+
+<section><h2>Modelos</h2><div class="grid">
+<article class="card rec"><span class="tag">recomendado</span><h3>1 · Pingo de Brasa</h3>
+<div class="pair"><div class="dk"><img src="logo-1.svg" alt="logo 1, fundo escuro"></div><div class="lt"><img src="logo-1-claro.svg" alt="logo 1, fundo claro"></div></div>
+<p>Wordmark pesado e amigável; o pingo do "i" vira uma brasa com um fio de fumaça. Um detalhe só, que vira ícone do app, favicon e loading animado. Funciona pequeno, tem personalidade sem virar desenho infantil.</p></article>
+<article class="card"><h3>2 · Selo do Açougue</h3>
+<div class="pair"><div class="dk"><img src="logo-2.svg" alt="logo 2, fundo escuro"></div><div class="lt"><img src="logo-2-claro.svg" alt="logo 2, fundo claro"></div></div>
+<p>Etiqueta de balcão com serifa robusta e borda picotada. É o que mais passa credibilidade de açougue; ótimo para embalagem, adesivo e redes. No app, pesado demais para o cabeçalho.</p></article>
+<article class="card"><h3>3 · Espetinho</h3>
+<div class="pair"><div class="dk"><img src="logo-3.svg" alt="logo 3, fundo escuro"></div><div class="lt"><img src="logo-3-claro.svg" alt="logo 3, fundo claro"></div></div>
+<p>Monograma "c" atravessado pelo espeto com carne e pimentão. Símbolo independente e lúdico; o risco é ficar genérico de "food app" se não for bem cuidado.</p></article>
+<article class="card"><h3>4 · Marca de Grelha</h3>
+<div class="pair"><div class="dk"><img src="logo-4.svg" alt="logo 4, fundo escuro"></div><div class="lt"><img src="logo-4-claro.svg" alt="logo 4, fundo claro"></div></div>
+<p>Itálico rápido com riscos de grelha em brasa por baixo. Energia de esporte e de fim de semana; mais fraco como ícone isolado.</p></article>
+</div></section>
+
+<section><h2>Paleta e papel de cada cor</h2><div class="sw">
+<div style="background:var(--c-carvao);border:1px solid #3a2e28">Carvão<small>#1C1512 · fundo</small></div>
+<div style="background:var(--c-carvao-2)">Carvão 2<small>#2B211C · superfície</small></div>
+<div style="background:var(--c-brasa);color:var(--c-carvao)">Brasa<small>#E85D24 · ação</small></div>
+<div style="background:var(--c-brasa-2);color:var(--c-carvao)">Brasa 2<small>#FF7A3D · hover</small></div>
+<div style="background:var(--c-osso);color:var(--c-carvao)">Osso<small>#F7F0E6 · texto/fundo claro</small></div>
+<div style="background:var(--c-sal);color:var(--c-carvao)">Sal<small>#B9ACA0 · texto suave</small></div>
+<div style="background:var(--c-ervas);color:var(--c-carvao)">Ervas<small>#8BA35A · acento</small></div>
+<div style="background:var(--c-gordura);color:var(--c-carvao)">Gordura<small>#F2E2C4 · creme</small></div>
+<div style="background:var(--c-carne);color:var(--c-osso)">Carne<small>#B42B3C · ilustração</small></div>
+</div></section>
+
+<section><h2>Uso</h2><ul>
+<li><b>Fundo padrão é carvão.</b> A comida e a brasa brilham no escuro; o claro (osso) fica para impressão e telas de leitura longa.</li>
+<li><b>Brasa é só para ação</b>: botões, "+ levar", estados ativos. Texto em cima dela é sempre carvão (contraste 5,2:1). Nunca osso sobre brasa.</li>
+<li><b>Carne e gordura</b> são das ilustrações dos cortes, não da interface. <b>Ervas</b> marca o que é bom/recomendado.</li>
+<li><b>Tipografia</b>: display serifado robusto (Rockwell/Roboto Slab/Georgia) para títulos com cara de balcão; texto em fonte do sistema.</li>
+<li><b>Movimento</b>: curva <code>--ease-brasa</code> acende rápido e assenta com uma pequena faísca.</li>
+</ul><p><button class="btn">+ levar picanha</button></p></section>
+</main></body></html>
