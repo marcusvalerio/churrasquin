@@ -314,8 +314,8 @@
       var k = Math.min(r.width / 600, r.height / 360);
       vw = r.width / k; vh = r.height / k;
     }
-    var pad = 36;
-    var s = Math.min(vw / (b.width + pad * 2), vh / (b.height + pad * 2), 2.6);
+    var pad = 56;
+    var s = Math.min(vw / (b.width + pad * 2), vh / (b.height + pad * 2), 2.2);
     s = Math.max(s, 1);
     var tx = 300 - s * (b.x + b.width / 2), ty = 180 - s * (b.y + b.height / 2);
     return 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(' + s.toFixed(3) + ')';
