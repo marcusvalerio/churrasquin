@@ -1,4 +1,4 @@
-const fs=require('fs');const B=require('./build.js');const {POS,C,WD,WW,TILE,QD,sym,horiz,vert,symbol,icon,V,TS,svg,f,G,P}=B;
+const fs=require('fs');const B=require('./build.js');const {iconInner,SREST,SX,SY,SW,SH,POS,C,WD,WW,TILE,QD,sym,horiz,vert,symbol,icon,V,TS,svg,f,G,P}=B;
 const OUT='/home/user/churrasquin/brand/v2/a/';
 const T30=Math.tan(Math.PI/6);
 const wm=(col,x=0,y=0,s=1)=>`<path transform="translate(${x},${y}) scale(${s})" d="${WD}" fill="${col}"/>`;
@@ -22,13 +22,16 @@ function constrWord(){const pad=60,w=WW+2*pad;const xs=[];
  g+=`<text x="${WW+pad-4}" y="-170" text-anchor="end" class="lab b">corte de faca · 30° · todas as entradas de haste</text>`;
  return `<svg viewBox="${-pad} -210 ${w} 320" class="constr">${g}</svg>`;}
 // ---------- construction: symbol
-function constrSym(){let g=`<rect x="-40" y="-40" width="280" height="280" fill="${C.sebo}"/>`;
- for(let i=0;i<=10;i++){g+=`<line x1="${i*20}" x2="${i*20}" y1="-20" y2="220" stroke="${C.osso}" stroke-width=".5"/><line y1="${i*20}" y2="${i*20}" x1="-20" x2="220" stroke="${C.osso}" stroke-width=".5"/>`;}
+function constrSym(){const {X}=require('./simbolo.js');const M=X.mapa(),M0=X.mapa(18,0);const T30=Math.tan(Math.PI/6);
+ let g=`<rect x="-40" y="-40" width="300" height="290" fill="${C.sebo}"/>`;
+ for(let i=0;i<=10;i++){g+=`<line x1="${i*20}" x2="${i*20}" y1="-20" y2="220" stroke="${C.osso}" stroke-width=".5"/><line y1="${i*20}" y2="${i*20}" x1="-20" x2="240" stroke="${C.osso}" stroke-width=".5"/>`;}
+ g+=`<path d="${M0.pick.pathData}" fill="none" stroke="${C.bordo}" stroke-width=".8" stroke-dasharray="3 2"/>`;
  g+=sym(C.bordo,C.manteiga);
- for(const [x,y] of [[0,0],[200,0],[0,200],[200,200]])g+=`<circle cx="${x}" cy="${y}" r="24" fill="none" stroke="${C.violeta}" stroke-width=".8" stroke-dasharray="3 2"/>`;
- g+=`<path d="${QD}" fill="none" stroke="${C.brasa}" stroke-width=".8"/>`;
- g+=`<line x1="-20" y1="100" x2="220" y2="100" stroke="${C.violeta}" stroke-width=".5"/><line x1="100" y1="-20" x2="100" y2="220" stroke="${C.violeta}" stroke-width=".5"/>`;
- return `<svg viewBox="-40 -40 280 280" class="constr">${g}<text x="-34" y="-28" class="lab">grade 10×10 · módulo 20</text><text x="-34" y="236" class="lab">entalhe r24 = etiqueta de balança</text></svg>`;}
+ for(const [x0,y0] of M.lines){g+=`<line x1="${x0-20}" y1="${f(y0+20*T30)}" x2="${x0+160}" y2="${f(y0-160*T30)}" stroke="${C.brasa}" stroke-width=".7"/>`;}
+ g+=`<line x1="80" x2="80" y1="-20" y2="220" stroke="${C.brasa}" stroke-width=".7"/>`;
+ g+=`<line x1="140" y1="146" x2="${f(140+26*Math.cos(Math.PI/6))}" y2="${f(146-26*Math.sin(Math.PI/6))}" stroke="${C.violeta}" stroke-width="1.2" marker-end="url(#ar)"/>`;
+ g+=`<text x="88" y="-26" class="lab">x 80</text><text x="170" y="160" class="lab">+26 na faca</text><text x="-34" y="243" class="lab">kerf 18 · peças 5 · faca 30°</text>`;
+ return `<svg viewBox="-40 -40 300 290" class="constr"><defs><marker id="ar" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0L6,3L0,6z" fill="${C.violeta}"/></marker></defs>${g}<text x="-34" y="-28" class="lab">grade 10×10 · módulo 20</text></svg>`;}
 
 // ---------- phone
 function phone(){const W=390,Hh=820;let g=`<defs><clipPath id="scr"><rect x="14" y="14" width="${W-28}" height="${Hh-28}" rx="46"/></clipPath>${grain('gp',.10)}</defs>
@@ -89,7 +92,7 @@ function wrap(){let g=`<defs>${grain('gw',.22,.75)}<filter id="sh" x="-10%" y="-
  <!-- inspection stamp -->
  <g transform="translate(250,400) rotate(-14)" filter="url(#ink)" fill="${C.violeta}" opacity=".88"><circle r="80" fill="none" stroke="${C.violeta}" stroke-width="4"/><circle r="56" fill="none" stroke="${C.violeta}" stroke-width="1.5"/>
  <text class="mono" font-size="11.5" font-weight="600" letter-spacing="4.2"><textPath href="#circ">CHURRASQUIN · CORTE INSPECIONADO · </textPath></text>
- <g transform="translate(-24,-30) scale(.24)"><path d="${QD}" transform="translate(-20,0)"/></g><text y="38" text-anchor="middle" class="mono" font-size="10" letter-spacing="2">Nº 042</text></g>
+ <g transform="translate(-23,-36) scale(.2)">${sym(C.violeta,C.violeta)}</g><text y="38" text-anchor="middle" class="mono" font-size="10" letter-spacing="2">Nº 042</text></g>
  ${tile(C.bordo,C.manteiga,150,140,.42)}`;
  return `<svg viewBox="0 0 900 620" class="mock">${g}</svg>`;}
 // ---------- board engraved
@@ -108,7 +111,7 @@ function board(){let g=`<defs><linearGradient id="wd" x1="0" y1="0" x2="1" y2="1
 // ---------- stickers
 function stickers(){let g=`<defs><filter id="ss" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-opacity=".3"/></filter></defs>
  <rect x="-300" y="-300" width="1200" height="1200" fill="${C.osso}"/>
- <g transform="translate(150,170) rotate(-8)" filter="url(#ss)"><g transform="translate(-112,-112) scale(1.12)"><path d="${TILE}" fill="#fff" transform="translate(-14,-14) scale(1.14)"/>${sym(C.bordo,C.manteiga)}</g></g>
+ <g transform="translate(150,170) rotate(-8)" filter="url(#ss)"><g transform="translate(-112,-112) scale(1.12)"><rect x="${f(SX-16)}" y="${f(SY-16)}" width="${f(SW+32)}" height="${f(SH+32)}" fill="#fff"/>${sym(C.bordo,C.manteiga)}</g></g>
  <g transform="translate(400,330) rotate(6)" filter="url(#ss)"><rect x="-170" y="-58" width="340" height="116" rx="58" fill="#fff"/><rect x="-162" y="-50" width="324" height="100" rx="50" fill="${C.carvao}"/>${wm(C.manteiga,-WW*.3/2,10,.3)}</g>
  <g transform="translate(200,470) rotate(-4)" filter="url(#ss)"><circle r="78" fill="#fff"/><circle r="70" fill="${C.violeta}"/><circle r="60" fill="none" stroke="${C.manteiga}" stroke-width="1.2" stroke-dasharray="2 3"/><text y="-12" text-anchor="middle" class="disp" font-size="34" fill="${C.manteiga}">ao</text><text y="20" text-anchor="middle" class="disp" font-size="34" fill="${C.manteiga}">ponto</text><text y="42" text-anchor="middle" class="mono" font-size="8" letter-spacing="2" fill="${C.manteiga}">56°C · AR · UY</text></g>`;
  return `<svg viewBox="0 0 600 600" class="mock">${g}</svg>`;}
@@ -125,8 +128,7 @@ function post(){let g=`<defs>${grain('gs',.12)}</defs><rect width="1080" height=
  return `<svg viewBox="0 0 1080 1080" class="mock">${g}</svg>`;}
 // home-screen row for 60px icon
 function homeRow(){const ic=(x,col,lab,inner='')=>`<g transform="translate(${x},40)"><rect width="60" height="60" rx="13.5" fill="${col}"/>${inner}<text x="30" y="80" text-anchor="middle" class="ui" font-size="11" fill="#fff">${lab}</text></g>`;
- const s=60/1024,qs=1024/TS*.8*s;const qq=G.q().g.bounds;
- const brand=`<g transform="translate(${f((60-qq.width*qs)/2-8*s)},${f((60-qq.height*qs)/2+103*qs)}) scale(${f(qs)})"><path d="${G.q().g.pathData}" fill="${C.manteiga}"/></g>`;
+ const brand=iconInner(60,C.manteiga);
  return `<svg viewBox="0 0 400 140" class="home"><defs><linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b3530"/><stop offset="1" stop-color="#151311"/></linearGradient></defs><rect width="400" height="140" rx="20" fill="url(#wall)"/>
  ${ic(22,'#4b4640','Agenda')}${ic(114,'#5a554e','Mapas')}${ic(206,C.bordo,'churrasquin',brand)}${ic(298,'#4b4640','Notas')}</svg>`;}
 
@@ -183,14 +185,14 @@ footer{padding:48px var(--m);display:flex;justify-content:space-between;align-it
 </style></head><body>
 <header class="top"><span>churrasquin</span><span>Direção A — Açougue de Ofício</span><span>Rodada 02</span></header>
 <section class="hero"><svg viewBox="-4 -156 ${WW+8} 214">${wm(C.manteiga)}</svg>
-<div class="meta"><span>Lettering proprietário<br>11 glifos desenhados</span><span>Corte de faca<br>30° em toda entrada</span><span>Símbolo<br>o gancho do q</span><span>Sem fonte<br>100% vetor</span></div></section>
+<div class="meta"><span>Lettering proprietário<br>11 glifos desenhados</span><span>Corte de faca<br>30° em toda entrada</span><span>Símbolo<br>o mapa de corte</span><span>Sem fonte<br>100% vetor</span></div></section>
 
 <div class="wrap">
 <section class="sec"><div class="sh"><span class="n">01 — CONCEITO</span><h2>o balcão, não a fogueira.</h2></div>
 <div class="cols"><p class="lead">Churrasco bom começa antes do fogo: no balcão, com quem sabe cortar.</p>
 <div><p>A rodada anterior falava de fumaça e brasa, como todo mundo do setor. Esta direção sai da churrasqueira e vai para o <b>balcão da casa de carnes</b>: a faca que corta em ângulo, o gancho onde a peça fica pendurada, a etiqueta da balança, o carimbo violeta da inspeção, o papel manteiga. É desse vocabulário que vêm as formas da marca, mas nada aqui é enfeite: cada ideia virou <b>regra de desenho</b>.</p><br>
 <p>O resultado é um lettering estreito e pesado, parente do letreiro pintado à mão, construído numa grade de 10 unidades. Ele é reconhecível pela forma das letras, não por um ícone colado ao lado.</p></div></div>
-<div class="principles" style="margin-top:56px"><div><b>I · O CORTE</b><p>Toda haste começa num corte de 30°, o ângulo de uma faca de açougueiro. A mesma inclinação abre o <i>c</i>, fecha o <i>s</i> e define o pingo do <i>i</i>.</p></div><div><b>II · O GANCHO</b><p>O <i>q</i> de “quin”, o diminutivo carinhoso, desce e vira gancho de pendurar carne. É o único gesto curvo abaixo da linha de base, e é ali que mora o símbolo.</p></div><div><b>III · A ETIQUETA</b><p>O símbolo fica numa placa de cantos entalhados (r24), a forma da etiqueta de balança e do cartão de preço do balcão.</p></div></div></section>
+<div class="principles" style="margin-top:56px"><div><b>I · O CORTE</b><p>Toda haste começa num corte de 30°, o ângulo de uma faca de açougueiro. A mesma inclinação abre o <i>c</i>, fecha o <i>s</i> e define o pingo do <i>i</i>.</p></div><div><b>II · O GANCHO</b><p>O <i>q</i> de “quin”, o diminutivo carinhoso, desce e vira gancho de pendurar carne. É o único gesto curvo abaixo da linha de base, e fica só no lettering.</p></div><div><b>III · O MAPA</b><p>O símbolo é a peça inteira vista como no quadro de cortes do açougue: um bloco, três golpes de faca, cinco partes. Uma delas sai do bloco, a que você escolheu para a sua turma.</p></div></div></section>
 
 <section class="sec"><div class="sh"><span class="n">02 — LETTERING</span><h2>desenhado, não digitado.</h2></div>
 ${constrWord()}
@@ -198,10 +200,15 @@ ${constrWord()}
 <div class="cols" style="margin-top:48px"><div><p>Os 11 glifos foram desenhados como geometria (bojos superelípticos, hastes, cortes) e fundidos com operações booleanas num único contorno. Não há nenhuma fonte instalada no arquivo. As horizontais são 19% mais finas que as verticais para compensar a ilusão óptica de peso, e as partes curvas passam 3 unidades da altura-x e da linha de base para parecerem do mesmo tamanho das retas.</p></div>
 <div><p>O que torna a palavra inconfundível: o <b>a</b> e o <b>q</b> têm o ombro direito reto, como uma peça encostada na tábua. O <b>s</b> tem a espinha horizontal e dois cortes paralelos. O pingo do <b>i</b> é um paralelogramo cortado a 30°, uma fatia. E o <b>q</b> termina num gancho. Pelo menos quatro dessas letras você reconhece mesmo sem ler o resto.</p></div></div></section>
 
-<section class="sec"><div class="sh"><span class="n">03 — SÍMBOLO</span><h2>o gancho na etiqueta.</h2></div>
+<section class="sec"><div class="sh"><span class="n">03 — SÍMBOLO</span><h2>o mapa de corte.</h2></div>
 <div class="cols"><div>${constrSym()}</div>
-<div style="display:flex;flex-direction:column;justify-content:space-between;gap:24px"><p>O <i>q</i> do lettering, ampliado em 112%, dentro de uma placa quadrada de 200 unidades com entalhes de raio 24 (12% do lado). O gancho segue um raio de 36, centrado no eixo da haste. Ele foi deslocado 4 unidades para a esquerda para equilibrar o peso do bojo, porque o centro geométrico não coincide com o centro óptico.</p>
+<div style="display:flex;flex-direction:column;justify-content:space-between;gap:24px"><p>O churrasquin faz três coisas: ajuda a <b>escolher o corte certo</b>, explica <b>de onde vem cada peça</b> e calcula quanto comprar para <b>a turma</b>. O símbolo diz as três numa forma só. É um bloco de 200 unidades, a peça inteira, partido como no quadro de cortes do balcão: um corte vertical em x 80 e um golpe a 30° que atravessa o bloco todo sem mudar de ângulo, mais um paralelo abaixo dele. São cinco partes, porque carne se divide. A parte do meio desliza 26 unidades ao longo da própria faca e sai do bloco. Ela é um paralelogramo de 30°, a mesma forma do pingo do <i>i</i> no lettering, e o mesmo <b>i</b> que no app mostra de onde vem o corte. O kerf (o vão da lâmina) tem 18 unidades, para sobreviver a 16 px.</p>
 <div class="sizes">${[16,24,32,48,96].map(s=>`<figure><img src="simbolo-pos.svg" width="${s}" height="${s}" alt=""><span>${s}px</span></figure>`).join('')}<figure><img src="simbolo-neg.svg" width="16" height="16" alt=""><span>16 neg</span></figure></div></div></div></section>
+
+<section class="sec"><div class="sh"><span class="n">03.1 — EXPLORAÇÕES</span><h2>oito caminhos, um escolhido.</h2></div>
+<div class="card"><img src="simbolo-exploracoes.svg" alt="Oito explorações de símbolo" style="width:100%;display:block"></div>
+<div class="cols" style="margin-top:32px"><div><p>Cada caminho foi testado em 200, 60, 32 e 16 px, no positivo e no ícone. <b>Fatias</b> e <b>Mesa posta</b> falavam bem da turma, mas não falavam do conhecimento. O <b>Pingo do i</b> era só informação e lembrava um ícone de interface. A <b>Roda</b> virava pizza. A <b>Capa de gordura</b> virava um botão em 16 px. <b>Etiqueta-mapa</b> e <b>Peça no gancho</b> carregavam o símbolo recusado.</p></div>
+<div><p>O <b>Mapa de corte</b> é o único que junta as três ideias sem somar figuras. Bloco = a peça inteira e o quadro de cortes (conhecimento). Peça que sai = o corte certo, com a forma do pingo do <i>i</i>. Cinco partes = carne que se divide (a turma). E é feito só com o que o lettering já usa: retas, uma faca a 30° e a grade de 20.</p></div></div></section>
 
 <section class="sec"><div class="sh"><span class="n">04 — ASSINATURAS</span><h2>horizontal, vertical, símbolo.</h2></div>
 ${['pos','neg','mono'].map(k=>`<div class="three" style="margin-bottom:16px">${files.map(fn=>`<div class="card"><div class="lk" style="background:${V[k].bg}"><img src="${fn}-${k}.svg" alt="" style="width:${{'logo-horizontal':86,'logo-vertical':62,simbolo:40}[fn]}%"></div><div class="cap"><span>${fn.replace('logo-','')}</span><span>${{pos:'positiva',neg:'negativa',mono:'monocromática'}[k]}</span></div></div>`).join('')}</div>`).join('')}
@@ -209,7 +216,7 @@ ${['pos','neg','mono'].map(k=>`<div class="three" style="margin-bottom:16px">${f
 
 <section class="sec"><div class="sh"><span class="n">05 — ÍCONE</span><h2>app icon.</h2></div>
 <div class="cols" style="align-items:center"><div class="card"><img src="app-icon-1024.svg" alt="" style="border-radius:22.37%;max-width:440px"><div class="cap"><span>1024 × 1024 · máscara do sistema</span><span>app-icon-1024.svg</span></div></div>
-<div>${homeRow()}<div class="cap"><span>Em 60 px, na tela inicial</span></div><p style="margin-top:24px">No ícone, a etiqueta sai e quem faz a moldura é a máscara do sistema. O <i>q</i> fica a 80% do campo, alinhado pelo bojo, e é a forma bordô mais fácil de achar numa tela cheia de ícones azuis e verdes.</p></div></div></section>
+<div>${homeRow()}<div class="cap"><span>Em 60 px, na tela inicial</span></div><p style="margin-top:24px">No ícone, o mapa ocupa 58% do campo, centrado pela caixa real (com a peça já deslocada), e a máscara do sistema faz a moldura. Em 60 px os vãos ainda abrem: é um bloco claro e quebrado num campo bordô, fácil de achar numa tela cheia de ícones azuis e verdes.</p></div></div></section>
 
 <section class="sec"><div class="sh"><span class="n">06 — COR</span><h2>paleta de balcão.</h2></div>
 <div class="pal">

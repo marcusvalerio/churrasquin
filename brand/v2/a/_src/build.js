@@ -5,29 +5,26 @@ const f=n=>+n.toFixed(2);
 // wordmark normalized: x from 0, baseline at y=0
 const W=word('churrasquin');const wb=W.path.bounds;W.path.translate(new P.Point(-wb.x,0));
 const POS=W.pos.map(([c,x])=>[c,x-wb.x]);const WD=W.path.pathData, WW=f(wb.width); // y range -150..53
-// symbol: notched tile 200 + q
-const TS=200,NR=24;
-let tile=new P.Path.Rectangle(new P.Rectangle(0,0,TS,TS));
-for(const [x,y] of [[0,0],[TS,0],[0,TS],[TS,TS]]) tile=tile.subtract(new P.Path.Circle(new P.Point(x,y),NR));
-const q=G.q().g;const qb=q.bounds;const QX=f((TS-qb.width)/2-2),QBASE=f((TS-qb.height)/2+103);
-q.scale(1.12,new P.Point(0,0));const qb2=q.bounds;q.translate(new P.Point(f((TS-qb2.width)/2-qb2.x-4),f((TS-qb2.height)/2-qb2.y+2)));
-const TILE=tile.pathData, QD=q.pathData;
-const sym=(bg,fg,extra='')=>`<path d="${TILE}" fill="${bg}"/><path d="${QD}" fill="${fg}"/>${extra}`;
+// symbol v3: MAPA DE CORTE — bloco 200 em 5 peças; a peça escolhida (paralelogramo = pingo do i) desliza 26 na linha da faca
+const TS=200;const SM=require('./simbolo.js').X.mapa();
+const SREST=SM.rest.pathData, QD=SM.pick.pathData, TILE=new P.Path.Rectangle(new P.Rectangle(0,0,TS,TS)).pathData;
+const SB=SM.rest.unite(SM.pick).bounds; const SX=f(SB.x),SW=f(SB.width),SY=f(SB.y),SH=f(SB.height); // bbox real (peça sai da grade)
+const sym=(bg,fg,extra='')=>`<path d="${SREST}" fill="${bg}"/><path d="${QD}" fill="${bg}"/>${extra}`;
 const svg=(vb,body,w)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}"${w?` width="${w}"`:''}>${body}</svg>`;
 const V={pos:{bg:C.manteiga,t:C.bordo,q:C.manteiga,w:C.carvao},neg:{bg:C.carvao,t:C.manteiga,q:C.carvao,w:C.manteiga},mono:{bg:'#FFFFFF',t:C.carvao,q:'#FFFFFF',w:C.carvao},bordo:{bg:C.bordo,t:C.manteiga,q:C.bordo,w:C.manteiga}};
 // lockups
-function horiz(v,pad=40,bg=true){const s=150/TS,gap=46,h=150+53;const w=150+gap+WW;
+function horiz(v,pad=40,bg=true){const s=150/TS,gap=46+f((SW+SX-TS)*150/TS),h=150+53;const w=150+gap+WW;
  return svg(`${-pad} ${-150-pad} ${w+2*pad} ${h+2*pad}`,(bg?`<rect x="${-pad}" y="${-150-pad}" width="${w+2*pad}" height="${h+2*pad}" fill="${v.bg}"/>`:'')+
  `<g transform="translate(0,-150) scale(${s})">${sym(v.t,v.q)}</g><path transform="translate(${150+gap},0)" d="${WD}" fill="${v.w}"/>`);}
-function vert(v,pad=50,bg=true){const ts=230,w=Math.max(WW,ts),gap=60;const tx=(w-ts)/2;const top=-150-gap-ts;
+function vert(v,pad=50,bg=true){const ts=230,w=Math.max(WW,ts),gap=60;const tx=(w-ts)/2-f((SW+SX-TS)/2*ts/TS);const top=-150-gap-ts;
  return svg(`${-pad} ${top-pad} ${w+2*pad} ${53-top+2*pad}`,(bg?`<rect x="${-pad}" y="${top-pad}" width="${w+2*pad}" height="${53-top+2*pad}" fill="${v.bg}"/>`:'')+
  `<g transform="translate(${tx},${top}) scale(${ts/TS})">${sym(v.t,v.q)}</g><path transform="translate(${(w-WW)/2},0)" d="${WD}" fill="${v.w}"/>`);}
-const symbol=(v,pad=20)=>svg(`${-pad} ${-pad} ${TS+2*pad} ${TS+2*pad}`,`<rect x="${-pad}" y="${-pad}" width="${TS+2*pad}" height="${TS+2*pad}" fill="${v.bg}"/>`+sym(v.t,v.q));
+const symbol=(v,pad=24)=>{const S=Math.max(SW,SH)+2*pad,x0=f(SX+SW/2-S/2),y0=f(SY+SH/2-S/2);return svg(`${x0} ${y0} ${f(S)} ${f(S)}`,`<rect x="${x0}" y="${y0}" width="${f(S)}" height="${f(S)}" fill="${v.bg}"/>`+sym(v.t,v.q));};
 const wordmark=(col)=>svg(`-10 -160 ${WW+20} 223`,`<path d="${WD}" fill="${col}"/>`);
 for(const k of ['pos','neg','mono']){fs.writeFileSync(OUT+`logo-horizontal-${k}.svg`,horiz(V[k]));fs.writeFileSync(OUT+`logo-vertical-${k}.svg`,vert(V[k]));fs.writeFileSync(OUT+`simbolo-${k}.svg`,symbol(V[k]));}
 fs.writeFileSync(OUT+'wordmark.svg',wordmark(C.carvao));
-// app icon 1024: bordo field, q centered, no notch (OS masks); subtle inner frame of notched label
-const icon=(sz)=>{const s=1024/TS*0.80;const qw=qb.width*s,qh=qb.height*s;
- return svg('0 0 1024 1024',`<rect width="1024" height="1024" fill="${C.bordo}"/><g transform="translate(${f((1024-qw)/2-8)},${f((1024-qh)/2+103*s)}) scale(${f(s)})"><path d="${G.q().g.pathData}" fill="${C.manteiga}"/></g>`,sz);};
+// app icon 1024: campo bordô, mapa a 58% do campo, centrado pelo bbox real (máscara do sistema faz a moldura)
+const iconInner=(size,col)=>{const s=size*.58/Math.max(SW,SH);return `<g transform="translate(${f(size/2-(SX+SW/2)*s)},${f(size/2-(SY+SH/2)*s)}) scale(${f(s*1000)/1000})">${sym(col,col)}</g>`;};
+const icon=(sz)=>svg('0 0 1024 1024',`<rect width="1024" height="1024" fill="${C.bordo}"/>`+iconInner(1024,C.manteiga),sz);
 fs.writeFileSync(OUT+'app-icon-1024.svg',icon());
-module.exports={POS,C,WD,WW,TILE,QD,sym,horiz,vert,symbol,wordmark,icon,V,TS,svg,f,G,P,word};
+module.exports={iconInner,SREST,SX,SY,SW,SH,POS,C,WD,WW,TILE,QD,sym,horiz,vert,symbol,wordmark,icon,V,TS,svg,f,G,P,word};
