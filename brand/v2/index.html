@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>churrasquin — marca v2</title>
+<style>
+/* VOICE: apresentação de agência, sóbria. IDEA: mesa de escolha com três pranchas. PICTURE: o logo de cada direção grande. COLOUR/TYPE: papel e tinta, sistema. LAYOUT: três faixas. */
+:root{color-scheme:light dark;--bg:light-dark(#f4efe6,#141110);--ink:light-dark(#171311,#f1ebe1);--mut:light-dark(#5d544c,#b3a99e)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif}
+header{padding:clamp(28px,4vw,56px) max(5vw,16px) 12px}
+h1{font-size:clamp(30px,4vw,46px);line-height:1.05;margin:0 0 8px;text-wrap:balance}
+header p{color:var(--mut);max-width:62ch;margin:0}
+a.card{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:24px;align-items:center;text-decoration:none;margin:20px max(5vw,16px);border-radius:18px;overflow:hidden;min-height:44px}
+a.card:focus-visible{outline:3px solid #e2552b;outline-offset:4px}
+.art{padding:clamp(24px,4vw,56px);display:grid;place-items:center;min-height:240px}
+.art img{width:100%;max-height:180px;object-fit:contain}
+.txt{padding:24px clamp(20px,3vw,40px) 24px 0}
+.txt h2{font-size:26px;line-height:1.1;margin:0 0 8px}
+.txt p{margin:0 0 12px}
+.go{font-weight:700}
+.a{background:#1b1a17;color:#f1e7d6}.b{background:#151211;color:#f1ebe1}.c{background:#2230f5;color:#fff3e2}
+@media(max-width:700px){a.card{grid-template-columns:1fr}.txt{padding:0 20px 24px}}
+</style></head><body>
+<header><h1>churrasquin — três direções de marca</h1>
+<p>Cada uma é uma identidade completa: lettering desenhado sob medida, símbolo, versões do logo, ícone de app, paleta e aplicações. Toque numa para abrir a apresentação inteira.</p></header>
+<a class="card a" href="a/index.html"><div class="art"><img src="a/logo-horizontal-neg.svg" alt="Logo da direção A"></div>
+<div class="txt"><h2>A · Açougue de Ofício</h2><p>O balcão, não a fogueira. Letra estreita e pesada com corte de faca a 30°; o q de "quin" vira gancho de açougue. Bordô, papel manteiga e carimbo violeta.</p><span class="go">Abrir apresentação →</span></div></a>
+<a class="card b" href="b/index.html"><div class="art"><img src="b/wordmark-negativo.svg" alt="Logo da direção B"></div>
+<div class="txt"><h2>B · Mapa de Cortes</h2><p>A palavra é o boi, cada letra um corte. O nome é fatiado em 7 regiões como o cartaz do açougue; só a picanha acende em brasa, o mesmo gesto do zoom no app.</p><span class="go">Abrir apresentação →</span></div></a>
+<a class="card c" href="c/index.html"><div class="art"><img src="c/wordmark-rosa.svg" alt="Logo da direção C"></div>
+<div class="txt"><h2>C · Derrete de bom</h2><p>Churrasco de domingo na laje. Itálico gordo de letreiro de boteco que derrete e pinga; símbolo e mascote "Solzão". Azul piscina, rosa e amarelo.</p><span class="go">Abrir apresentação →</span></div></a>
+</body></html>
