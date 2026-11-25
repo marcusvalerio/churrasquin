@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>churrasquin — cortes, origem e quanto comprar</title>
+<meta name="description" content="Catálogo de cortes do Brasil, Argentina, Uruguai e steaks americanos, com a origem de cada peça e uma calculadora de quanto comprar.">
+<link rel="stylesheet" href="brand/tokens.css">
+<link rel="stylesheet" href="app/styles.css">
+</head>
+<body>
+<a class="skip" href="#catalogo">Pular para o catálogo</a>
+<header class="topbar">
+  <div class="wrap topbar__in">
+    <a class="brand" href="#" aria-label="churrasquin, início"><img src="brand/logo.svg" alt="churrasquin" height="32" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'brand__txt',textContent:'churrasquin'}))"></a>
+    <nav class="topnav" aria-label="Principal"><a href="#catalogo">Cortes</a><a href="#calculadora">Calculadora</a></nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" aria-labelledby="hero-t">
+    <p class="eyebrow">Brasil · Argentina · Uruguai · EUA</p>
+    <h1 id="hero-t">Escolha o corte. A gente diz de onde vem e quanto levar.</h1>
+    <p class="hero__lead">42 cortes com ilustração da peça crua, nomes em cada país e a conta certa para a sua turma.</p>
+  </section>
+
+  <div class="wrap layout">
+    <section id="catalogo" class="catalog" aria-labelledby="cat-t">
+      <div class="catalog__head">
+        <h2 id="cat-t">Cortes</h2>
+        <p class="count" id="count" aria-live="polite"></p>
+      </div>
+
+      <form class="filters" id="filters" role="search" onsubmit="return false">
+        <label class="search">
+          <span class="sr">Buscar corte</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="q" type="search" placeholder="Buscar: picanha, vacío, ribeye…" autocomplete="off">
+        </label>
+        <fieldset class="seg" id="f-pais"><legend class="sr">País</legend></fieldset>
+        <div class="selects">
+          <label><span>Animal</span><select id="f-animal"><option value="">Todos</option><option value="boi">Boi</option><option value="porco">Porco</option><option value="cordeiro">Cordeiro</option><option value="frango">Frango</option></select></label>
+          <label><span>Categoria</span><select id="f-cat"><option value="">Todas</option><option value="nobre">Nobre</option><option value="tradicional">Tradicional</option><option value="steak">Steak</option><option value="popular">Popular</option><option value="miudo">Miúdo</option></select></label>
+          <label><span>Ordenar</span><select id="f-sort"><option value="">Destaques</option><option value="maciez-desc">Mais macio</option><option value="maciez-asc">Mais firme</option><option value="nome">A–Z</option></select></label>
+        </div>
+      </form>
+
+      <ul class="grid" id="grid" aria-label="Cortes"></ul>
+      <div class="empty" id="empty" hidden>
+        <p class="empty__t">Nenhum corte encontrado</p>
+        <p class="empty__d">Tente outro nome (vale “vacío”, “ribeye”, “bife de chorizo”) ou limpe os filtros.</p>
+        <button type="button" class="btn btn--ghost" id="clear">Limpar filtros</button>
+      </div>
+    </section>
+
+    <aside id="calculadora" class="calc" aria-labelledby="calc-t" tabindex="-1">
+      <h2 id="calc-t">Minha lista</h2>
+      <div id="calc-mount"><p class="muted">Carregando calculadora…</p></div>
+    </aside>
+  </div>
+</main>
+
+<a class="dock" id="dock" href="#calculadora"><span class="dock__l">Minha lista</span><span class="dock__v" id="dock-v">vazia</span><span aria-hidden="true">→</span></a>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<footer class="foot wrap"><p>churrasquin · pesos de carne crua; ajuste ao gosto da turma.</p></footer>
+
+<script src="data/cortes.js"></script>
+<script src="app/cuts-art.js"></script>
+<script src="app/animal.js"></script>
+<script src="app/calc.js"></script>
+<script src="app/main.js"></script>
+</body>
+</html>
