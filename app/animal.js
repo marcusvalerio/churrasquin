@@ -7,93 +7,173 @@
 (function () {
   'use strict';
 
-  /* ---------- Silhuetas (viewBox 0 0 600 360, perfil, cabeça à esquerda) ----------
-   * Regiões compartilham vértices: as bordas internas são retas comuns às duas peças,
-   * só o contorno externo é curvo. Assim encaixam sem buracos. [id, d, rótuloX, rótuloY] */
+  /* ---------- Pranchas anatômicas (viewBox 0 0 600 360, perfil, cabeça à esquerda) ----------
+   * body: contorno contínuo do animal (vira clipPath). far: membros do lado oposto (atrás).
+   * regioes: polígonos que particionam o plano com vértices compartilhados; o clipPath do corpo
+   * recorta cada um, então dentro da silhueta não sobra buraco nem sobreposição.
+   * [id, polígonos ('|' separa partes), rótuloX, rótuloY] */
   var ANIMAIS = {
     boi: {
       nome: 'boi',
-      deco: [
-        // cabeça, chifre, orelha
-        'M112,96 Q95,82 78,90 Q60,100 42,140 Q34,160 46,172 Q62,182 90,178 Q108,184 122,190 Q112,140 110,95 Z',
-        'M98,88 Q98,64 120,56 Q108,72 108,90 Z',
-        'M92,94 Q68,80 64,98 Q80,104 96,102 Z'
+      body: 'M44,160 C46,146 56,126 66,112 C74,100 86,90 102,85 C120,82 140,84 158,78 ' +
+        'C170,62 190,49 212,51 C232,54 244,74 254,88 C290,96 360,93 420,92 C450,92 470,86 490,88 ' +
+        'C515,90 540,92 556,96 C572,104 581,122 583,150 C585,182 577,212 567,236 C561,251 556,262 558,276 ' +
+        'C560,290 557,305 555,322 C555,330 559,336 562,342 L535,342 C535,334 537,328 537,320 ' +
+        'C536,300 533,288 529,276 C525,264 518,256 510,250 C496,246 486,256 470,258 ' +
+        'C420,266 330,270 280,265 C266,263 257,270 255,282 C253,300 251,316 251,326 C251,332 254,336 256,342 ' +
+        'L229,342 C229,334 231,328 231,320 C230,300 226,286 221,274 C217,263 210,256 201,252 ' +
+        'C192,266 176,268 163,256 C148,240 134,216 124,197 C110,193 92,192 76,190 C64,188 54,186 46,184 ' +
+        'C38,182 34,172 37,166 C39,162 42,161 44,160 Z',
+      far: [
+        'M262,250 C270,276 272,300 272,322 C272,332 275,337 277,342 L252,342 C252,320 250,298 246,270 Z',
+        'M488,238 C504,262 510,290 511,322 C511,332 514,337 516,342 L491,342 C492,322 492,300 486,280 C482,266 474,256 466,250 Z'
       ],
-      dark: [
-        'M222,335 L250,335 L251,346 L220,346 Z', 'M530,335 L556,335 L557,346 L528,346 Z',
-        'M575,100 Q598,130 592,214 L600,236 L584,236 L588,214 Q592,140 572,108 Z'
+      details: [
+        // orelha (atrás do chifre), chifre curto, vassoura da cauda, cascos
+        ['ear', 'M100,98 C114,90 134,90 148,100 C140,108 122,110 104,106 C100,104 99,101 100,98 Z'],
+        ['horn', 'M96,88 C93,76 97,64 110,57 C112,59 112,61 110,63 C104,70 104,80 106,88 Z'],
+        ['tail', 'M556,98 C574,116 588,150 590,196 C591,226 591,248 590,262 L585,262 C585,244 585,222 584,196 C582,156 572,124 554,104 Z'],
+        ['switch', 'M587,252 C599,266 600,292 590,314 C586,316 583,316 580,312 C574,292 576,268 587,252 Z'],
+        ['hoof', 'M231,328 L251,328 C252,334 254,338 256,342 L229,342 C229,336 230,332 231,328 Z'],
+        ['hoof', 'M537,328 L556,328 C557,334 559,338 562,342 L535,342 C535,336 536,332 537,328 Z'],
+        ['hoofd', 'M252,328 L273,328 C274,334 275,338 277,342 L252,342 Z'],
+        ['hoofd', 'M492,328 L512,328 C513,334 514,338 516,342 L491,342 Z'],
+        ['nostril', 'M42,168 C45,165 50,166 50,170 C48,172 44,172 42,168 Z'],
+        ['sheath', 'M392,266 C396,276 404,280 412,276 C414,272 413,268 411,266']
       ],
-      eye: [80, 118],
+      eye: [86, 112, 4],
+      lines: [
+        'M66,112 C70,128 80,140 96,146', 'M40,178 C46,180 54,180 60,178', // bochecha, boca
+        'M82,106 C86,103 92,104 94,108', // pálpebra
+        'M128,110 C140,130 152,150 160,176', 'M136,152 C146,160 150,172 152,186', // dobras do pescoço (zebu)
+        'M196,104 C214,140 230,176 240,214', 'M240,214 C232,232 224,244 218,256', // escápula e braço
+        'M300,120 C306,160 306,200 300,240', 'M330,118 C336,160 336,204 330,248', 'M360,118 C366,160 366,206 360,252',
+        'M390,118 C396,160 396,206 392,254', // costelas
+        'M480,100 C500,120 512,150 512,180', 'M512,180 C508,208 506,230 510,250', // ílio e soldra
+        'M540,120 C556,150 562,190 556,232', 'M466,198 C482,212 494,230 500,246', // nádega, flanco
+        'M542,286 C544,300 545,312 546,324', 'M238,292 C240,306 241,316 241,326' // tendões
+      ],
       regioes: [
-        ['musculo', 'M192,248 L262,262 L250,335 L222,335 L208,290 Z M500,245 L540,250 L560,270 L556,335 L530,335 L514,282 Z', 234, 305],
-        ['pescoco', 'M110,95 L165,85 L167,105 L171,150 L176,205 Q150,200 120,190 Q112,140 110,95 Z', 142, 148],
-        ['cupim', 'M165,85 Q200,40 245,78 L240,102 L167,105 Z', 205, 88],
-        ['acem', 'M245,78 Q268,84 290,82 L292,125 L292,150 L171,150 L167,105 L240,102 Z', 232, 130],
-        ['paleta', 'M171,150 L292,150 L290,205 L176,205 Z', 232, 181],
-        ['peito', 'M176,205 L290,205 L290,262 Q230,264 185,252 Q172,232 176,205 Z', 234, 238],
-        ['costela', 'M292,125 L420,125 L420,150 L420,200 L290,205 L292,150 Z', 356, 168],
-        ['ponta-de-agulha', 'M290,205 L420,200 L420,268 Q350,268 290,262 Z', 355, 238],
-        ['contrafile', 'M290,82 Q355,88 420,86 L420,125 L292,125 Z', 356, 109],
-        ['alcatra', 'M420,86 Q465,84 510,80 L505,122 L420,125 Z', 462, 107],
-        ['picanha', 'M510,80 Q550,80 575,100 Q572,118 565,135 L505,122 Z', 539, 108],
-        ['file-mignon', 'M420,125 L505,122 L505,150 L420,150 Z', 462, 140],
-        ['maminha', 'M420,150 L505,150 L500,190 L420,200 Z', 460, 177],
-        ['fraldinha', 'M420,200 L500,190 L500,245 Q465,262 420,268 Z', 458, 230],
-        ['patinho', 'M505,150 L545,160 L540,250 L500,245 L500,190 Z', 522, 205],
-        ['coxao', 'M505,122 L565,135 Q588,165 585,200 Q578,240 560,270 L540,250 L545,160 L505,150 Z', 565, 182]
+        ['pescoco', '108,0 165,0 170,100 184,160 128,212 116,95', 148, 140],
+        ['cupim', '165,0 250,0 248,104 170,100', 210, 80],
+        ['acem', '250,0 305,0 305,122 290,150 184,160 170,100 248,104', 248, 128],
+        ['paleta', '184,160 290,150 300,215 262,270 210,275', 248, 205],
+        ['peito', '128,212 184,160 210,275 150,300 100,240', 178, 240],
+        ['musculo', '150,300 210,275 262,270 270,360 140,360|500,250 545,270 600,270 600,360 500,360', 241, 300],
+        ['contrafile', '305,0 440,0 440,124 400,124 305,122', 372, 108],
+        ['costela', '290,150 305,122 400,124 400,175 400,205 300,215', 350, 168],
+        ['ponta-de-agulha', '300,215 400,205 440,360 270,360 262,270', 350, 244],
+        ['file-mignon', '400,124 440,124 440,140 470,152 470,175 400,175', 434, 152],
+        ['alcatra', '440,0 480,0 482,108 545,128 530,150 470,152 440,140', 494, 134],
+        ['picanha', '480,0 565,0 566,98 545,128 482,108', 526, 104],
+        ['maminha', '400,175 470,175 485,215 410,210 400,205', 442, 196],
+        ['fraldinha', '400,205 410,210 485,215 500,250 500,360 440,360', 458, 242],
+        ['patinho', '470,152 530,150 545,128 535,200 545,270 500,250 485,215 470,175', 512, 196],
+        ['coxao', '565,0 600,0 600,270 545,270 535,200 545,128 566,98', 560, 176]
       ]
     },
     porco: {
       nome: 'porco',
-      deco: [
-        'M140,112 Q110,104 90,124 Q70,144 52,158 Q44,176 58,184 Q92,192 145,165 Q138,140 140,112 Z',
-        'M108,114 Q116,84 136,92 Q134,108 128,120 Z'
+      body: 'M58,158 C52,159 48,165 48,173 C48,181 51,187 57,189 C70,193 86,196 100,200 ' +
+        'C114,206 128,214 140,222 C148,232 156,240 168,247 C172,264 173,284 172,302 C172,314 170,324 168,334 ' +
+        'L193,334 C193,322 195,310 197,298 C199,280 203,266 211,257 C260,269 360,273 440,263 ' +
+        'C452,272 456,290 456,304 C456,316 456,326 454,334 L479,334 C481,322 484,310 488,296 ' +
+        'C496,276 512,262 525,250 C549,230 563,200 565,170 C567,140 557,116 537,104 ' +
+        'C480,86 380,79 300,81 C240,83 190,91 160,103 C140,110 124,116 110,124 C92,134 74,147 58,158 Z',
+      far: [
+        'M206,252 C214,272 216,296 216,318 C216,326 217,330 218,334 L195,334 C196,316 196,296 194,274 Z',
+        'M474,252 C486,274 490,296 490,316 C490,324 491,330 492,334 L469,334 C470,316 468,296 462,276 Z'
       ],
-      dark: ['M44,160 Q36,170 44,182 Q54,184 56,170 Q54,158 44,160 Z',
-        'M190,320 L215,320 L216,332 L188,332 Z', 'M508,320 L535,320 L536,332 L506,332 Z',
-        'M558,128 Q584,118 580,140 Q574,152 566,140 Q576,134 570,130 Q562,132 560,136 Z'],
-      eye: [98, 140],
+      details: [
+        ['ear', 'M120,110 C128,96 142,86 156,84 C156,100 148,118 136,132 C130,124 124,116 120,110 Z'],
+        ['tailc', 'M562,124 C576,114 588,122 582,134 C576,142 566,134 572,126 C578,120 586,128 582,136'],
+        ['hoof', 'M170,324 L194,324 L193,334 L168,334 Z'], ['hoof', 'M456,324 L481,324 L479,334 L454,334 Z'],
+        ['hoofd', 'M195,324 L217,324 L218,334 L195,334 Z'], ['hoofd', 'M469,324 L491,324 L492,334 L469,334 Z'],
+        ['nostril', 'M51,168 C53,165 56,166 56,169 C55,171 52,171 51,168 Z'],
+        ['nostril', 'M51,178 C53,175 56,176 56,179 C55,181 52,181 51,178 Z']
+      ],
+      eye: [108, 140, 3.2],
+      lines: [
+        'M60,158 C62,170 62,180 58,189', 'M62,192 C76,190 88,186 98,180', // disco do focinho, boca
+        'M102,134 C106,131 112,132 114,136', 'M126,170 C134,186 144,200 150,214', // pálpebra, papada
+        'M190,110 C206,150 214,190 212,232', 'M300,92 C330,90 380,90 430,96', // escápula, linha do lombo
+        'M260,120 C266,160 266,200 260,240', 'M300,118 C306,160 306,204 300,248', 'M340,118 C346,162 346,206 340,252',
+        'M470,120 C500,150 512,190 506,236', 'M520,150 C530,180 532,210 524,240' // pernil
+      ],
       regioes: [
-        ['paleta-suina', 'M145,165 L225,150 L228,205 L232,250 Q200,252 165,240 Q145,210 145,165 Z M170,236 L226,248 L215,320 L190,320 Z', 186, 205],
-        ['pernil', 'M480,100 Q540,105 560,160 Q565,210 540,252 L470,252 L470,150 Z M484,244 L540,248 L535,320 L508,320 Z', 515, 182],
-        ['copa', 'M140,112 Q180,96 220,95 L225,150 L145,165 Q138,140 140,112 Z', 182, 133],
-        ['lombo', 'M220,95 Q350,88 480,100 L470,150 L360,150 L225,150 Z', 350, 125],
-        ['costela-suina', 'M225,150 L360,150 L360,208 L228,205 Z', 294, 182],
-        ['barriga', 'M228,205 L360,208 L360,150 L470,150 L470,252 Q350,268 232,250 Z', 412, 205]
+        ['copa', '140,0 230,0 232,140 150,150 146,110', 186, 118],
+        ['paleta-suina', '150,150 232,140 236,205 240,360 120,360 148,230', 190, 200],
+        ['lombo', '230,0 470,0 468,140 360,142 232,140', 350, 112],
+        ['costela-suina', '232,140 360,142 362,200 236,205', 298, 172],
+        ['barriga', '236,205 362,200 360,142 468,140 440,250 430,360 240,360', 380, 220],
+        ['pernil', '470,0 600,0 600,360 430,360 440,250 468,140', 516, 180]
       ]
     },
     cordeiro: {
       nome: 'cordeiro',
-      deco: [
-        'M150,112 Q130,90 110,95 Q80,104 62,140 Q56,156 68,160 Q100,164 130,152 L155,150 Z',
-        'M118,100 Q98,88 90,104 Q104,110 120,108 Z',
-        'M528,118 Q550,122 548,152 Q536,148 530,136 Z'
+      body: 'M62,146 C56,152 56,162 64,166 C78,169 94,167 110,163 C124,171 140,190 156,206 ' +
+        'C166,220 174,232 184,241 C188,264 194,290 196,314 C196,324 195,331 195,338 L212,338 ' +
+        'C213,326 215,310 218,292 C222,274 228,260 240,253 C246,256 252,256 258,258 C266,262 276,258 286,262 ' +
+        'C296,264 306,260 316,263 C328,266 338,261 350,263 C362,265 372,260 384,262 C398,264 410,258 424,258 ' +
+        'C432,256 438,254 442,252 C448,270 454,296 458,312 C460,322 460,330 460,338 L477,338 ' +
+        'C477,326 477,312 475,298 C475,284 483,270 497,256 C511,240 521,212 523,186 C525,156 517,130 502,114 ' +
+        'C494,108 486,104 476,104 C464,98 452,102 440,100 C426,96 414,101 400,98 C386,95 372,100 358,97 ' +
+        'C344,94 330,99 316,97 C302,95 288,100 274,99 C260,98 250,104 238,104 C214,108 184,113 166,106 ' +
+        'C152,98 142,90 128,88 C110,88 92,100 80,116 C72,126 66,136 62,146 Z',
+      far: [
+        'M232,256 C238,276 240,300 240,320 C240,328 240,333 240,338 L224,338 C224,320 224,298 222,278 Z',
+        'M488,262 C482,280 482,300 484,318 C484,326 485,332 485,338 L468,338 C468,320 468,300 470,282 Z'
       ],
-      dark: ['M205,325 L228,325 L229,336 L203,336 Z', 'M475,325 L500,325 L501,336 L473,336 Z'],
-      eye: [100, 118],
+      details: [
+        ['ear', 'M120,98 C138,94 156,98 166,108 C154,114 136,112 122,106 C118,104 118,100 120,98 Z'],
+        ['tail', 'M500,114 C514,118 522,132 520,150 C514,152 508,146 504,136 Z'],
+        ['hoof', 'M195,330 L212,330 L212,338 L195,338 Z'], ['hoof', 'M460,330 L477,330 L477,338 L460,338 Z'],
+        ['hoofd', 'M224,330 L240,330 L240,338 L224,338 Z'], ['hoofd', 'M468,330 L485,330 L485,338 L468,338 Z'],
+        ['nostril', 'M60,152 C62,150 65,151 65,154 C63,156 61,155 60,152 Z']
+      ],
+      eye: [96, 116, 3.4],
+      lines: [
+        'M60,160 C66,162 72,162 78,160', 'M90,112 C94,109 100,110 102,114', 'M78,126 C88,140 100,150 112,158',
+        'M184,116 C200,150 212,190 216,232', 'M270,120 C276,160 276,200 270,240', 'M310,120 C316,162 316,206 310,248',
+        'M350,120 C356,162 356,206 350,250', 'M450,116 C478,140 494,176 492,222', 'M478,268 C474,290 474,310 476,330'
+      ],
       regioes: [
-        ['paleta-cordeiro', 'M150,112 Q200,96 250,105 L250,170 L255,245 Q205,245 172,228 Q150,190 155,150 Z M178,224 L236,240 L228,325 L205,325 Z', 205, 168],
-        ['pernil-cordeiro', 'M440,100 Q505,100 528,150 Q535,210 505,252 L430,252 L430,165 Z M450,244 L505,248 L500,325 L475,325 Z', 482, 182],
-        ['carre', 'M250,105 Q345,96 440,100 L430,165 L250,170 Z', 345, 137],
-        ['costela-cordeiro', 'M250,170 L430,165 L430,252 Q340,262 255,245 Z', 342, 212]
+        ['paleta-cordeiro', '130,0 250,0 252,165 238,250 240,360 150,360 150,200 132,100', 196, 168],
+        ['carre', '250,0 430,0 432,160 252,165', 340, 132],
+        ['costela-cordeiro', '252,165 432,160 438,250 440,360 240,360 238,250', 340, 214],
+        ['pernil-cordeiro', '430,0 600,0 600,360 440,360 438,250 432,160', 480, 186]
       ]
     },
     frango: {
       nome: 'frango',
-      deco: [
-        // corpo/carcaça (costas, sobre-asa, cauda) e pescoço/cabeça
-        'M190,130 Q230,110 300,120 L440,95 Q480,80 485,120 Q480,190 430,230 Q360,270 270,262 Q190,250 175,195 Q168,160 190,130 Z',
-        'M192,142 Q170,110 168,80 Q170,55 195,55 Q215,60 212,85 Q210,110 228,132 Z',
-        'M440,95 Q470,50 500,62 Q492,90 485,120 Z'
+      body: 'M154,74 C156,60 168,52 182,54 C196,56 204,66 204,80 C204,96 208,110 220,124 ' +
+        'C236,138 260,140 290,136 C340,130 390,118 430,96 C446,80 462,62 480,52 C492,58 495,74 491,90 ' +
+        'C504,86 516,92 521,104 C513,124 499,138 487,150 C479,190 457,222 425,240 C411,248 397,252 384,255 ' +
+        'C350,262 300,262 270,252 C230,238 198,210 186,176 C178,152 176,130 180,112 C172,104 162,96 158,90 ' +
+        'C154,86 152,80 154,74 Z',
+      far: [],
+      legs: [
+        // canela (tarso) e dedos: perna de trás mais escura
+        ['legd', 'M392,248 L398,316 M398,316 L420,330 M398,316 L404,334 M398,316 L384,330'],
+        ['leg', 'M362,250 L354,316 M354,316 L328,330 M354,316 L360,336 M354,316 L372,326']
       ],
-      dark: ['M172,70 L150,78 L172,84 Z', 'M178,56 Q182,40 192,48 Q198,36 206,48 Q214,44 210,60 Z',
-        'M360,298 L372,298 L380,318 L392,322 L366,322 L352,324 L360,310 Z'],
-      eye: [188, 70],
+      details: [
+        ['comb', 'M160,58 C158,44 168,38 172,50 C175,34 187,34 187,47 C192,36 204,40 199,56 C190,59 176,57 164,60 Z'],
+        ['beak', 'M156,68 C148,70 140,74 134,79 C142,81 150,82 157,82 Z'],
+        ['wattle', 'M158,86 C155,98 160,108 167,103 C171,96 167,89 162,84 Z'],
+        ['earlobe', 'M190,80 C194,78 198,82 196,87 C192,88 189,85 190,80 Z']
+      ],
+      eye: [176, 68, 3.2],
+      lines: [
+        'M250,152 C300,140 370,140 420,152', 'M262,170 C310,166 360,168 400,176', 'M282,190 C318,190 352,192 380,198', // penas da asa
+        'M440,110 C458,96 474,84 484,62', 'M452,124 C474,112 494,104 512,104', // cauda
+        'M204,96 C210,110 214,120 222,128', 'M196,190 C212,220 236,240 262,250', 'M330,220 C360,210 392,214 420,228'
+      ],
       regioes: [
-        ['coxa', 'M320,215 Q390,195 432,228 Q400,262 340,264 Q315,245 320,215 Z M340,256 L382,250 L372,300 L360,300 Z', 378, 238],
-        ['peito-frango', 'M190,132 L262,140 L270,262 Q190,250 175,195 Q168,160 190,132 Z', 218, 238],
-        ['asa', 'M250,150 Q320,128 402,150 Q382,196 300,205 Q255,200 250,150 Z', 326, 172],
-        ['coracao', 'M225,184 C219,174 205,180 211,192 L225,206 L239,192 C245,180 231,174 225,184 Z', 225, 168]
+        ['peito-frango', '178,118 225,128 250,160 280,215 300,360 100,360 100,118', 222, 222],
+        ['asa', '225,128 240,100 430,100 440,150 400,178 320,200 280,215 250,160', 330, 162],
+        ['coxa', '280,215 320,200 400,178 440,150 470,160 480,360 300,360', 400, 222],
+        ['coracao', 'M232,186 C226,176 212,182 218,194 L232,208 L246,194 C252,182 238,176 232,186 Z', 232, 172]
       ]
     }
   };
@@ -131,15 +211,34 @@
     '.anm-svgwrap{flex:1;min-height:0;border-radius:var(--r-md,12px);background:var(--c-carvao,#1C1512);overflow:hidden;position:relative}',
     '.anm-svg{width:100%;height:100%;display:block}',
     '.anm-cam{transform-box:view-box;transform-origin:0 0;transition:transform var(--dur-3,520ms) var(--ease-brasa,cubic-bezier(.2,.8,.2,1.15));will-change:transform}',
-    '.anm-reg{fill:var(--c-gordura,#F2E2C4);fill-opacity:.22;stroke:var(--c-carvao,#1C1512);stroke-width:2;stroke-linejoin:round;cursor:pointer}',
-    '.anm-reg:hover{fill-opacity:.34}',
+    '.anm-reg{fill:var(--c-gordura,#F2E2C4);fill-opacity:.07;stroke:var(--c-osso,#F7F0E6);stroke-opacity:.55;stroke-width:1;stroke-dasharray:4 2.5;stroke-linejoin:round;cursor:pointer}',
+    '.anm-reg:hover{fill-opacity:.2}',
     '.anm-reg:focus{outline:none}',
-    '.anm-reg:focus-visible{stroke:var(--c-gordura,#F2E2C4);stroke-width:3}',
-    '.anm-deco{fill:var(--c-sal,#B9ACA0);fill-opacity:.16;stroke:var(--c-carvao,#1C1512);stroke-width:2}',
-    '.anm-dark{fill:var(--c-sal,#B9ACA0);fill-opacity:.45}',
-    '.anm-eye{fill:var(--c-carvao,#1C1512)}',
-    '.anm-lit,.anm-peek{pointer-events:none;stroke:var(--c-carvao,#1C1512);stroke-width:2;opacity:0;transition:opacity var(--dur-2,260ms) ease}',
-    '.anm-lit{fill:var(--c-brasa,#E85D24)}',
+    '.anm-reg:focus-visible{stroke:var(--c-gordura,#F2E2C4);stroke-opacity:1;stroke-width:3;stroke-dasharray:none}',
+    '.anm-none{pointer-events:none}',
+    '.anm-ground{fill:#000;opacity:.35}',
+    '.anm-skin{fill:var(--c-sal,#B9ACA0);fill-opacity:.2}',
+    '.anm-far{fill:var(--c-sal,#B9ACA0);fill-opacity:.1;stroke:var(--c-osso,#F7F0E6);stroke-opacity:.35;stroke-width:1}',
+    '.anm-weight{fill:var(--c-osso,#F7F0E6);fill-opacity:.75}',
+    '.anm-line{fill:none;stroke:var(--c-osso,#F7F0E6);stroke-width:1.1;stroke-linejoin:round}',
+    '.anm-mus{fill:none;stroke:var(--c-osso,#F7F0E6);stroke-opacity:.28;stroke-width:.9;stroke-linecap:round}',
+    '.anm-ear,.anm-wattle,.anm-earlobe{fill:var(--c-sal,#B9ACA0);fill-opacity:.55;stroke:var(--c-osso,#F7F0E6);stroke-width:1}',
+    '.anm-horn,.anm-beak{fill:var(--c-gordura,#F2E2C4);fill-opacity:.85;stroke:var(--c-carvao,#1C1512);stroke-width:.8}',
+    '.anm-tail,.anm-switch{fill:var(--c-sal,#B9ACA0);fill-opacity:.5;stroke:var(--c-osso,#F7F0E6);stroke-width:1}',
+    '.anm-switch{fill-opacity:.8}',
+    '.anm-tailc,.anm-sheath{fill:none;stroke:var(--c-osso,#F7F0E6);stroke-width:1.6;stroke-linecap:round}',
+    '.anm-sheath{stroke-width:1;stroke-opacity:.6}',
+    '.anm-hoof{fill:var(--c-carvao,#1C1512);stroke:var(--c-osso,#F7F0E6);stroke-width:1}',
+    '.anm-hoofd{fill:var(--c-carvao,#1C1512);stroke:var(--c-sal,#B9ACA0);stroke-width:.8}',
+    '.anm-nostril{fill:var(--c-carvao,#1C1512)}',
+    '.anm-comb{fill:var(--c-brasa,#E85D24);fill-opacity:.75;stroke:var(--c-osso,#F7F0E6);stroke-width:1}',
+    '.anm-wattle{fill:var(--c-brasa,#E85D24);fill-opacity:.6}',
+    '.anm-leg{fill:none;stroke:var(--c-gordura,#F2E2C4);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:.8}',
+    '.anm-legd{fill:none;stroke:var(--c-sal,#B9ACA0);stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:.45}',
+    '.anm-eye{fill:var(--c-carvao,#1C1512);stroke:var(--c-osso,#F7F0E6);stroke-width:.8}',
+    '.anm-glint{fill:var(--c-osso,#F7F0E6)}',
+    '.anm-lit,.anm-peek{pointer-events:none;stroke:var(--c-gordura,#F2E2C4);stroke-width:1.5;opacity:0;transition:opacity var(--dur-2,260ms) ease}',
+    '.anm-lit{fill:var(--c-brasa,#E85D24);fill-opacity:.88}',
     '.anm-peek{fill:var(--c-ervas,#8BA35A)}',
     '.anm-litup .anm-lit,.anm-peek.anm-on{opacity:1}',
     '.anm-lbl{font:600 10px var(--font-body,system-ui,sans-serif);fill:var(--c-osso,#F7F0E6);text-anchor:middle;dominant-baseline:middle;pointer-events:none;',
@@ -272,33 +371,68 @@
   }
 
   /* ---------- SVG do animal ---------- */
+  function regD(spec) {
+    if (/^M/.test(spec)) return spec;
+    return spec.split('|').map(function (p) { return 'M' + p.trim().replace(/ +/g, ' L') + ' Z'; }).join(' ');
+  }
+  function stop(o, c, a) { return sv('stop', { offset: o, style: 'stop-color:' + c + ';stop-opacity:' + a }); }
   function drawAnimal(key, ativa) {
     var a = ANIMAIS[key];
+    var OS = 'var(--c-osso,#F7F0E6)', SAL = 'var(--c-sal,#B9ACA0)', CV = 'var(--c-carvao,#1C1512)';
     svgwrap.textContent = '';
     svg = sv('svg', { viewBox: '0 0 600 360', class: 'anm-svg', role: 'group', 'aria-label': 'Mapa de cortes do ' + a.nome + '. Região destacada: ' + (NOMES_REGIAO[ativa] || ativa) });
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    var id = 'anm-' + key, defs = sv('defs', {});
+    var cp = sv('clipPath', { id: id + '-clip' }); cp.appendChild(sv('path', { d: a.body })); defs.appendChild(cp);
+    // volume: luz de cima/esquerda, ventre e membros na sombra
+    var g1 = sv('linearGradient', { id: id + '-vol', x1: 0, y1: 0, x2: 0, y2: 1 });
+    [stop(0, OS, .30), stop(.45, SAL, .16), stop(.8, CV, .30), stop(1, CV, .55)].forEach(function (s) { g1.appendChild(s); });
+    var g2 = sv('radialGradient', { id: id + '-hl', cx: .38, cy: .3, r: .55 });
+    [stop(0, OS, .16), stop(1, OS, 0)].forEach(function (s) { g2.appendChild(s); });
+    var hat = sv('pattern', { id: id + '-hatch', width: 5, height: 5, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(35)' });
+    hat.appendChild(sv('line', { x1: 0, y1: 0, x2: 0, y2: 5, style: 'stroke:' + CV + ';stroke-width:1;stroke-opacity:.5' }));
+    var gm = sv('linearGradient', { id: id + '-hm', x1: 0, y1: 0, x2: 0, y2: 1 });
+    [stop(.5, '#fff', 0), stop(.85, '#fff', 1)].forEach(function (s) { gm.appendChild(s); });
+    var mk = sv('mask', { id: id + '-mask', maskContentUnits: 'objectBoundingBox' });
+    mk.appendChild(sv('rect', { x: 0, y: 0, width: 1, height: 1, fill: 'url(#' + id + '-hm)' }));
+    [g1, g2, hat, gm, mk].forEach(function (n) { defs.appendChild(n); });
+    svg.appendChild(defs);
+    var clip = 'url(#' + id + '-clip)';
     cam = sv('g', { class: 'anm-cam' });
-    var decoG = sv('g', { 'aria-hidden': 'true' }), darkG = sv('g', { 'aria-hidden': 'true' });
-    a.deco.forEach(function (d) { decoG.appendChild(sv('path', { d: d, class: 'anm-deco' })); });
-    a.dark.forEach(function (d) { darkG.appendChild(sv('path', { d: d, class: 'anm-dark' })); });
-    darkG.appendChild(sv('circle', { cx: a.eye[0], cy: a.eye[1], r: 3.5, class: 'anm-eye' }));
-    var regs = sv('g', {});
-    litLayer = sv('g', { 'aria-hidden': 'true' });
-    peekLayer = sv('g', { 'aria-hidden': 'true' });
+    var back = sv('g', { 'aria-hidden': 'true' });
+    back.appendChild(sv('ellipse', { cx: 330, cy: 344, rx: 250, ry: 7, class: 'anm-ground' }));
+    (a.far || []).forEach(function (d) { back.appendChild(sv('path', { d: d, class: 'anm-far' })); });
+    (a.legs || []).forEach(function (l) { back.appendChild(sv('path', { d: l[1], class: 'anm-' + l[0] })); });
+    // traço de espessura variável: cópia deslocada embaixo vira o "peso" do contorno no lado da sombra
+    back.appendChild(sv('path', { d: a.body, class: 'anm-weight', transform: 'translate(1.2 2)' }));
+    back.appendChild(sv('path', { d: a.body, class: 'anm-skin' }));
+    var regs = sv('g', { 'clip-path': clip });
+    litLayer = sv('g', { 'aria-hidden': 'true', 'clip-path': clip });
+    peekLayer = sv('g', { 'aria-hidden': 'true', 'clip-path': clip });
     var lbls = sv('g', { 'aria-hidden': 'true' });
     a.regioes.forEach(function (r) {
-      var nome = NOMES_REGIAO[r[0]] || r[0];
-      var p = sv('path', { d: r[1], class: 'anm-reg', 'data-regiao': r[0], tabindex: '0', role: 'button', 'aria-label': nome });
+      var nome = NOMES_REGIAO[r[0]] || r[0], d = regD(r[1]);
+      var p = sv('path', { d: d, class: 'anm-reg', 'data-regiao': r[0], tabindex: '0', role: 'button', 'aria-label': nome });
       p.addEventListener('click', function () { peek(r[0]); });
       p.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); peek(r[0]); } });
       regs.appendChild(p);
-      if (r[0] === ativa) litLayer.appendChild(sv('path', { d: r[1], class: 'anm-lit' }));
+      if (r[0] === ativa) litLayer.appendChild(sv('path', { d: d, class: 'anm-lit' }));
       var t = sv('text', { x: r[2], y: r[3], class: 'anm-lbl' + (r[0] === ativa ? ' anm-act' : '') });
       t.textContent = nome;
       lbls.appendChild(t);
     });
-    // ordem: carcaça, regiões, cascos/olho, destaque, vizinha, rótulos
-    [decoG, regs, darkG, litLayer, peekLayer, lbls].forEach(function (n) { cam.appendChild(n); });
+    var shade = sv('g', { 'aria-hidden': 'true', 'clip-path': clip, class: 'anm-none' });
+    shade.appendChild(sv('path', { d: a.body, fill: 'url(#' + id + '-vol)' }));
+    shade.appendChild(sv('path', { d: a.body, fill: 'url(#' + id + '-hl)' }));
+    shade.appendChild(sv('path', { d: a.body, fill: 'url(#' + id + '-hatch)', mask: 'url(#' + id + '-mask)', opacity: .55 }));
+    (a.lines || []).forEach(function (d) { shade.appendChild(sv('path', { d: d, class: 'anm-mus' })); });
+    var front = sv('g', { 'aria-hidden': 'true', class: 'anm-none' });
+    front.appendChild(sv('path', { d: a.body, class: 'anm-line' }));
+    (a.details || []).forEach(function (x) { front.appendChild(sv('path', { d: x[1], class: 'anm-' + x[0] })); });
+    front.appendChild(sv('circle', { cx: a.eye[0], cy: a.eye[1], r: a.eye[2], class: 'anm-eye' }));
+    front.appendChild(sv('circle', { cx: a.eye[0] - 1, cy: a.eye[1] - 1.2, r: 1, class: 'anm-glint' }));
+    // ordem: fundo, regiões, destaque, vizinha, volume/musculatura, contorno e detalhes, rótulos
+    [back, regs, litLayer, peekLayer, shade, front, lbls].forEach(function (n) { cam.appendChild(n); });
     svg.appendChild(cam);
     svgwrap.appendChild(svg);
   }
@@ -306,16 +440,19 @@
   function camFor(reg) {
     var p = svg.querySelector('.anm-reg[data-regiao="' + reg + '"]');
     if (!p) return 'none';
-    var b = p.getBBox();
-    // fora do zoom, considera o recorte real do palco (meet) para enquadrar bem no celular
+    // bbox da região recortada pela silhueta
+    var b = p.getBBox(), c = svg.querySelector('.anm-skin').getBBox();
+    var x0 = Math.max(b.x, c.x), y0 = Math.max(b.y, c.y), x1 = Math.min(b.x + b.width, c.x + c.width), y1 = Math.min(b.y + b.height, c.y + c.height);
+    b = { x: x0, y: y0, width: Math.max(1, x1 - x0), height: Math.max(1, y1 - y0) };
     var r = svgwrap.getBoundingClientRect();
     var vw = 600, vh = 360;
     if (r.width && r.height) {
       var k = Math.min(r.width / 600, r.height / 360);
       vw = r.width / k; vh = r.height / k;
     }
-    var pad = 56;
-    var s = Math.min(vw / (b.width + pad * 2), vh / (b.height + pad * 2), 2.2);
+    // zoom contido: a peça ganha destaque, mas o animal continua reconhecível em volta
+    var pad = 110;
+    var s = Math.min(vw / (b.width + pad * 2), vh / (b.height + pad * 2), 1.7);
     s = Math.max(s, 1);
     var tx = 300 - s * (b.x + b.width / 2), ty = 180 - s * (b.y + b.height / 2);
     return 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(' + s.toFixed(3) + ')';
