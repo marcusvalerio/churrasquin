@@ -24,13 +24,13 @@ button,input,select{font:inherit;color:inherit}
 /* hero */
 .hero{padding-top:40px;padding-bottom:28px}
 .eyebrow{margin:0 0 12px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--c-brasa)}
-.hero h1{font-size:clamp(30px,5vw,52px);max-width:18ch;letter-spacing:-.01em}
+.hero h1{font-size:clamp(30px,4.4vw,52px);max-width:22ch;letter-spacing:-.01em}
 .hero__lead{margin:14px 0 0;color:var(--c-sal);font-size:clamp(16px,1.6vw,19px);max-width:52ch}
 
 /* layout */
-.layout{display:grid;gap:32px;padding-bottom:120px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;padding-bottom:120px}
 @media (min-width:1024px){
-  .layout{grid-template-columns:minmax(0,1fr) 360px;align-items:start;padding-bottom:64px}
+  .layout{grid-template-columns:minmax(0,1fr) 420px;align-items:start;padding-bottom:64px}
   .calc{position:sticky;top:76px;max-height:calc(100vh - 92px);overflow:auto}
   .dock{display:none!important}
 }
@@ -39,13 +39,13 @@ button,input,select{font:inherit;color:inherit}
 .catalog__head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
 .catalog__head h2{font-size:26px}
 .count{margin:0;color:var(--c-sal);font-size:14px}
-.filters{display:grid;gap:12px;margin-bottom:20px;position:sticky;top:60px;z-index:10;background:var(--c-carvao);padding:10px 0}
+.filters{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-bottom:20px;position:sticky;top:60px;z-index:10;background:var(--c-carvao);padding:10px 0}
 @media (min-width:760px){.filters{grid-template-columns:minmax(220px,1fr) auto;align-items:center}.selects{grid-column:1/-1}}
 .search{display:flex;align-items:center;gap:8px;background:var(--c-carvao-2);border:1px solid color-mix(in srgb,var(--c-osso) 12%,transparent);border-radius:var(--r-md);padding:0 12px;height:44px}
 .search:focus-within{border-color:var(--c-brasa)}
 .search svg{width:18px;height:18px;fill:none;stroke:var(--c-sal);stroke-width:2;flex:none}
 .search input{flex:1;min-width:0;background:none;border:0;outline:0;height:100%}
-.seg{display:flex;gap:6px;border:0;margin:0;padding:0;overflow-x:auto;scrollbar-width:none}
+.seg{display:flex;gap:6px;min-width:0;border:0;margin:0;padding:0;overflow-x:auto;scrollbar-width:none}
 .seg button{flex:none;height:36px;padding:0 14px;border-radius:999px;border:1px solid color-mix(in srgb,var(--c-osso) 14%,transparent);background:transparent;color:var(--c-sal);cursor:pointer;font-size:14px;transition:all var(--dur-1) var(--ease-brasa)}
 .seg button:hover{color:var(--c-osso)}
 .seg button[aria-pressed="true"]{background:var(--c-osso);color:var(--c-carvao);border-color:var(--c-osso)}
@@ -53,10 +53,11 @@ button,input,select{font:inherit;color:inherit}
 @media (min-width:760px){.selects{display:flex;gap:12px}}
 .selects label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--c-sal)}
 @media (min-width:760px){.selects label{flex-direction:row;align-items:center;gap:8px;font-size:14px}}
-.selects select{height:36px;background:var(--c-carvao-2);border:1px solid color-mix(in srgb,var(--c-osso) 12%,transparent);border-radius:var(--r-sm);padding:0 8px;min-width:0}
+.selects label{min-width:0}
+.selects select{width:100%;height:36px;background:var(--c-carvao-2);border:1px solid color-mix(in srgb,var(--c-osso) 12%,transparent);border-radius:var(--r-sm);padding:0 8px;min-width:0}
 
 .grid{list-style:none;margin:0;padding:0;display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
-@media (max-width:559px){.grid{grid-template-columns:1fr 1fr;gap:10px}}
+@media (max-width:559px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
 .card{position:relative;display:flex;flex-direction:column;background:var(--c-carvao-2);border-radius:var(--r-lg);overflow:hidden;border:1px solid color-mix(in srgb,var(--c-osso) 6%,transparent);transition:transform var(--dur-2) var(--ease-brasa),border-color var(--dur-2)}
 .card:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--c-brasa) 40%,transparent)}
 .card__art{aspect-ratio:320/220;background:radial-gradient(120% 90% at 50% 30%,color-mix(in srgb,var(--c-osso) 10%,var(--c-carvao-2)),var(--c-carvao-2))}
@@ -104,8 +105,8 @@ button,input,select{font:inherit;color:inherit}
 .error{padding:20px;border-radius:var(--r-md);background:color-mix(in srgb,var(--c-carne) 20%,var(--c-carvao-2));color:var(--c-osso)}
 
 /* calculadora */
-.calc{background:var(--c-carvao-2);border-radius:var(--r-lg);padding:20px;border:1px solid color-mix(in srgb,var(--c-osso) 8%,transparent);scroll-margin-top:80px}
-.calc h2{font-size:22px;margin-bottom:12px}
+.calc{min-width:0;scroll-margin-top:80px}
+.calc h2{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .calc:focus{outline:none}
 
 /* dock mobile */
