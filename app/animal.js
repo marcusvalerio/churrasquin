@@ -334,6 +334,36 @@
     ' .anm-lbl{font-size:12.5px}',
     ' .anm-grab{display:block;width:44px;height:5px;border-radius:3px;background:var(--c-sal,#B9ACA0);margin:6px auto 4px;opacity:.6}',
     '}',
+    /* v3 "riso de brasa": modal em papel creme; o palco do animal segue impresso em tinta carvão */
+    '.anm-root{--c-osso:#1F1A17;--c-carvao:#F3EADB;--c-carvao-2:#F3EADB;--c-sal:#5C514A;color:#1F1A17}',
+    '.anm-backdrop{background:#1F1A17}',
+    '.anm-in .anm-backdrop{opacity:.6}',
+    '.anm-head{border-bottom:2px solid #1F1A17}',
+    '.anm-kicker{font-weight:700;color:#5C514A}',
+    '.anm-btn{border:1.5px solid color-mix(in srgb,#1F1A17 30%,transparent);background:color-mix(in srgb,#F3EADB 45%,#fff);color:#1F1A17;border-radius:999px;font-weight:600}',
+    '.anm-btn:hover{border-color:#1F1A17}',
+    '.anm-btn-pri{background:var(--c-brasa,#EB6440);border-color:#1F1A17;color:#1F1A17;box-shadow:0 2px 0 #1F1A17}',
+    '.anm-root :focus-visible{outline:3px solid #1F1A17;outline-offset:2px}',
+    '.anm-svgwrap{--c-osso:#F3EADB;--c-carvao:#1F1A17;--c-sal:#BCAE9E;--c-gordura:#F6DDB8;background:#1F1A17;isolation:isolate}',
+    '.anm-svgwrap::after{content:"";position:absolute;inset:-50%;pointer-events:none;background-image:radial-gradient(circle,rgba(243,234,219,.5) 0 .7px,transparent 1.1px);background-size:4px 4px;transform:rotate(45deg);mix-blend-mode:soft-light;opacity:.5}',
+    '.anm-svg{filter:drop-shadow(1.2px -.8px 0 rgba(63,162,149,.35))}',
+    '.anm-svgwrap :focus-visible,.anm-reg:focus-visible{stroke:#F6DDB8}',
+    '.anm-info strong{color:#1F1A17}',
+    '.anm-title{font-weight:800}',
+    '.anm-nomes li{display:inline-flex;align-items:center;gap:6px;border:1.5px solid color-mix(in srgb,#1F1A17 22%,transparent);background:color-mix(in srgb,#F3EADB 45%,#fff);border-radius:999px;padding:4px 10px 4px 5px}',
+    '.anm-nomes img{width:20px;height:20px}',
+    '.anm-nomes abbr{color:#5C514A}',
+    '.anm-h3{font-weight:700;color:#5C514A}',
+    '.anm-bar{grid-template-columns:7.2em 1fr 2.6em}',
+    '.anm-bar dt{display:flex;align-items:center;gap:7px;font-weight:600}',
+    '.anm-bar dt img{width:22px;height:22px}',
+    '.anm-track{background:color-mix(in srgb,#1F1A17 12%,transparent)}',
+    '.anm-fill{background:#1F1A17}',
+    '.anm-bar:nth-child(1) .anm-fill{background:color-mix(in srgb,var(--c-ervas,#3FA295) 62%,#1F1A17)}',
+    '.anm-bar:nth-child(2) .anm-fill{background:#C79A6A}',
+    '.anm-bar:nth-child(3) .anm-fill{background:var(--c-brasa,#EB6440)}',
+    '.anm-chip[aria-pressed="true"]{border-color:#1F1A17;background:#1F1A17;color:#F3EADB}',
+    '@media (max-width:820px){ .anm-panel{background:color-mix(in srgb,#F3EADB 45%,#fff);border-top:2px solid #1F1A17} .anm-grab{background:#1F1A17;opacity:.35} }',
     /* movimento reduzido: tudo no estado final, sem transição */
     '.anm-still *,.anm-still{transition:none!important}',
     '@media (prefers-reduced-motion:reduce){.anm-root *,.anm-root{transition:none!important}}'
@@ -592,7 +622,8 @@
     ['ar', 'uy', 'us'].forEach(function (k) {
       if (!nomes[k]) return;
       var li = el('li'); var ab = el('abbr', '', k.toUpperCase()); ab.title = PAIS[k];
-      li.appendChild(ab); li.appendChild(document.createTextNode(nomes[k])); ul.appendChild(li);
+      var fl = document.createElement('img'); fl.src = 'brand/v3/icons/pais-' + k + '.svg'; fl.alt = ''; fl.width = 20; fl.height = 20;
+      li.appendChild(fl); li.appendChild(ab); li.appendChild(document.createTextNode(nomes[k])); ul.appendChild(li);
     });
     if (ul.children.length) add(ul);
     add(el('h3', 'anm-h3', 'Por que essa peça é assim'));
@@ -602,7 +633,8 @@
     [['Maciez', c.maciez], ['Gordura', c.gordura], ['Sabor', c.sabor]].forEach(function (b, j) {
       var v = Math.max(0, Math.min(5, +b[1] || 0));
       var row = el('div', 'anm-bar');
-      row.appendChild(el('dt', '', b[0]));
+      var dt = el('dt'); var bi = document.createElement('img'); bi.src = 'brand/v3/icons/' + b[0].toLowerCase() + '.svg'; bi.alt = ''; bi.width = 22; bi.height = 22;
+      dt.appendChild(bi); dt.appendChild(document.createTextNode(b[0])); row.appendChild(dt);
       var dd = el('dd');
       var tr = el('span', 'anm-track'); tr.setAttribute('aria-hidden', 'true');
       var f = el('span', 'anm-fill'); f.style.display = 'block'; f.style.setProperty('--d', j); f.setAttribute('data-v', v / 5);

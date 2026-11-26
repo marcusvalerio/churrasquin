@@ -80,11 +80,12 @@ img{max-width:100%}
 .seg button:active{transform:scale(.97)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .seg button[aria-pressed="true"] img{background:var(--paper);border-radius:50%;box-shadow:0 0 0 2px var(--paper)}
-.seg--animal{padding-left:16px;border-left:1.5px solid var(--line)}
+.seg--animal{}
 .selects{display:flex;gap:10px;min-width:0}
 .selects label{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);min-width:0}
 .selects select{height:38px;background:var(--card);border:1.5px solid var(--line-2);border-radius:999px;padding:0 12px;min-width:0;color:var(--ink)}
 @media (max-width:759px){
+  .filters{position:static}
   .row2{flex-wrap:nowrap;flex-direction:column;align-items:stretch;gap:8px}
   .seg--animal{padding-left:0;border-left:0}
   .selects{display:grid;grid-template-columns:1fr 1fr}
@@ -185,3 +186,5 @@ img{max-width:100%}
 @media (min-width:1024px){.toast{bottom:24px}}
 
 .foot{color:var(--muted);font-size:13px;padding-top:8px;padding-bottom:32px;border-top:1px solid var(--line)}
+@media (min-width:760px){.selects label span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.row2{flex-wrap:nowrap}.selects{margin-left:auto}}
+@media (max-width:1023px){.calc__head{margin-top:20px}}

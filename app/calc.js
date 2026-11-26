@@ -87,6 +87,10 @@
       '.calc-inverse{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;font-weight:600}',
       '.calc-inverse img{width:26px;height:26px}',
       '.calc-inverse input{width:6rem;border-radius:999px;text-align:center}',
+      '.calc-apetite{grid-template-columns:1fr}',
+      '.calc-apetite label{display:grid;grid-template-columns:auto 1fr;align-items:baseline;gap:0 10px}.calc-apetite label br{display:none}.calc-apetite small{text-align:right}',
+      '.calc-step{min-width:0}.calc-item{grid-template-columns:minmax(0,1fr) auto}',
+      '@media (max-width:420px){.calc-root{padding:12px;gap:14px}.calc-qty{width:3.6rem}.calc-unit{min-width:3.6rem}.calc-remove{grid-column:1/-1;justify-self:end;min-height:36px!important}}',
       '.calc-note{color:var(--c-sal);font-size:.85rem;margin:.6rem 0 0!important}'
     ].join('\n');
     document.head.appendChild(st);
