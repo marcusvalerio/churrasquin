@@ -27,7 +27,12 @@
   function cortes() { return Array.isArray(window.CORTES) ? window.CORTES : []; }
   var byId = {};
   function corte(id) { if (!byId[id]) cortes().forEach(function (c) { byId[c.id] = c; }); return byId[id]; }
-  function preco(c) { return c && typeof c.precoKg === 'number' && c.precoKg > 0 ? c.precoKg : null; }
+  function preco(c) {
+    if (!c || !c.precoKg) return null;
+    if (typeof c.precoKg === 'number') return c.precoKg > 0 ? c.precoKg : null;
+    var a = +c.precoKg.min, b = +c.precoKg.max;
+    return a > 0 && b > 0 ? Math.round((a + b) / 2) : (a || b || null);
+  }
   function hasPrices() { return cortes().some(preco); }
   function apetites() { return window.APETITE && typeof window.APETITE === 'object' ? window.APETITE : AP_FALLBACK; }
   function calcOK(fn) { return window.Calc && typeof window.Calc[fn] === 'function'; }
@@ -47,7 +52,7 @@
   function add(id) {
     if (!corte(id) || has(id)) return false;
     plan.itens.push({ id: id });
-    if (calcOK('add')) { try { window.Calc.add(id); } catch (e) {} }
+    if (false && calcOK('add')) { try { window.Calc.add(id); } catch (e) {} }
     commit(); return true;
   }
   function remove(id) { plan.itens = plan.itens.filter(function (it) { return it.id !== id; }); commit(); }
@@ -59,16 +64,16 @@
     var A = apetites(), g = (A[plan.apetite] || A.confortavel || { gramas: 400 }).gramas;
     var porcoes = plan.adultos + plan.criancas * 0.5;
     var alvo = porcoes * g; // equivalente cru em corte de rendimento médio
-    var manualEq = 0, auto = [];
+    var manualEq = 0, auto = [], wSum = 0;
     plan.itens.forEach(function (it) {
       var c = corte(it.id), r = (c && c.rendimento) || REF;
-      if (it.g > 0) manualEq += it.g * r / REF; else auto.push(it);
+      if (it.g > 0) manualEq += it.g * r / REF; else { auto.push(it); wSum += it.w > 0 ? it.w : 1; }
     });
     var resto = Math.max(0, alvo - manualEq);
     var linhas = plan.itens.map(function (it) {
       var c = corte(it.id), r = (c && c.rendimento) || REF, grams;
       if (it.g > 0) grams = it.g;
-      else grams = auto.length ? Math.max(200, Math.round((resto / auto.length) * REF / r / 100) * 100) : 0;
+      else grams = auto.length ? Math.max(200, Math.round((resto * (it.w > 0 ? it.w : 1) / wSum) * REF / r / 100) * 100) : 0;
       var p = preco(c);
       return { id: it.id, c: c, g: grams, manual: it.g > 0, preco: p, valor: p ? p * grams / 1000 : null };
     });
@@ -144,7 +149,8 @@
 
   /* ---------- catálogo ---------- */
   var state = { q: '', pais: '', animal: '', sort: '', eco: false };
-  var ecoMax = Infinity;
+  var ecoMax = Infinity, ecoSet = null;
+  function isEco(c) { return ecoSet ? ecoSet.indexOf(c.id) >= 0 : !!(preco(c) && preco(c) <= ecoMax); }
   function meter(k, label, n) {
     var o = ''; for (var i = 1; i <= 5; i++) o += '<i' + (i <= n ? ' class="on"' : '') + '></i>';
     return '<div class="meter meter--' + k + '"><dt>' + label + '</dt><dd><span class="dots" aria-hidden="true">' + o + '</span><span class="meter__n" aria-label="' + n + ' de 5">' + n + '</span></dd></div>';
@@ -164,7 +170,7 @@
         '<h3>' + esc(c.nome) + '</h3>' +
         (alt ? '<p class="card__alt">' + alt + '</p>' : '') +
         '<dl class="meters">' + meter('maciez', 'Maciez', c.maciez) + meter('gordura', 'Gordura', c.gordura) + meter('sabor', 'Sabor', c.sabor) + '</dl>' +
-        '<div class="card__foot">' + (p ? '<span class="price' + (p <= ecoMax ? ' price--eco' : '') + '"><b>' + brl(p) + '</b>/kg</span>' : '<span class="price price--na">preço a confirmar</span>') +
+        '<div class="card__foot">' + (p ? '<span class="price' + (isEco(c) ? ' price--eco' : '') + '"><b>' + brl(p) + '</b>/kg</span>' : '<span class="price price--na">preço a confirmar</span>') +
         '<button type="button" class="add' + (on ? ' is-on' : '') + '" data-act="add" aria-pressed="' + on + '" aria-label="' + (on ? 'Tirar ' : 'Levar ') + esc(c.nome) + (on ? ' da lista' : '') + '">' +
         (on ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Na lista</span>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Levar</span>') +
         '</button></div></div></li>';
@@ -176,7 +182,7 @@
     names.forEach(function (n, i) {
       var base = n.replace(/\s*\(.*\)\s*/g, ' ').trim();
       var s = 9;
-      if (n === q || base === q) s = 0;
+      if (n === q) s = 0; else if (base === q) s = 0.75;
       else if (n.indexOf(q) === 0) s = 1;
       else if ((' ' + n).indexOf(' ' + q) >= 0) s = 2;
       else if (n.indexOf(q) >= 0) s = 3;
@@ -190,7 +196,7 @@
     var list = cortes().filter(function (c) {
       if (state.pais && (c.paises || []).indexOf(state.pais) < 0) return false;
       if (state.animal && c.animal !== state.animal) return false;
-      if (state.eco && !(preco(c) && preco(c) <= ecoMax)) return false;
+      if (state.eco && !isEco(c)) return false;
       return true;
     }).map(function (c, i) { return { c: c, i: i, s: q ? matchScore(c, q) : 0 }; })
       .filter(function (x) { return x.s < 9; });
@@ -235,7 +241,7 @@
       '<section class="card-s" aria-labelledby="l-carne"><h2 class="sec-t" id="l-carne">Carne <span>' + kgTxt(r.totalG) + '</span></h2><ul class="lines">' +
       r.linhas.map(function (l) {
         return '<li class="line" data-id="' + esc(l.id) + '">' + thumb(l.c) +
-          '<span class="line__n"><b>' + esc(l.c.nome) + '</b><small>' + (l.preco ? brl(l.preco) + '/kg' : 'sem preço') + (l.c.pesoPeca ? ' · peça ' + esc(l.c.pesoPeca) : '') + '</small>' +
+          '<span class="line__n"><b>' + esc(l.c.nome) + '</b><small>' + (l.preco ? brl(l.preco) + '/kg' : 'sem preço') + '</small>' +
           (l.manual ? '<button type="button" class="mini" data-act="auto">ajustado · voltar ao automático</button>' : '') + '</span>' +
           '<span class="qty"><button type="button" class="qty__b" data-act="dec" aria-label="Menos 250 g de ' + esc(l.c.nome) + '">−</button><output aria-live="polite">' + kgTxt(l.g) + '</output><button type="button" class="qty__b" data-act="inc" aria-label="Mais 250 g de ' + esc(l.c.nome) + '">+</button></span>' +
           '<span class="line__v">' + (l.valor != null ? brl(l.valor) : '—') + '</span>' +
@@ -299,7 +305,7 @@
     $$('.view').forEach(function (s) { s.hidden = s.dataset.view !== v; });
     $$('.tab[data-view]').forEach(function (t) { if (t.dataset.view === v) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
     if (location.hash.slice(1) !== v) history.replaceState(null, '', '#' + v);
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0); requestAnimationFrame(function () { window.scrollTo(0, 0); });
     if (focus) { var h = $('#' + v + ' h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); } }
   }
 
@@ -309,6 +315,7 @@
     // limiar "econômico": terço mais barato dos cortes com preço
     var ps = cortes().map(preco).filter(Boolean).sort(function (a, b) { return a - b; });
     if (ps.length) { ecoMax = ps[Math.floor((ps.length - 1) / 3)]; $('#f-eco').hidden = false; }
+    if (Array.isArray(window.CORTES_ECONOMICOS) && window.CORTES_ECONOMICOS.length) ecoSet = window.CORTES_ECONOMICOS;
     else $$('#f-sort option[data-preco]').forEach(function (o) { o.remove(); });
 
     // passo 1
@@ -334,6 +341,17 @@
       toast(c.nome + ' saiu do plano', { label: 'Desfazer', fn: function () { add(id); } });
     });
     $('#preset').addEventListener('click', function () { PRESET.forEach(function (id) { if (corte(id) && !has(id)) plan.itens.push({ id: id }); }); commit(); });
+    var M = window.Calc && window.Calc.MIXES;
+    if (M) {
+      $('#mixes').innerHTML = Object.keys(M).map(function (k) { return '<button type="button" class="mix" data-mix="' + k + '"><b>' + esc(M[k].label) + '</b><small>' + esc(M[k].desc || '') + '</small></button>'; }).join('');
+      $('#mixes-wrap').hidden = false;
+      $('#mixes').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-mix]'); if (!b) return;
+        var w = M[b.dataset.mix].w || {}, prev = plan.itens.slice();
+        plan.itens = Object.keys(w).filter(corte).map(function (id) { return { id: id, w: w[id] }; });
+        commit(); toast('Mix ' + M[b.dataset.mix].label + ' aplicado', { label: 'Desfazer', fn: function () { plan.itens = prev; commit(); } });
+      });
+    }
 
     // catálogo
     $('#f-pais').innerHTML = PAISES.map(function (p) { return '<option value="' + p[0] + '">' + p[1] + '</option>'; }).join('');

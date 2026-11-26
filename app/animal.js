@@ -364,6 +364,35 @@
     '.anm-bar:nth-child(3) .anm-fill{background:var(--c-brasa,#EB6440)}',
     '.anm-chip[aria-pressed="true"]{border-color:#1F1A17;background:#1F1A17;color:#F3EADB}',
     '@media (max-width:820px){ .anm-panel{background:color-mix(in srgb,#F3EADB 45%,#fff);border-top:2px solid #1F1A17} .anm-grab{background:#1F1A17;opacity:.35} }',
+    /* ficha: resumo sempre visível, sem esperar a coreografia */
+    '.anm-panel,.anm-panel>*{opacity:1!important;transform:none!important}',
+    '.anm-panel{display:flex;flex-direction:column;gap:10px;padding-top:12px}',
+    '.anm-panel>*{flex-shrink:0}',
+    '.anm-panel>.anm-h3{margin:10px 0 -4px}',
+    '.anm-title{margin:0}.anm-sub{margin:-6px 0 0;font-size:.9rem}',
+    '.anm-nota{margin:0;align-self:flex-start;background:#F6DDB8;border:1.5px solid #1F1A17;border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:700}',
+    '.anm-porque{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:1rem;line-height:1.45}',
+    '.anm-porque.anm-open{display:block}',
+    '.anm-more{align-self:flex-start;margin:-8px 0 0;background:none;border:0;padding:0 2px;min-height:32px;font:inherit;font-size:.875rem;font-weight:700;color:#1F1A17;text-decoration:underline;text-decoration-color:#EB6440;text-underline-offset:.2em;cursor:pointer}',
+    '.anm-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}',
+    '.anm-bar{display:grid;grid-template-columns:1fr;gap:6px;padding:8px 10px;border-radius:12px;background:color-mix(in srgb,#F3EADB 45%,#fff);border:1px solid color-mix(in srgb,#1F1A17 13%,transparent)}',
+    '.anm-bar dt{font-size:.8rem}.anm-bar dt img{width:18px!important;height:18px!important}',
+    '.anm-bar dd{display:flex;align-items:center;gap:8px}',
+    '.anm-track{flex:1;height:6px}',
+    '.anm-num{font-size:.85rem;color:#5C514A}.anm-num b{font:800 1.25rem/1 var(--font-display,sans-serif);color:#1F1A17}',
+    '.anm-levar{min-height:48px;font-weight:800;font-size:1rem;width:100%}',
+    '.anm-levar.anm-on{background:#F3EADB;box-shadow:none;border-color:color-mix(in srgb,#3FA295 58%,#1F1A17);color:color-mix(in srgb,#3FA295 58%,#1F1A17)}',
+    '.anm-ficha{font-size:.95rem}',
+    '@media (max-width:820px){',
+    ' .anm-body{grid-template-rows:minmax(150px,30vh) 1fr;min-height:0}',
+    ' .anm-stage{padding:0 12px}.anm-tools{padding-top:6px}',
+    ' .anm-tools .anm-btn{min-height:40px}',
+    ' .anm-panel{margin-top:8px;padding:4px 16px 28px;gap:8px}',
+    ' .anm-title{font-size:1.75rem}',
+    ' .anm-head{padding:4px 6px 4px 16px}',
+    ' .anm-dialog{transition:opacity 120ms ease,transform 200ms ease;transform:none}',
+    '}',
+    '@media (max-width:820px) and (max-height:700px){.anm-body{grid-template-rows:minmax(130px,26vh) 1fr}}',
     /* movimento reduzido: tudo no estado final, sem transição */
     '.anm-still *,.anm-still{transition:none!important}',
     '@media (prefers-reduced-motion:reduce){.anm-root *,.anm-root{transition:none!important}}'
@@ -617,19 +646,13 @@
     add(el('div', 'anm-grab')).setAttribute('aria-hidden', 'true');
     var h = add(el('h2', 'anm-title', c.nome)); h.id = titleId;
     add(el('p', 'anm-sub', 'Do ' + ANIMAIS[c.animal].nome + ' · região: ' + (NOMES_REGIAO[c.regiao] || c.regiao)));
-    var nomes = c.nomes || {};
-    var ul = el('ul', 'anm-nomes'); ul.setAttribute('aria-label', 'Nomes em outros países');
-    ['ar', 'uy', 'us'].forEach(function (k) {
-      if (!nomes[k]) return;
-      var li = el('li'); var ab = el('abbr', '', k.toUpperCase()); ab.title = PAIS[k];
-      var fl = document.createElement('img'); fl.src = 'brand/v3/icons/pais-' + k + '.svg'; fl.alt = ''; fl.width = 20; fl.height = 20;
-      li.appendChild(fl); li.appendChild(ab); li.appendChild(document.createTextNode(nomes[k])); ul.appendChild(li);
-    });
-    if (ul.children.length) add(ul);
-    add(el('h3', 'anm-h3', 'Por que essa peça é assim'));
-    add(el('p', 'anm-porque', c.porque || ''));
-    add(el('h3', 'anm-h3', 'Perfil'));
+    if (c.nota) add(el('p', 'anm-nota', c.nota));
+    var pq = add(el('p', 'anm-porque', c.porque || ''));
+    var more = el('button', 'anm-more', 'ler mais'); more.type = 'button'; more.setAttribute('aria-expanded', 'false');
+    more.addEventListener('click', function () { var o = pq.classList.toggle('anm-open'); more.setAttribute('aria-expanded', o); more.textContent = o ? 'ler menos' : 'ler mais'; });
+    add(more);
     var bars = el('dl', 'anm-bars');
+    bars.setAttribute('aria-label', 'Perfil');
     [['Maciez', c.maciez], ['Gordura', c.gordura], ['Sabor', c.sabor]].forEach(function (b, j) {
       var v = Math.max(0, Math.min(5, +b[1] || 0));
       var row = el('div', 'anm-bar');
@@ -639,13 +662,33 @@
       var tr = el('span', 'anm-track'); tr.setAttribute('aria-hidden', 'true');
       var f = el('span', 'anm-fill'); f.style.display = 'block'; f.style.setProperty('--d', j); f.setAttribute('data-v', v / 5);
       tr.appendChild(f);
-      var num = el('span', 'anm-num', v + '/5'); num.setAttribute('aria-label', v + ' de 5');
+      var num = el('span', 'anm-num'); num.innerHTML = '<b>' + v + '</b>/5'; num.setAttribute('aria-label', v + ' de 5');
       dd.appendChild(tr); dd.appendChild(num); row.appendChild(dd); bars.appendChild(row);
     });
     add(bars);
+    if (c.id && achar(c.id)) {
+      var lev = add(el('button', 'anm-btn anm-btn-pri anm-levar'));
+      lev.type = 'button';
+      var setLev = function () { var on = window.Plan && window.Plan.has(c.id); lev.textContent = on ? '✓ Na lista' : '+ Levar ' + c.nome; lev.classList.toggle('anm-on', !!on); lev.setAttribute('aria-pressed', on ? 'true' : 'false'); };
+      setLev();
+      lev.addEventListener('click', function () {
+        if (window.Plan) window.Plan.toggle(c.id);
+        else { try { document.dispatchEvent(new CustomEvent('corte:levar', { detail: { id: c.id } })); } catch (e) {} }
+        setLev();
+      });
+    }
+    var nomes = c.nomes || {};
+    var ul = el('ul', 'anm-nomes'); ul.setAttribute('aria-label', 'Nomes em outros países');
+    ['ar', 'uy', 'us'].forEach(function (k) {
+      if (!nomes[k]) return;
+      var li = el('li'); var ab = el('abbr', '', k.toUpperCase()); ab.title = PAIS[k];
+      var fl = document.createElement('img'); fl.src = 'brand/v3/icons/pais-' + k + '.svg'; fl.alt = ''; fl.width = 20; fl.height = 20;
+      li.appendChild(fl); li.appendChild(ab); li.appendChild(document.createTextNode(nomes[k])); ul.appendChild(li);
+    });
+    if (ul.children.length) { add(el('h3', 'anm-h3', 'Em outros países')); add(ul); }
     add(el('h3', 'anm-h3', 'Na brasa'));
     var fi = el('dl', 'anm-ficha');
-    [['Preparo', c.preparo], ['Ponto', c.ponto], ['Tempo', c.tempo]].forEach(function (p) {
+    [['Preparo', c.preparo], ['Ponto', c.ponto], ['Tempo', c.tempo], ['Brasa', c.brasa]].forEach(function (p) {
       if (!p[1]) return; fi.appendChild(el('dt', '', p[0])); fi.appendChild(el('dd', '', p[1]));
     });
     add(fi);
