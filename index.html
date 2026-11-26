@@ -2,25 +2,31 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F3EADB">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="brand/v3/simbolo.svg" type="image/svg+xml">
 <title>churrasquin — cortes, origem e quanto comprar</title>
 <meta name="description" content="Catálogo de cortes do Brasil, Argentina, Uruguai e steaks americanos, com a origem de cada peça e uma calculadora de quanto comprar.">
-<link rel="stylesheet" href="brand/tokens.css">
+<link rel="stylesheet" href="brand/v3/tokens.css">
 <link rel="stylesheet" href="app/styles.css">
 </head>
 <body>
 <a class="skip" href="#catalogo">Pular para o catálogo</a>
 <header class="topbar">
   <div class="wrap topbar__in">
-    <a class="brand" href="#" aria-label="churrasquin, início"><img src="brand/logo.svg" alt="churrasquin" height="40" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'brand__txt',textContent:'churrasquin'}))"></a>
-    <nav class="topnav" aria-label="Principal"><a href="#catalogo">Cortes</a><a href="#calculadora">Calculadora</a></nav>
+    <a class="brand" href="#" aria-label="churrasquin, início"><img src="brand/v3/logo-horizontal.svg" alt="churrasquin" width="150" height="40" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'brand__txt',textContent:'churrasquin'}))"></a>
+    <nav class="tabs" aria-label="Seções">
+      <a class="tab" href="#catalogo" data-view="cortes" aria-current="page"><img class="ico" src="brand/v3/icons/boi.svg" alt="">Cortes</a>
+      <a class="tab" href="#calculadora" data-view="calc"><img class="ico" src="brand/v3/icons/calculadora.svg" alt="">Calculadora <span class="tab__n" data-n="0" aria-hidden="true">0</span></a>
+    </nav>
   </div>
 </header>
 
 <main>
   <section class="hero wrap" aria-labelledby="hero-t">
-    <p class="eyebrow">Brasil · Argentina · Uruguai · EUA</p>
-    <h1 id="hero-t">Escolha o corte. A gente diz de onde vem e quanto levar.</h1>
+    <p class="eyebrow"><img src="brand/v3/icons/pais-br.svg" alt=""><img src="brand/v3/icons/pais-ar.svg" alt=""><img src="brand/v3/icons/pais-uy.svg" alt=""><img src="brand/v3/icons/pais-us.svg" alt=""> Brasil · Argentina · Uruguai · EUA</p>
+    <h1 id="hero-t">Escolha o corte. A gente diz <em>de onde vem</em> e <em>quanto levar</em>.</h1>
     <p class="hero__lead">42 cortes servidos na tábua, com o mapa de onde cada um vem, nomes em cada país e a conta certa para a sua turma.</p>
   </section>
 
@@ -38,10 +44,12 @@
           <input id="q" type="search" placeholder="Buscar: picanha, vacío, ribeye…" autocomplete="off">
         </label>
         <fieldset class="seg" id="f-pais"><legend class="sr">País</legend></fieldset>
-        <div class="selects">
-          <label><span>Animal</span><select id="f-animal"><option value="">Todos</option><option value="boi">Boi</option><option value="porco">Porco</option><option value="cordeiro">Cordeiro</option><option value="frango">Frango</option></select></label>
-          <label><span>Categoria</span><select id="f-cat"><option value="">Todas</option><option value="nobre">Nobre</option><option value="tradicional">Tradicional</option><option value="steak">Steak</option><option value="popular">Popular</option><option value="miudo">Miúdo</option></select></label>
-          <label><span>Ordenar</span><select id="f-sort"><option value="">Destaques</option><option value="maciez-desc">Mais macio</option><option value="maciez-asc">Mais firme</option><option value="nome">A–Z</option></select></label>
+        <div class="row2">
+          <fieldset class="seg seg--animal" id="f-animal"><legend class="sr">Animal</legend></fieldset>
+          <div class="selects">
+            <label><span>Categoria</span><select id="f-cat"><option value="">Todas</option><option value="nobre">Nobre</option><option value="tradicional">Tradicional</option><option value="steak">Steak</option><option value="popular">Popular</option><option value="miudo">Miúdo</option></select></label>
+            <label><span>Ordenar</span><select id="f-sort"><option value="">Destaques</option><option value="maciez-desc">Mais macio</option><option value="maciez-asc">Mais firme</option><option value="nome">A–Z</option></select></label>
+          </div>
         </div>
       </form>
 
@@ -54,13 +62,16 @@
     </section>
 
     <aside id="calculadora" class="calc" aria-labelledby="calc-t" tabindex="-1">
-      <h2 id="calc-t">Minha lista</h2>
+      <div class="calc__head"><img src="brand/v3/icons/calculadora.svg" alt=""><h2 id="calc-t">Calculadora</h2></div>
       <div id="calc-mount"><p class="muted">Carregando calculadora…</p></div>
     </aside>
   </div>
 </main>
 
-<a class="dock" id="dock" href="#calculadora"><span class="dock__l">Minha lista</span><span class="dock__v" id="dock-v">vazia</span><span aria-hidden="true">→</span></a>
+<nav class="tabbar" id="tabbar" aria-label="Seções">
+  <a class="tab" href="#catalogo" data-view="cortes" aria-current="page"><img class="ico" src="brand/v3/icons/boi.svg" alt="">Cortes</a>
+  <a class="tab" href="#calculadora" data-view="calc"><img class="ico" src="brand/v3/icons/calculadora.svg" alt="">Calculadora <span class="tab__n" data-n="0" aria-hidden="true">0</span><span class="sr" id="tab-n-sr"></span></a>
+</nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer class="foot wrap"><p>churrasquin · pesos de carne crua; ajuste ao gosto da turma.</p></footer>

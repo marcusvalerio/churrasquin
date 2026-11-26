@@ -2,13 +2,21 @@
 (function () {
   'use strict';
   var $ = function (s) { return document.querySelector(s); };
+  var ICO = 'brand/v3/icons/';
   var PAISES = [['', 'Todos'], ['BR', 'Brasil'], ['AR', 'Argentina'], ['UY', 'Uruguai'], ['US', 'EUA']];
+  var PAIS_NOME = { BR: 'Brasil', AR: 'Argentina', UY: 'Uruguai', US: 'EUA' };
+  var ANIMAIS = [['', 'Todos'], ['boi', 'Boi'], ['porco', 'Porco'], ['cordeiro', 'Cordeiro'], ['frango', 'Frango']];
+  var CAT = { nobre: 'Nobre', tradicional: 'Tradicional', steak: 'Steak', popular: 'Popular', miudo: 'Miúdo' };
   var LBL = { ar: 'AR', uy: 'UY', us: 'US' };
+  function ico(name, cls) { return '<img' + (cls ? ' class="' + cls + '"' : '') + ' src="' + ICO + name + '.svg" alt="" width="20" height="20">'; }
   var state = { q: '', pais: '', animal: '', cat: '', sort: '' };
   var added = 0;
 
   function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function meter(k, label, n) {
+    return '<div class="meter meter--' + k + '">' + ico(k) + '<dt>' + label + '</dt><dd>' + dots(n) + '<span class="sr">' + n + ' de 5</span></dd></div>';
+  }
   function dots(n) { var o = ''; for (var i = 1; i <= 5; i++) o += '<i class="' + (i <= n ? 'on' : '') + '"></i>'; return '<span class="dots" aria-hidden="true">' + o + '</span>'; }
 
   function cards(list) {
@@ -17,16 +25,13 @@
         .map(function (k) { return '<b>' + LBL[k] + '</b>' + esc(c.nomes[k]); }).join(' · ');
       var art = (window.CUT_ART && window.CUT_ART[c.id]) || '<div class="card__ph">ilustração em breve</div>';
       return '<li class="card" data-id="' + esc(c.id) + '">' +
-        '<div class="card__art">' + art + '</div>' +
-        '<div class="card__flags">' + (c.paises || []).map(function (p) { return '<span>' + p + '</span>'; }).join('') + '</div>' +
-        '<button type="button" class="card__info" data-act="info" aria-label="Saiba de onde vem a ' + esc(c.nome) + '">i</button>' +
-        '<div class="card__body"><h3>' + esc(c.nome) + '</h3>' +
+        '<div class="card__art" aria-hidden="true">' + art + '</div>' +
+        '<ul class="card__flags" aria-label="Servido em">' + (c.paises || []).map(function (p) { return '<li title="' + PAIS_NOME[p] + '"><img src="' + ICO + 'pais-' + p.toLowerCase() + '.svg" alt="' + PAIS_NOME[p] + '" width="20" height="20"></li>'; }).join('') + '</ul>' +
+        '<button type="button" class="card__info" data-act="info" aria-label="Saiba de onde vem a ' + esc(c.nome) + '">' + ico('info') + '</button>' +
+        '<div class="card__body"><p class="card__tag">' + ico(c.animal) + esc((ANIMAIS.filter(function (a) { return a[0] === c.animal; })[0] || ['', ''])[1]) + (CAT[c.categoria] ? ' · ' + CAT[c.categoria] : '') + '</p><h3>' + esc(c.nome) + '</h3>' +
         (alt ? '<p class="card__alt">' + alt + '</p>' : '') +
-        '<div class="meters">' +
-        '<span class="chip chip--maciez" title="Maciez ' + c.maciez + ' de 5"><span class="lbl">Maciez</span>' + dots(c.maciez) + '<span class="sr">' + c.maciez + ' de 5</span></span>' +
-        '<span class="chip chip--gordura" title="Gordura ' + c.gordura + ' de 5"><span class="lbl">Gordura</span>' + dots(c.gordura) + '<span class="sr">' + c.gordura + ' de 5</span></span>' +
-        '</div>' +
-        '<button type="button" class="btn btn--primary card__add" data-act="add" aria-label="Levar ' + esc(c.nome) + '">+ levar</button>' +
+        '<dl class="meters">' + meter('maciez', 'Maciez', c.maciez) + meter('gordura', 'Gordura', c.gordura) + meter('sabor', 'Sabor', c.sabor) + '</dl>' +
+        '<button type="button" class="btn btn--primary card__add" data-act="add" aria-label="Levar ' + esc(c.nome) + '"><span class="btn__ico">' + ico('adicionar') + '</span><span class="btn__t">levar</span></button>' +
         '</div></li>';
     }).join('');
   }
@@ -64,28 +69,49 @@
   }
 
   function updateDock() {
-    var v = $('#dock-v'), C = window.Calc, s = null;
+    var n = 0;
     try {
       var st = JSON.parse(localStorage.getItem('churrasquin.calc.v1') || 'null');
-      if (C && typeof C.compute === 'function' && st && Array.isArray(st.itens) && st.itens.length) s = C.compute(st.itens, st.apetite || 'confortavel', st.convidados);
-    } catch (e) { s = null; }
-    if (s && s.totalG != null) v.textContent = (s.totalG / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' kg · ' + (s.pessoas || 0) + (s.pessoas === 1 ? ' pessoa' : ' pessoas');
-    else v.textContent = added ? added + (added > 1 ? ' cortes' : ' corte') : 'vazia';
+      if (st && Array.isArray(st.itens)) n = st.itens.length;
+    } catch (e) { n = added; }
+    document.querySelectorAll('.tab__n').forEach(function (b) { b.textContent = n; b.setAttribute('data-n', n); });
+    var sr = $('#tab-n-sr'); if (sr) sr.textContent = n ? ', ' + n + (n > 1 ? ' cortes na lista' : ' corte na lista') : ', lista vazia';
+  }
+
+  /* abas: no celular alternam a vista; no desktop (duas colunas) só rolam e marcam a seção */
+  var mqDesk = window.matchMedia('(min-width:1024px)');
+  function setView(v, scroll) {
+    document.body.setAttribute('data-view', v);
+    document.querySelectorAll('.tab[data-view]').forEach(function (t) { if (t.dataset.view === v) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
+    if (scroll === false) return;
+    if (!mqDesk.matches) window.scrollTo(0, 0);
+    var target = v === 'calc' ? $('#calculadora') : $('#catalogo');
+    if (mqDesk.matches) target.scrollIntoView({ block: 'start' });
+    target.focus({ preventScroll: true });
   }
 
   function onAdd(btn, id, c) {
     if (window.Calc && typeof window.Calc.add === 'function') window.Calc.add(id);
     added++;
-    btn.classList.add('is-added'); btn.textContent = '✓ na lista';
-    setTimeout(function () { btn.classList.remove('is-added'); btn.textContent = '+ levar'; }, 1400);
-    toast((c ? c.nome : id) + ' adicionada à lista');
-    var d = $('#dock'); d.classList.remove('bump'); void d.offsetWidth; d.classList.add('bump');
+    var t = btn.querySelector('.btn__t');
+    btn.classList.add('is-added'); t.textContent = 'na lista ✓';
+    clearTimeout(btn._t); btn._t = setTimeout(function () { btn.classList.remove('is-added'); t.textContent = 'levar'; }, 1400);
+    toast((c ? c.nome : id) + ' foi para a lista');
+    var d = $('#tabbar'); d.classList.remove('bump'); void d.offsetWidth; d.classList.add('bump');
     setTimeout(updateDock, 0);
   }
 
   function init() {
     var seg = $('#f-pais');
-    seg.innerHTML += PAISES.map(function (p) { return '<button type="button" data-v="' + p[0] + '" aria-pressed="' + (p[0] === '' ) + '">' + p[1] + '</button>'; }).join('');
+    seg.innerHTML += PAISES.map(function (p) { return '<button type="button" class="' + (p[0] ? '' : 'noicon') + '" data-v="' + p[0] + '" aria-pressed="' + (p[0] === '') + '">' + (p[0] ? ico('pais-' + p[0].toLowerCase()) : '') + p[1] + '</button>'; }).join('');
+    var segA = $('#f-animal');
+    segA.innerHTML += ANIMAIS.map(function (p) { return '<button type="button" class="' + (p[0] ? '' : 'noicon') + '" data-v="' + p[0] + '" aria-pressed="' + (p[0] === '') + '">' + (p[0] ? ico(p[0]) : '') + p[1] + '</button>'; }).join('');
+    segA.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      state.animal = b.dataset.v;
+      segA.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+      render();
+    });
     seg.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       state.pais = b.dataset.v;
@@ -93,12 +119,11 @@
       render();
     });
     var qT; $('#q').addEventListener('input', function (e) { clearTimeout(qT); qT = setTimeout(function () { state.q = e.target.value; render(); }, 120); });
-    $('#f-animal').addEventListener('change', function (e) { state.animal = e.target.value; render(); });
     $('#f-cat').addEventListener('change', function (e) { state.cat = e.target.value; render(); });
     $('#f-sort').addEventListener('change', function (e) { state.sort = e.target.value; render(); });
     $('#clear').addEventListener('click', function () {
       state = { q: '', pais: '', animal: '', cat: '', sort: '' };
-      $('#filters').reset(); seg.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.v === ''); });
+      $('#filters').reset(); [seg, segA].forEach(function (g) { g.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.v === ''); }); });
       render(); $('#q').focus();
     });
 
@@ -112,7 +137,10 @@
       } else onAdd(b, id, c);
     });
 
-    $('#dock').addEventListener('click', function () { setTimeout(function () { $('#calculadora').focus({ preventScroll: true }); }, 400); });
+    document.querySelectorAll('.tab[data-view]').forEach(function (t) {
+      t.addEventListener('click', function (e) { e.preventDefault(); setView(t.dataset.view); history.replaceState(null, '', t.getAttribute('href')); });
+    });
+    setView(location.hash === '#calculadora' ? 'calc' : 'cortes', false);
 
     if (!Array.isArray(window.CORTES)) {
       $('#grid').innerHTML = '<li class="error" style="grid-column:1/-1">Não conseguimos carregar os cortes. Recarregue a página.</li>';
