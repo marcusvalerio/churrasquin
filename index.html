@@ -3,148 +3,117 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F3EADB">
+<meta name="theme-color" content="#FBF1DE">
 <meta name="color-scheme" content="light">
-<link rel="icon" href="brand/v3/simbolo.svg" type="image/svg+xml">
-<title>churrasquin — quanto comprar, qual corte e de onde vem</title>
-<meta name="description" content="Planeje o churrasco pela turma: quantas pessoas, quais cortes, quantos kg e quanto custa. Catálogo de cortes do Brasil, Argentina, Uruguai e EUA.">
+<title>churrasquin — pra quem toca a brasa</title>
+<meta name="description" content="App de apoio ao churrasqueiro: quanto comprar, qual corte, a ordem na brasa, o ponto pelo termômetro e as receitas que acompanham.">
+<link rel="icon" href="brand/final/app-icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:wght@400;700&family=Share+Tech+Mono&display=swap">
-<link rel="stylesheet" href="brand/v3/tokens.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&family=Yellowtail&display=swap">
+<link rel="stylesheet" href="brand/final/tokens.css">
 <link rel="stylesheet" href="app/styles.css">
 </head>
-<body data-view="planejar">
-<a class="skip" href="#conteudo">Pular para o conteúdo</a>
-<header class="topbar">
-  <div class="wrap topbar__in">
-    <a class="brand" href="#planejar" data-go="planejar" aria-label="churrasquin, início"><img id="logo" src="brand/v4/logo-final.svg" alt="churrasquin" width="160" height="40" onerror="this.onerror=null;this.src='brand/v3/logo-horizontal.svg'"></a>
-    <nav class="tabs espeto" aria-label="Seções">
-      <a class="tab" href="#planejar" data-view="planejar"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/turma.svg" alt=""><span class="tab__l">Planejar</span></a>
-      <a class="tab" href="#cortes" data-view="cortes"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/boi.svg" alt=""><span class="tab__l">Cortes</span></a>
-      <a class="tab" href="#brasa" data-view="brasa"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/brasa.svg" alt=""><span class="tab__l">Na brasa</span></a>
-      <a class="tab" href="#lista" data-view="lista"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/calculadora.svg" alt=""><span class="tab__l">Lista</span> <span class="tab__n" data-n="0" aria-hidden="true">0</span></a>
-    </nav>
-  </div>
-</header>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="dog" viewBox="0 0 490 290"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M70 270C58 226 66 182 100 160C118 148 132 146 142 128"/>
+<path d="M142 128C138 104 150 82 176 74C198 68 214 76 232 72C250 68 266 76 266 92C266 106 252 112 238 110C230 122 214 128 198 126C184 136 176 150 176 166"/>
+<path d="M176 166C180 200 182 236 178 270M128 172C124 206 122 240 124 270"/>
+<path d="M110 270H144M162 270H196M50 270H110"/>
+<path d="M174 82C160 86 150 106 156 132C170 124 178 108 182 90"/>
+<path d="M248 114C250 126 246 134 240 136C234 134 232 126 236 116"/>
+<path d="M70 252C40 246 26 222 36 198M24 220L12 214M28 236L14 238"/>
+<path d="M266 92C270 90 274 90 276 94"/>
+<circle cx="218" cy="90" r="9"/></g>
+<circle cx="222" cy="86" r="4" fill="currentColor"/><path d="M240 136C238 146 244 152 246 146C247 142 244 140 240 136Z" fill="currentColor"/>
+<g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M300 150H470M296 150C300 196 340 220 385 220C430 220 470 196 474 150"/>
+<path d="M330 212L312 270M440 212L458 270M385 220V270M300 270H470"/>
+<path d="M318 136C318 126 326 120 336 122L378 128C388 130 390 144 380 146L334 146C324 146 318 142 318 136Z"/>
+<path d="M392 132C394 122 402 118 412 120L452 128C462 130 462 144 452 144L404 144C396 144 390 140 392 132Z"/>
+<path d="M350 108C340 96 360 86 350 72M392 104C382 92 402 82 392 66M432 108C422 96 442 86 432 72" stroke-width="3"/>
+<path d="M286 70L296 62M280 52L282 40M300 82L312 80" stroke-width="3"/></g></symbol>
+<filter id="ink" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="3" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -14 10" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in" result="s"/><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="7" result="w"/><feDisplacementMap in="s" in2="w" scale="3"/></filter>
+</defs></svg>
 
-<main id="conteudo" tabindex="-1">
-  <!-- PLANEJAR -->
-  <section class="view view--plan wrap" id="planejar" data-view="planejar" aria-labelledby="plan-t">
-    <div class="plan">
-      <div class="plan__main caderno">
-        <header class="caderno__head">
-          <p class="caderno__meta" aria-hidden="true"><span>Caderno do assador</span><span id="pedido-d"></span></p>
-          <h1 id="plan-t" class="lettering">Quantos vêm pro churrasco?</h1>
-          <p class="caderno__lead">Turma, apetite e cortes. O caderno faz a conta de quanto comprar.</p>
+<div class="stage">
+  <aside class="about" aria-label="Sobre este protótipo">
+    <p class="about__k">Protótipo navegável</p>
+    <h2 class="about__t">O que você está vendo</h2>
+    <p class="about__d" id="about-d" aria-live="polite">Abertura do app.</p>
+    <ol class="about__steps" id="about-steps"></ol>
+    <p class="about__f">Toque e role dentro do celular. Tudo funciona de verdade: plano, timers, receitas escaladas e a lista compartilhável.</p>
+  </aside>
+
+  <div class="phone">
+    <div class="phone__screen" id="screen">
+      <!-- ABERTURA -->
+      <div class="splash" id="splash" aria-hidden="true">
+        <div class="splash__in">
+          <img class="splash__selo" src="brand/final/selo.svg" alt="" width="168" height="168" onerror="this.onerror=null;this.src='brand/v5/b/app-icon.svg'">
+          <div class="splash__script">
+            <img class="splash__sig" src="brand/final/assinatura-script.svg" alt="" onerror="this.onerror=null;this.hidden=true;this.nextElementSibling.hidden=false">
+            <svg class="splash__sigfb" hidden viewBox="0 0 320 110" aria-hidden="true"><text x="160" y="66" text-anchor="middle" font-family="Yellowtail" font-size="76" fill="#FF5F1F" transform="rotate(-6 160 60)">churrasquin</text><path d="M40 92 Q160 80 280 88" fill="none" stroke="#1D2A9E" stroke-width="5" stroke-linecap="round"/></svg>
+            <span class="splash__cover"></span>
+          </div>
+          <p class="splash__tag">pra quem toca a brasa</p>
+        </div>
+        <button type="button" class="splash__skip" id="splash-skip" tabindex="-1">Pular</button>
+      </div>
+
+      <!-- ONBOARDING -->
+      <section class="onb" id="onb" hidden aria-label="Primeiros passos" role="dialog" aria-modal="true">
+        <header class="onb__top">
+          <div class="onb__dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          <button type="button" class="ghost" id="onb-skip">Pular</button>
         </header>
+        <div class="onb__track" id="onb-track"></div>
+        <footer class="onb__foot">
+          <button type="button" class="btn btn--line" id="onb-back">Voltar</button>
+          <button type="button" class="btn btn--brasa" id="onb-next">Continuar</button>
+        </footer>
+      </section>
 
-        <div class="step" aria-labelledby="s1-t">
-          <h2 class="step__t" id="s1-t"><span class="step__n">01</span><span class="lettering">A turma</span></h2>
-          <div class="people">
-            <div class="stepper" data-k="adultos">
-              <span class="stepper__l" id="lbl-ad">Adultos <small>porção inteira</small></span>
-              <button type="button" class="stepper__b" data-d="-1" aria-label="Menos um adulto">−</button>
-              <input id="in-ad" class="stepper__v" type="number" inputmode="numeric" min="0" max="200" aria-labelledby="lbl-ad">
-              <button type="button" class="stepper__b" data-d="1" aria-label="Mais um adulto">+</button>
-            </div>
-            <div class="stepper" data-k="criancas">
-              <span class="stepper__l" id="lbl-cr">Crianças <small>meia porção</small></span>
-              <button type="button" class="stepper__b" data-d="-1" aria-label="Menos uma criança">−</button>
-              <input id="in-cr" class="stepper__v" type="number" inputmode="numeric" min="0" max="200" aria-labelledby="lbl-cr">
-              <button type="button" class="stepper__b" data-d="1" aria-label="Mais uma criança">+</button>
-            </div>
-          </div>
-          <fieldset class="apetite" id="apetite"><legend>Quanto a turma come?</legend></fieldset>
+      <!-- APP -->
+      <div class="app" id="app" hidden>
+        <header class="top">
+          <a href="#inicio" class="top__brand" data-go="inicio" aria-label="churrasquin, início"><img src="brand/final/logo.svg" alt="churrasquin" height="28" onerror="this.onerror=null;this.src='brand/v5/c/logo.svg'"></a>
+          <button type="button" class="top__btn" id="open-lista" aria-label="Abrir lista de compras"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l-1.4 11.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8L5 7Z"/><path d="M9 7V6a3 3 0 0 1 6 0v1"/></svg><span class="badge" id="lista-n" aria-hidden="true">0</span></button>
+        </header>
+        <main class="views" id="conteudo">
+          <section class="view" id="v-inicio" data-view="inicio" aria-label="Início" tabindex="-1"></section>
+          <section class="view" id="v-planejar" data-view="planejar" aria-label="Planejar" tabindex="-1" hidden></section>
+          <section class="view" id="v-cortes" data-view="cortes" aria-label="Cortes" tabindex="-1" hidden></section>
+          <section class="view" id="v-brasa" data-view="brasa" aria-label="Na brasa" tabindex="-1" hidden></section>
+          <section class="view" id="v-receitas" data-view="receitas" aria-label="Receitas" tabindex="-1" hidden></section>
+        </main>
+        <nav class="tabbar" aria-label="Seções">
+          <a class="tab" href="#inicio" data-tab="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1Z"/></svg><span>Início</span></a>
+          <a class="tab" href="#planejar" data-tab="planejar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 19"/></svg><span>Planejar</span></a>
+          <a class="tab" href="#cortes" data-tab="cortes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13c0-4.4 3.6-8 8.5-8C17 5 20 7.6 20 11c0 4-3.4 8-9 8-4.2 0-7-2.6-7-6Z"/><path d="M8.5 12.5c1.2-2.2 3.4-3.5 6-3.5"/><circle cx="15.5" cy="13" r="1.4"/></svg><span>Cortes</span></a>
+          <a class="tab" href="#brasa" data-tab="brasa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c1 3.5 5 5.4 5 10a5 5 0 0 1-10 0c0-2.4 1.3-3.6 2.4-4.8C10.5 10.5 12 9 12 3Z"/><path d="M12 14c.6 1.2 2 1.7 2 3.2a2 2 0 0 1-4 0c0-.9.5-1.4 1-2"/></svg><span>Na brasa</span></a>
+          <a class="tab" href="#receitas" data-tab="receitas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3Z"/><path d="M5 17a3 3 0 0 1 3-3h11M9 8h6"/></svg><span>Receitas</span></a>
+          <span class="tabbar__ink" aria-hidden="true"></span>
+        </nav>
+        <div class="scrim" id="scrim" hidden></div>
+        <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-t" hidden>
+          <div class="sheet__grab" aria-hidden="true"></div>
+          <button type="button" class="sheet__x" id="sheet-x" aria-label="Fechar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          <div class="sheet__body" id="sheet-body"></div>
         </div>
-
-        <div class="step" aria-labelledby="s2-t">
-          <h2 class="step__t" id="s2-t"><span class="step__n">02</span><span class="lettering">O que vai na grelha</span></h2>
-          <ul class="picks" id="picks" aria-label="Cortes escolhidos"></ul>
-          <div class="picks-empty" id="picks-empty" hidden>
-            <p>Escolha 3 ou 4 cortes. A gente divide os quilos entre eles.</p>
-            <button type="button" class="btn btn--ghost" id="preset">Usar o clássico: picanha, fraldinha, linguiça e coxa</button>
-          </div>
-          <div id="mixes-wrap" hidden><p class="sug-t">Montar com um mix pronto</p><div class="mixes" id="mixes"></div></div>
-          <p class="sug-t">Ou adicione um a um</p>
-          <div class="sug" id="sug"></div>
-          <button type="button" class="link-btn" data-go="cortes">Ver todos os cortes <span aria-hidden="true">→</span></button>
-        </div>
+        <div class="stampfx" id="stampfx" aria-hidden="true"></div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
       </div>
-
-      <aside class="plan__side" aria-labelledby="s3-t">
-        <div class="result" id="result">
-          <h2 class="result__k" id="s3-t"><span class="step__n">03</span><span class="lettering">Quanto comprar</span></h2>
-          <div aria-live="polite" aria-atomic="true" id="result-live"></div>
-          <button type="button" class="btn btn--primary" data-go="lista">Ver lista de compras</button>
-        </div>
-      </aside>
     </div>
-  </section>
-
-  <!-- CORTES -->
-  <section class="view view--cortes wrap" id="cortes" data-view="cortes" aria-labelledby="cat-t" hidden>
-    <header class="vhead vhead--row">
-      <div><p class="eyebrow">Guia de campo do assador</p><h1 id="cat-t" class="lettering">Cortes</h1></div>
-      <p class="count" id="count" aria-live="polite"></p>
-    </header>
-    <form class="filters" id="filters" role="search" onsubmit="return false">
-      <label class="search">
-        <span class="sr">Buscar corte</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-        <input id="q" type="search" placeholder="Buscar: picanha, vacío, ribeye…" autocomplete="off">
-      </label>
-      <div class="chips" role="group" aria-label="Filtros">
-        <fieldset class="seg" id="f-animal"><legend class="sr">Animal</legend></fieldset>
-        <button type="button" class="chip chip--eco" id="f-eco" aria-pressed="false" hidden>Econômico</button>
-        <label class="sel"><span class="sr">País</span><select id="f-pais"></select></label>
-        <label class="sel"><span class="sr">Ordenar</span><select id="f-sort"><option value="">Destaques</option><option value="preco-asc" data-preco>Menor preço</option><option value="preco-desc" data-preco>Maior preço</option><option value="maciez-desc">Mais macio</option><option value="sabor-desc">Mais sabor</option><option value="nome">A–Z</option></select></label>
-      </div>
-    </form>
-    <ul class="grid" id="grid" aria-label="Cortes"></ul>
-    <div class="empty" id="empty" hidden>
-      <img src="brand/v3/icons/brasa.svg" alt="" width="48" height="48">
-      <p class="empty__t">Nenhum corte encontrado</p>
-      <p class="empty__d">Tente outro nome (vale “vacío”, “ribeye”, “bife de chorizo”) ou limpe os filtros.</p>
-      <button type="button" class="btn btn--ghost" id="clear">Limpar filtros</button>
-    </div>
-  </section>
-
-  <!-- NA BRASA -->
-  <section class="view view--brasa wrap" id="brasa" data-view="brasa" aria-labelledby="brasa-t" hidden>
-    <header class="vhead vhead--row">
-      <div><p class="eyebrow">Comando da grelha</p><h1 id="brasa-t" class="lettering">Na brasa</h1></div>
-      <label class="servir"><span>Servir às</span><input type="time" id="servir" value="13:00"></label>
-    </header>
-    <div class="brasa" id="brasa-body"></div>
-  </section>
-
-  <!-- LISTA -->
-  <section class="view view--lista wrap" id="lista" data-view="lista" aria-labelledby="lista-t" hidden>
-    <header class="vhead vhead--row">
-      <div><p class="eyebrow">Compras e checklist do dia</p><h1 id="lista-t" class="lettering">Lista</h1></div>
-      <p class="count" id="lista-meta"></p>
-    </header>
-    <div class="lista" id="lista-body"></div>
-  </section>
-</main>
-
-<div class="dock" id="dock">
-  <button type="button" class="dock__sum" id="dock-sum" data-go="lista" aria-label="Ver lista de compras"></button>
-  <nav class="tabbar espeto" aria-label="Seções">
-    <a class="tab" href="#planejar" data-view="planejar"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/turma.svg" alt=""><span class="tab__l">Planejar</span></a>
-    <a class="tab" href="#cortes" data-view="cortes"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/boi.svg" alt=""><span class="tab__l">Cortes</span></a>
-    <a class="tab" href="#brasa" data-view="brasa"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/brasa.svg" alt=""><span class="tab__l">Na brasa</span></a>
-    <a class="tab" href="#lista" data-view="lista"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/calculadora.svg" alt=""><span class="tab__l">Lista</span> <span class="tab__n" data-n="0" aria-hidden="true">0</span><span class="sr tab-n-sr"></span></a>
-  </nav>
+  </div>
 </div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-<div id="calc-mount" hidden></div>
 
 <script src="data/cortes.js"></script>
+<script src="data/receitas.js"></script>
 <script src="app/cuts-art.js"></script>
 <script src="app/animal.js"></script>
-<script src="app/calc.js"></script>
+<script src="app/receitas.js"></script>
 <script src="app/main.js"></script>
 </body>
 </html>
