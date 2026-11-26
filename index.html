@@ -8,6 +8,9 @@
 <link rel="icon" href="brand/v3/simbolo.svg" type="image/svg+xml">
 <title>churrasquin — quanto comprar, qual corte e de onde vem</title>
 <meta name="description" content="Planeje o churrasco pela turma: quantas pessoas, quais cortes, quantos kg e quanto custa. Catálogo de cortes do Brasil, Argentina, Uruguai e EUA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:wght@400;700&family=Share+Tech+Mono&display=swap">
 <link rel="stylesheet" href="brand/v3/tokens.css">
 <link rel="stylesheet" href="app/styles.css">
 </head>
@@ -16,10 +19,10 @@
 <header class="topbar">
   <div class="wrap topbar__in">
     <a class="brand" href="#planejar" data-go="planejar" aria-label="churrasquin, início"><img id="logo" src="brand/v4/logo-final.svg" alt="churrasquin" width="160" height="40" onerror="this.onerror=null;this.src='brand/v3/logo-horizontal.svg'"></a>
-    <nav class="tabs" aria-label="Seções">
-      <a class="tab" href="#planejar" data-view="planejar"><img class="ico" src="brand/v3/icons/turma.svg" alt="">Planejar</a>
-      <a class="tab" href="#cortes" data-view="cortes"><img class="ico" src="brand/v3/icons/boi.svg" alt="">Cortes</a>
-      <a class="tab" href="#lista" data-view="lista"><img class="ico" src="brand/v3/icons/calculadora.svg" alt="">Minha lista <span class="tab__n" data-n="0" aria-hidden="true">0</span></a>
+    <nav class="tabs gancho" aria-label="Seções">
+      <a class="tab" href="#planejar" data-view="planejar"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/turma.svg" alt=""><span class="tab__l">Planejar</span></a>
+      <a class="tab" href="#cortes" data-view="cortes"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/boi.svg" alt=""><span class="tab__l">Cortes</span></a>
+      <a class="tab" href="#lista" data-view="lista"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/calculadora.svg" alt=""><span class="tab__l">Minha lista</span> <span class="tab__n" data-n="0" aria-hidden="true">0</span></a>
     </nav>
   </div>
 </header>
@@ -28,17 +31,19 @@
   <!-- PLANEJAR -->
   <section class="view view--plan wrap" id="planejar" data-view="planejar" aria-labelledby="plan-t">
     <div class="plan">
-      <div class="plan__main">
-        <header class="vhead">
-          <p class="eyebrow">Planeje em 3 passos</p>
-          <h1 id="plan-t">Quantas pessoas vêm pro churrasco?</h1>
+      <div class="plan__main comanda">
+        <header class="comanda__head">
+          <div class="comanda__meta" aria-hidden="true"><span>Comanda</span><b id="pedido-n">Nº 0000</b><span id="pedido-d"></span></div>
+          <p class="eyebrow">Pedido de balcão · 3 passos</p>
+          <h1 id="plan-t" class="lettering">Quantos vêm pro churrasco?</h1>
+          <span class="stamp stamp--head" aria-hidden="true">Balcão<br>aberto</span>
         </header>
 
         <div class="step" aria-labelledby="s1-t">
-          <h2 class="step__t" id="s1-t"><span class="step__n">1</span>A turma</h2>
+          <h2 class="step__t" id="s1-t"><span class="step__n">01</span><span class="lettering">A turma</span></h2>
           <div class="people">
             <div class="stepper" data-k="adultos">
-              <span class="stepper__l" id="lbl-ad">Adultos</span>
+              <span class="stepper__l" id="lbl-ad">Adultos <small>porção inteira</small></span>
               <button type="button" class="stepper__b" data-d="-1" aria-label="Menos um adulto">−</button>
               <input id="in-ad" class="stepper__v" type="number" inputmode="numeric" min="0" max="200" aria-labelledby="lbl-ad">
               <button type="button" class="stepper__b" data-d="1" aria-label="Mais um adulto">+</button>
@@ -54,7 +59,7 @@
         </div>
 
         <div class="step" aria-labelledby="s2-t">
-          <h2 class="step__t" id="s2-t"><span class="step__n">2</span>O que vai na grelha</h2>
+          <h2 class="step__t" id="s2-t"><span class="step__n">02</span><span class="lettering">O que vai na grelha</span></h2>
           <ul class="picks" id="picks" aria-label="Cortes escolhidos"></ul>
           <div class="picks-empty" id="picks-empty" hidden>
             <p>Escolha 3 ou 4 cortes. A gente divide os quilos entre eles.</p>
@@ -68,8 +73,8 @@
       </div>
 
       <aside class="plan__side" aria-labelledby="s3-t">
-        <div class="result" id="result">
-          <h2 class="result__k" id="s3-t"><span class="step__n">3</span>Compre</h2>
+        <div class="result balanca" id="result">
+          <h2 class="result__k" id="s3-t"><span class="step__n">03</span><span class="lettering">Na balança</span></h2>
           <div aria-live="polite" aria-atomic="true" id="result-live"></div>
           <button type="button" class="btn btn--primary" data-go="lista">Ver lista de compras</button>
         </div>
@@ -80,7 +85,7 @@
   <!-- CORTES -->
   <section class="view view--cortes wrap" id="cortes" data-view="cortes" aria-labelledby="cat-t" hidden>
     <header class="vhead vhead--row">
-      <h1 id="cat-t">Cortes</h1>
+      <div><p class="eyebrow">Vitrine do açougue</p><h1 id="cat-t" class="lettering">Cortes</h1></div>
       <p class="count" id="count" aria-live="polite"></p>
     </header>
     <form class="filters" id="filters" role="search" onsubmit="return false">
@@ -108,7 +113,7 @@
   <!-- LISTA -->
   <section class="view view--lista wrap" id="lista" data-view="lista" aria-labelledby="lista-t" hidden>
     <header class="vhead vhead--row">
-      <h1 id="lista-t">Minha lista</h1>
+      <div><p class="eyebrow">Embrulhado pra levar</p><h1 id="lista-t" class="lettering">Minha lista</h1></div>
       <p class="count" id="lista-meta"></p>
     </header>
     <div class="lista" id="lista-body"></div>
@@ -117,10 +122,10 @@
 
 <div class="dock" id="dock">
   <button type="button" class="dock__sum" id="dock-sum" data-go="lista" aria-label="Ver lista de compras"></button>
-  <nav class="tabbar" aria-label="Seções">
-    <a class="tab" href="#planejar" data-view="planejar"><img class="ico" src="brand/v3/icons/turma.svg" alt="">Planejar</a>
-    <a class="tab" href="#cortes" data-view="cortes"><img class="ico" src="brand/v3/icons/boi.svg" alt="">Cortes</a>
-    <a class="tab" href="#lista" data-view="lista"><img class="ico" src="brand/v3/icons/calculadora.svg" alt="">Lista <span class="tab__n" data-n="0" aria-hidden="true">0</span><span class="sr tab-n-sr"></span></a>
+  <nav class="tabbar gancho" aria-label="Seções">
+    <a class="tab" href="#planejar" data-view="planejar"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/turma.svg" alt=""><span class="tab__l">Planejar</span></a>
+    <a class="tab" href="#cortes" data-view="cortes"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/boi.svg" alt=""><span class="tab__l">Cortes</span></a>
+    <a class="tab" href="#lista" data-view="lista"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/calculadora.svg" alt=""><span class="tab__l">Lista</span> <span class="tab__n" data-n="0" aria-hidden="true">0</span><span class="sr tab-n-sr"></span></a>
   </nav>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

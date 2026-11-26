@@ -45,6 +45,7 @@
       if (s && Array.isArray(s.itens)) plan = Object.assign(plan, s);
     } catch (e) { /* sem storage: segue em memória */ }
     plan.itens = plan.itens.filter(function (it) { return corte(it.id); });
+    if (!plan.pedido) plan.pedido = 100 + Math.floor(Math.random() * 900);
     if (!apetites()[plan.apetite]) plan.apetite = Object.keys(apetites())[1] || Object.keys(apetites())[0];
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(plan)); } catch (e) {} }
@@ -122,7 +123,7 @@
     picks.innerHTML = r.linhas.map(function (l) {
       return '<li class="pick" data-id="' + esc(l.id) + '">' + thumb(l.c) +
         '<span class="pick__n"><b>' + esc(l.c.nome) + '</b><small>' + (l.preco ? brl(l.preco) + '/kg' : ANIMAL_NOME[l.c.animal] || '') + (l.manual ? ' · ajustado' : '') + '</small></span>' +
-        '<span class="pick__kg">' + kgTxt(l.g) + '</span>' +
+        '<span class="pick__lead" aria-hidden="true"></span><span class="pick__kg">' + kgTxt(l.g) + '</span>' +
         '<button type="button" class="icon-btn" data-act="rm" aria-label="Tirar ' + esc(l.c.nome) + ' do plano"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
     }).join('');
     picks.hidden = !r.linhas.length;
@@ -130,17 +131,23 @@
 
     $('#sug').innerHTML = SUGESTOES.filter(function (id) { return corte(id) && !has(id); }).slice(0, 6).map(function (id) {
       var c = corte(id);
-      return '<button type="button" class="chip chip--add" data-id="' + id + '"><span aria-hidden="true">+</span> ' + esc(c.nome) + (preco(c) ? ' <small>' + brl(preco(c)) + '/kg</small>' : '') + '</button>';
+      return '<button type="button" class="chip chip--add" data-id="' + id + '"><span class="chip__plus" aria-hidden="true">+</span>' + esc(c.nome) + (preco(c) ? ' <small>' + brl(preco(c)) + '/kg</small>' : '') + '</button>';
     }).join('');
 
     var live = $('#result-live');
-    if (!r.porcoes) live.innerHTML = '<p class="result__big">Quantas pessoas?</p><p class="result__sub">Comece pelo passo 1.</p>';
-    else if (!r.linhas.length) live.innerHTML = '<p class="result__big">' + kgTxt(Math.round(r.alvo / 100) * 100) + '<small> de carne</small></p><p class="result__sub">para ' + pessoasTxt() + '. Agora escolha os cortes.</p>';
-    else live.innerHTML = '<p class="result__big">' + kgTxt(r.totalG) + '<small> de carne</small></p>' +
-      '<p class="result__sub">para ' + pessoasTxt() + ', em ' + r.linhas.length + (r.linhas.length > 1 ? ' cortes' : ' corte') + '</p>' +
-      (r.temPreco ? '<dl class="result__money"><div><dt>Estimativa</dt><dd>~' + brl(r.valor) + '</dd></div><div><dt>Por pessoa</dt><dd>~' + brl(r.porPessoa) + '</dd></div></dl>' +
-        (r.precoParcial ? '<p class="result__note">Alguns cortes ainda sem preço.</p>' : '') : '') +
-      '<ul class="result__lines">' + r.linhas.map(function (l) { return '<li><span>' + esc(l.c.nome) + '</span><b>' + kgTxt(l.g) + '</b></li>'; }).join('') + '</ul>';
+    var kgN = r.linhas.length ? r.totalG / 1000 : (r.porcoes ? Math.round(r.alvo / 100) / 10 : 0);
+    var rkg = r.temPreco && r.totalG ? r.valor / (r.totalG / 1000) : null;
+    var num = function (v, d) { return v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }); };
+    var visor = '<div class="visor" role="group" aria-label="Visor da balança">' +
+      '<div class="visor__c visor__c--kg"><span class="visor__k">Peso kg</span><span class="visor__v">' + num(kgN, 1) + '</span></div>' +
+      '<div class="visor__c"><span class="visor__k">R$/kg méd.</span><span class="visor__v">' + (rkg ? num(rkg, 2) : '--,--') + '</span></div>' +
+      '<div class="visor__c visor__c--tot"><span class="visor__k">Total R$</span><span class="visor__v">' + (r.linhas.length && r.temPreco ? num(r.valor, 2) : '--,--') + '</span></div></div>';
+    if (!r.porcoes) live.innerHTML = visor + '<p class="result__sub">Comece pelo passo 01: quantos vêm?</p>';
+    else if (!r.linhas.length) live.innerHTML = visor + '<p class="result__sub"><b>' + kgTxt(Math.round(r.alvo / 100) * 100) + '</b> de carne para ' + pessoasTxt() + '. Agora escolha os cortes.</p>';
+    else live.innerHTML = visor +
+      '<p class="result__sub"><b>' + kgTxt(r.totalG) + '</b> para ' + pessoasTxt() + ', em ' + r.linhas.length + (r.linhas.length > 1 ? ' cortes' : ' corte') + (r.temPreco ? ' · ~' + brl(r.porPessoa) + '/pessoa' : '') + '</p>' +
+      (r.precoParcial ? '<p class="result__note">Alguns cortes ainda sem preço.</p>' : '') +
+      '<div class="etiqueta"><p class="etiqueta__h"><span>Etiqueta</span><span>' + r.linhas.length + ' itens</span></p><ul class="result__lines">' + r.linhas.map(function (l) { return '<li><span>' + esc(l.c.nome) + '</span><i aria-hidden="true"></i><b>' + kgTxt(l.g) + '</b></li>'; }).join('') + '</ul><span class="etiqueta__bar" aria-hidden="true"></span></div>';
     $('#result .btn').hidden = !r.linhas.length;
   }
   function pessoasTxt() {
@@ -161,7 +168,7 @@
         .map(function (k) { return '<b>' + LBL[k] + '</b> ' + esc(c.nomes[k]); }).join(' · ');
       var art = (window.CUT_ART && window.CUT_ART[c.id]) || '<div class="card__ph">' + ico(c.animal, '', 40) + '<span>ilustração em breve</span></div>';
       var p = preco(c), on = has(c.id);
-      return '<li class="card" data-id="' + esc(c.id) + '">' +
+      return '<li class="card' + (on ? ' is-on' : '') + '" data-id="' + esc(c.id) + '">' +
         '<div class="card__art" aria-hidden="true">' + art + '</div>' +
         '<ul class="card__flags" aria-label="Servido em">' + (c.paises || []).map(function (x) { return '<li><img src="' + ICO + 'pais-' + x.toLowerCase() + '.svg" alt="' + PAIS_NOME[x] + '" title="' + PAIS_NOME[x] + '" width="18" height="18"></li>'; }).join('') + '</ul>' +
         '<button type="button" class="card__info" data-act="info" aria-label="Saiba de onde vem: ' + esc(c.nome) + '">' + ico('info', '', 24) + '</button>' +
@@ -170,7 +177,9 @@
         '<h3>' + esc(c.nome) + '</h3>' +
         (alt ? '<p class="card__alt">' + alt + '</p>' : '') +
         '<dl class="meters">' + meter('maciez', 'Maciez', c.maciez) + meter('gordura', 'Gordura', c.gordura) + meter('sabor', 'Sabor', c.sabor) + '</dl>' +
-        '<div class="card__foot">' + (p ? '<span class="price' + (isEco(c) ? ' price--eco' : '') + '"><b>' + brl(p) + '</b>/kg</span>' : '<span class="price price--na">preço a confirmar</span>') +
+        (p ? '<span class="pricetag' + (isEco(c) ? ' pricetag--eco' : '') + '"><span class="pricetag__k">' + (isEco(c) ? 'Oferta' : 'Kg') + '</span><b>' + brl(p) + '</b></span>' : '<span class="pricetag pricetag--na"><span class="pricetag__k">Kg</span><b>consulte</b></span>') +
+        '<span class="card__stamp" aria-hidden="true">Na lista</span>' +
+        '<div class="card__foot">' +
         '<button type="button" class="add' + (on ? ' is-on' : '') + '" data-act="add" aria-pressed="' + on + '" aria-label="' + (on ? 'Tirar ' : 'Levar ') + esc(c.nome) + (on ? ' da lista' : '') + '">' +
         (on ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Na lista</span>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Levar</span>') +
         '</button></div></div></li>';
@@ -213,7 +222,12 @@
   function renderGrid() {
     var grid = $('#grid'), list = filtered(), total = cortes().length;
     if (!total) { grid.innerHTML = ''; $('#empty').hidden = false; $('#empty .empty__t').textContent = 'Não conseguimos carregar os cortes'; $('#empty .empty__d').textContent = 'Recarregue a página. Se continuar, tente mais tarde.'; return; }
-    grid.innerHTML = cards(list);
+    var groups = {}, order = [];
+    list.forEach(function (c) { if (!groups[c.animal]) { groups[c.animal] = []; order.push(c.animal); } groups[c.animal].push(c); });
+    grid.innerHTML = order.map(function (a) {
+      return '<li class="vitrine" data-animal="' + a + '"><h2 class="letreiro"><span class="letreiro__ico">' + ico(a, '', 28) + '</span><span class="letreiro__t">' + esc(ANIMAL_NOME[a] || a) + '</span><span class="letreiro__n">' + groups[a].length + (groups[a].length > 1 ? ' peças' : ' peça') + '</span></h2>' +
+        '<ul class="grid-row" aria-label="' + esc(ANIMAL_NOME[a] || a) + '">' + cards(groups[a]) + '</ul></li>';
+    }).join('');
     $('#empty').hidden = list.length > 0; grid.hidden = !list.length;
     $('#count').textContent = list.length === total ? total + ' cortes' : list.length + ' de ' + total;
   }
@@ -221,7 +235,8 @@
     $$('#grid .card').forEach(function (li) {
       var b = li.querySelector('.add'), on = has(li.dataset.id), c = corte(li.dataset.id);
       if (b.classList.contains('is-on') === on) return;
-      b.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on);
+      b.classList.toggle('is-on', on); li.classList.toggle('is-on', on);
+      if (on) { li.classList.remove('stamp-in'); void li.offsetWidth; li.classList.add('stamp-in'); } b.setAttribute('aria-pressed', on);
       b.setAttribute('aria-label', (on ? 'Tirar ' : 'Levar ') + c.nome + (on ? ' da lista' : ''));
       b.innerHTML = on ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Na lista</span>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Levar</span>';
     });
@@ -236,30 +251,41 @@
       return;
     }
     var txt = shareText(r);
+    var d = new Date(), dt = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    var num = function (v) { return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
     body.innerHTML =
-      '<div class="lista__grid"><div class="lista__main">' +
-      '<section class="card-s" aria-labelledby="l-carne"><h2 class="sec-t" id="l-carne">Carne <span>' + kgTxt(r.totalG) + '</span></h2><ul class="lines">' +
-      r.linhas.map(function (l) {
-        return '<li class="line" data-id="' + esc(l.id) + '">' + thumb(l.c) +
-          '<span class="line__n"><b>' + esc(l.c.nome) + '</b><small>' + (l.preco ? brl(l.preco) + '/kg' : 'sem preço') + '</small>' +
+      '<div class="lista__grid"><div class="lista__main"><article class="cupom" aria-labelledby="l-carne">' +
+      '<header class="cupom__head"><img src="brand/v4/wordmark-final.svg" alt="" class="cupom__logo" onerror="this.remove()"><p>Açougue da turma · balcão 01</p><p>Cupom de balança · não fiscal</p>' +
+      '<p class="cupom__row"><span>Pedido Nº ' + String(plan.pedido || 0).padStart(4, '0') + '</span><span>' + dt + '</span></p></header>' +
+      '<h2 class="cupom__sec" id="l-carne"><span>Carne</span><span>' + kgTxt(r.totalG) + '</span></h2>' +
+      '<p class="cupom__cols" aria-hidden="true"><span>Item</span><span>Kg × R$/kg</span><span>R$</span></p><ul class="lines">' +
+      r.linhas.map(function (l, i) {
+        return '<li class="line" data-id="' + esc(l.id) + '">' +
+          '<span class="line__i" aria-hidden="true">' + String(i + 1).padStart(3, '0') + '</span>' +
+          '<span class="line__n"><b>' + esc(l.c.nome) + '</b><small>' + kgTxt(l.g).replace(' kg', '') + ' kg × ' + (l.preco ? num(l.preco) : 's/ preço') + '</small>' +
           (l.manual ? '<button type="button" class="mini" data-act="auto">ajustado · voltar ao automático</button>' : '') + '</span>' +
-          '<span class="qty"><button type="button" class="qty__b" data-act="dec" aria-label="Menos 250 g de ' + esc(l.c.nome) + '">−</button><output aria-live="polite">' + kgTxt(l.g) + '</output><button type="button" class="qty__b" data-act="inc" aria-label="Mais 250 g de ' + esc(l.c.nome) + '">+</button></span>' +
-          '<span class="line__v">' + (l.valor != null ? brl(l.valor) : '—') + '</span>' +
-          '<button type="button" class="icon-btn" data-act="rm" aria-label="Remover ' + esc(l.c.nome) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
+          '<span class="line__lead" aria-hidden="true"></span><span class="line__v">' + (l.valor != null ? num(l.valor) : '—') + '</span>' +
+          '<span class="line__ctl"><span class="qty"><button type="button" class="qty__b" data-act="dec" aria-label="Menos 250 g de ' + esc(l.c.nome) + '">−</button><output aria-live="polite">' + kgTxt(l.g) + '</output><button type="button" class="qty__b" data-act="inc" aria-label="Mais 250 g de ' + esc(l.c.nome) + '">+</button></span>' +
+          '<button type="button" class="icon-btn" data-act="rm" aria-label="Remover ' + esc(l.c.nome) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></span></li>';
       }).join('') + '</ul>' +
-      '<button type="button" class="link-btn" data-go="cortes">+ Adicionar corte</button></section>' +
-      '<section class="card-s" aria-labelledby="l-extra"><h2 class="sec-t" id="l-extra">Acompanhamentos</h2><ul class="checks">' +
+      '<button type="button" class="link-btn" data-go="cortes">+ Adicionar corte</button>' +
+      '<div class="cupom__tot"><p><span>Total da carne</span><b>' + (r.temPreco ? 'R$ ' + num(r.valor) : '—') + '</b></p>' +
+      '<p class="cupom__sub"><span>' + pessoasTxt() + '</span><span>' + (r.temPreco ? '~' + brl(r.porPessoa) + '/pessoa' : '') + '</span></p>' +
+      '<span class="stamp stamp--brasa" aria-hidden="true">Pronto<br>pra brasa</span></div>' +
+      (r.precoParcial ? '<p class="cupom__note">* Alguns cortes sem preço não entram no total.</p>' : '') +
+      '<p class="cupom__note">' + (!r.temPreco ? '* Preços estimados ainda não disponíveis.' : '* Preço médio de açougue; confira no seu.') + '</p>' +
+      '<section aria-labelledby="l-extra"><h2 class="cupom__sec" id="l-extra"><span>Acompanhamentos</span><span>' + r.extras.length + ' itens</span></h2><ul class="checks">' +
       r.extras.map(function (x) {
         var ok = !!plan.extrasOk[x.id];
         return '<li><label class="check"><input type="checkbox" data-x="' + x.id + '"' + (ok ? ' checked' : '') + '><span class="check__box" aria-hidden="true"></span><span class="check__n">' + esc(x.nome) + '</span><span class="check__q">' + esc(x.qtd) + '</span></label></li>';
-      }).join('') + '</ul></section></div>' +
+      }).join('') + '</ul></section>' +
+      '<p class="cupom__bye" aria-hidden="true">*** obrigado, bom churrasco ***</p><span class="cupom__barcode" aria-hidden="true"></span>' +
+      '</article></div>' +
       '<aside class="lista__side"><div class="total">' +
-      '<p class="total__k">Total estimado da carne</p>' +
-      '<p class="total__v">' + (r.temPreco ? '~' + brl(r.valor) : '—') + '</p>' +
-      '<p class="total__s">' + kgTxt(r.totalG) + ' · ' + pessoasTxt() + (r.temPreco ? ' · ~' + brl(r.porPessoa) + '/pessoa' : '') + '</p>' +
-      (r.precoParcial ? '<p class="total__note">Alguns cortes sem preço não entram no total.</p>' : '') +
-      (!r.temPreco ? '<p class="total__note">Preços estimados ainda não disponíveis.</p>' : '<p class="total__note">Preço médio de açougue; confira no seu.</p>') +
-      '<a class="btn btn--wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(txt) + '" id="share-wa">' + waIco() + 'Enviar no WhatsApp</a>' +
+      '<p class="total__k">Mandar pra turma</p>' +
+      '<p class="total__v">' + (r.temPreco ? '~' + brl(r.valor) : kgTxt(r.totalG)) + '</p>' +
+      '<p class="total__s">' + kgTxt(r.totalG) + ' · ' + r.pessoas + ' pessoas</p>' +
+      '<a class="btn btn--wa selo" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(txt) + '" id="share-wa">' + waIco() + '<span>Enviar no WhatsApp</span></a>' +
       '<button type="button" class="btn btn--ghost" id="share-copy">Copiar lista</button>' +
       (navigator.share ? '<button type="button" class="btn btn--ghost" id="share-native">Compartilhar…</button>' : '') +
       '<button type="button" class="link-btn link-btn--danger" id="clear-list">Limpar lista</button>' +
@@ -282,8 +308,10 @@
   var last;
   function commit() {
     save();
+    var prevG = last ? last.totalG + '|' + last.alvo : null;
     last = compute();
-    renderPlan(last); renderLista(last); renderDock(last); syncCardButtons();
+    renderPlan(last);
+    if (prevG !== null && prevG !== last.totalG + '|' + last.alvo) { var vz = $('#result .visor'); if (vz) vz.classList.add('roll'); } renderLista(last); renderDock(last); syncCardButtons();
     document.dispatchEvent(new CustomEvent('plan:change', { detail: { itens: plan.itens.slice() } }));
   }
 
@@ -324,6 +352,7 @@
       s.addEventListener('click', function (e) {
         var b = e.target.closest('button[data-d]'); if (!b) return;
         plan[k] = Math.max(0, Math.min(200, plan[k] + +b.dataset.d)); commit();
+        s.classList.remove('tick'); void s.offsetWidth; s.classList.add('tick');
       });
       inp.addEventListener('change', function () { var v = parseInt(inp.value, 10); plan[k] = v >= 0 ? Math.min(200, v) : 0; commit(); });
     });
@@ -426,6 +455,8 @@
       if (has(id)) return; add(id); toast(c.nome + ' entrou na lista');
     });
 
+    var pn = $('#pedido-n'); if (pn) pn.textContent = 'Nº ' + String(plan.pedido).padStart(4, '0');
+    var pd = $('#pedido-d'); if (pd) pd.textContent = new Date().toLocaleDateString('pt-BR');
     renderGrid();
     commit();
     setView(location.hash.slice(1) || 'planejar');
