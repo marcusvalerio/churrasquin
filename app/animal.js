@@ -398,7 +398,7 @@
     '.anm-root .anm-dialog{top:2.5rem;border-radius:1.5rem 1.5rem 0 0;transform:translateY(100%);opacity:1;transition:transform 520ms cubic-bezier(.22,1.2,.36,1);box-shadow:0 -10px 40px rgba(23,18,15,.25)}',
     '.anm-root.anm-in .anm-dialog{transform:none}',
     '.anm-root .anm-head{border-bottom:0;padding-top:10px}',
-    '.anm-root .anm-title{font-family:Rubik,system-ui,sans-serif;font-weight:900;letter-spacing:-.01em;color:#1D2A9E}',
+    '.anm-root .anm-title{font-family:Rubik,system-ui,sans-serif;font-weight:900;letter-spacing:-.01em;color:#17120F}',
     '.anm-root .anm-kicker{letter-spacing:.12em;font-size:.75rem}',
     '.anm-root .anm-btn-pri{box-shadow:none;border-color:#FF5F1F}',
     '.anm-root .anm-svgwrap{border-radius:1rem}',

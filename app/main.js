@@ -138,6 +138,12 @@
   }
   function descanso(c) { return c.animal === 'boi' || c.animal === 'cordeiro' ? (tempoMin(c) >= 120 ? 15 : 5) : 0; }
   function hhmm(d) { return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+  function horaSel(id) {
+    var v = plan.servir || '13:00', o = [], has = false;
+    for (var m = 0; m < 1440; m += 15) { var h = String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); if (h === v) has = true; o.push(h); }
+    if (!has) { o.push(v); o.sort(); }
+    return '<select id="' + id + '" class="hsel" aria-label="Horário de servir (24 h)">' + o.map(function (h) { return '<option value="' + h + '"' + (h === v ? ' selected' : '') + '>' + h + '</option>'; }).join('') + '</select>';
+  }
   function servirDate() { var sv = (plan.servir || '13:00').split(':'), T = new Date(); T.setHours(+sv[0] || 13, +sv[1] || 0, 0, 0); return T; }
   function sequence(r) {
     var T = servirDate();
@@ -154,7 +160,7 @@
     if (!s.seq.length) return null;
     var ev = [{ t: s.acender, txt: 'Acender ' + r.carvao + ' kg de carvão', k: 'fogo' }].concat(s.seq.map(function (x) { return { t: x.entra, txt: x.l.c.nome + ' na ' + x.z.nome.toLowerCase(), k: x.z.k }; }), [{ t: s.T, txt: 'Servir', k: 'servir' }]);
     for (var i = 0; i < ev.length; i++) if (ev[i].t.getTime() > now) return ev[i];
-    return { t: s.T, txt: 'Bom churrasco! Já passou da hora de servir.', k: 'servir', passou: true };
+    return { t: s.T, txt: 'Planejar o próximo churrasco', k: 'servir', passou: true };
   }
   function faltaTxt(d) {
     var m = Math.round((d - Date.now()) / 60000); if (m <= 0) return 'agora';
@@ -227,14 +233,14 @@
   function onbHTML() {
     var A = apetites();
     return '' +
-      '<div class="onb__p" data-i="0"><p class="script onb__s">bora?</p><h1 class="onb__t">Quantos vêm?</h1><p class="onb__d">Criança conta meia porção. Dá pra mudar depois.</p>' +
+      '<div class="onb__p" data-i="0"><p class="eyebrow onb__s">bora?</p><h1 class="onb__t">Quantos vêm?</h1><p class="onb__d">Criança conta meia porção. Dá pra mudar depois.</p>' +
       stepperHTML('adultos', 'Adultos') + stepperHTML('criancas', 'Crianças') +
       '<fieldset class="seg"><legend class="sr">Apetite da turma</legend>' + Object.keys(A).map(function (k) { return '<label><input type="radio" name="onb-ap" value="' + k + '"' + (plan.apetite === k ? ' checked' : '') + '><span>' + esc(A[k].label) + '<small>' + A[k].gramas + ' g</small></span></label>'; }).join('') + '</fieldset>' + dog('dog--onb') + '</div>' +
-      '<div class="onb__p" data-i="1"><p class="script onb__s">a turma</p><h1 class="onb__t">Do que a turma gosta?</h1><p class="onb__d">Escolha um estilo. A gente divide os quilos entre os cortes.</p>' +
+      '<div class="onb__p" data-i="1"><p class="eyebrow onb__s">a turma</p><h1 class="onb__t">Do que a turma gosta?</h1><p class="onb__d">Escolha um estilo. A gente divide os quilos entre os cortes.</p>' +
       '<div class="mixes mixes--grid" role="radiogroup" aria-label="Estilo do churrasco">' + Object.keys(MIXES).map(function (k, i) { return mixBtn(k, i); }).join('') + '</div></div>' +
-      '<div class="onb__p" data-i="2"><p class="script onb__s">relógio</p><h1 class="onb__t">Que horas sai?</h1><p class="onb__d">A gente calcula de trás pra frente quando acender e quando cada corte entra.</p>' +
+      '<div class="onb__p" data-i="2"><p class="eyebrow onb__s">relógio</p><h1 class="onb__t">Que horas sai?</h1><p class="onb__d">A gente calcula de trás pra frente quando acender e quando cada corte entra.</p>' +
       '<div class="horas" role="radiogroup" aria-label="Horário de servir">' + ['12:00', '13:00', '14:00', '19:00', '20:00'].map(function (h) { return '<button type="button" class="hora" role="radio" data-hora="' + h + '" aria-checked="' + (plan.servir === h) + '">' + h + '</button>'; }).join('') + '</div>' +
-      '<label class="field"><span>Outro horário</span><input type="time" id="onb-hora" value="' + esc(plan.servir) + '"></label>' +
+      '<label class="field"><span>Outro horário</span>' + horaSel('onb-hora') + '</label>' +
       '<p class="onb__prev" id="onb-prev"></p></div>';
   }
   function mixBtn(k, i) {
@@ -327,14 +333,14 @@
     var recs = plan.receitas.map(function (id) { return R().get(id); }).filter(Boolean);
     var hora = new Date().getHours(), oi = hora < 12 ? 'bom dia' : hora < 18 ? 'boa tarde' : 'boa noite';
     el.innerHTML = '<div class="pad cascade">' +
-      '<header class="hello" style="--i:0"><p class="script hello__s">' + oi + ', assador</p><h1 class="h1">O churrasco de hoje</h1></header>' +
+      '<header class="hello" style="--i:0"><p class="hello__s">' + oi + ', assador</p><h1 class="h1">O churrasco de hoje</h1></header>' +
       (r.linhas.length ? '<section class="hero" style="--i:1" aria-label="Resumo">' +
         '<div class="hero__row"><div class="kpi"><span class="kpi__v odo-host" data-odo="h-pes"></span><span class="kpi__l">pessoas</span></div>' +
         '<div class="kpi"><span class="kpi__v odo-host" data-odo="h-kg"></span><span class="kpi__l">kg de carne</span></div>' +
         '<div class="kpi"><span class="kpi__v odo-host" data-odo="h-hr"></span><span class="kpi__l">servir</span></div></div>' +
-        '<svg class="hero__espeto" viewBox="0 0 300 16" aria-hidden="true" preserveAspectRatio="none"><path d="M6 8H280" /><path d="M280 3 296 8 280 13Z" class="f"/><circle cx="8" cy="8" r="5"/></svg>' +
+        '' +
         '<p class="hero__s">' + esc(pessoasTxt()) + ' · ' + r.linhas.length + ' cortes · ' + r.carvao + ' kg de carvão</p></section>' +
-        (p ? '<button type="button" class="next" style="--i:2" data-go="brasa"><span class="next__k">' + ic('clock') + 'Próximo passo · ' + (p.passou ? 'hoje' : faltaTxt(p.t)) + '</span><b class="next__t">' + esc(p.txt) + '</b><span class="next__h">' + hhmm(p.t) + '</span>' + ic('arrow', 'next__a') + '</button>' : '')
+        (p ? '<button type="button" class="next" style="--i:2" data-go="' + (p.passou ? 'planejar' : 'brasa') + '"><span class="next__k">' + ic('clock') + (p.passou ? 'Churrasco servido às ' + hhmm(p.t) : 'Próximo passo · ' + faltaTxt(p.t)) + '</span><b class="next__t">' + esc(p.txt) + '</b>' + (p.passou ? '' : '<span class="next__h">' + hhmm(p.t) + '</span>') + ic('arrow', 'next__a') + '</button>' : '')
         : '<section class="empty" style="--i:1">' + dog() + '<p class="empty__t">Nada planejado ainda</p><p class="empty__d">Diga quantos vêm e escolha os cortes. O resto a gente conta.</p><button type="button" class="btn btn--brasa" data-go="planejar">Planejar churrasco</button></section>') +
       '<h2 class="h2" style="--i:3">Atalhos</h2><div class="atalhos" style="--i:4">' +
       atalho('planejar', 'people', 'Ajustar turma', pessoasTxt()) + atalho('brasa', 'fire', 'Na brasa', s.acender ? 'acender às ' + hhmm(s.acender) : 'linha do tempo') +
@@ -362,7 +368,7 @@
         '<h2 class="h2" style="--i:5">No plano</h2><ul class="picks" id="picks" style="--i:6"></ul>' +
         '<p class="eyebrow" style="--i:7">Sugestões</p><div class="chips" id="sug" style="--i:8"></div>' +
         '<header style="--i:9"><p class="eyebrow">Passo 3 · horário</p><h2 class="h2 h2--flush">Que horas sai?</h2></header>' +
-        '<label class="field" style="--i:10"><span>Servir às</span><input type="time" id="p-hora"></label>' +
+        '<label class="field" style="--i:10"><span>Servir às</span>' + horaSel('p-hora') + '</label>' +
         '<button type="button" class="btn btn--brasa btn--full" style="--i:11" data-go="brasa">Ver a ordem na brasa ' + ic('arrow') + '</button>' +
         '</div>';
     }
@@ -445,7 +451,7 @@
   function renderBrasa() {
     var el = $('#v-brasa'), r = last, s = sequence(r), seq = s.seq, T = s.T, acender = s.acender;
     var html = '<div class="pad cascade"><header style="--i:0"><p class="eyebrow">Na brasa</p><h1 class="h1">Ordem da grelha</h1></header>' +
-      '<label class="field field--row" style="--i:1"><span>' + ic('clock') + 'Servir às</span><input type="time" id="b-hora" value="' + esc(plan.servir) + '"></label>';
+      '<label class="field field--row" style="--i:1"><span>' + ic('clock') + 'Servir às</span>' + horaSel('b-hora') + '</label>';
     if (!seq.length) {
       html += '<div class="empty" style="--i:2">' + dog() + '<p class="empty__t">Nada na grelha ainda</p><p class="empty__d">Escolha os cortes no Planejar. Aqui sai a ordem de entrada, com timers.</p><button type="button" class="btn btn--brasa" data-go="planejar">Planejar</button></div>';
     } else {

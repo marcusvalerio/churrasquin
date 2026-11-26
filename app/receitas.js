@@ -105,7 +105,7 @@
         var t = typeof p === 'string' ? p : (p.txt || p.texto || '');
         return '<li><label class="check"><input type="checkbox" data-passo="' + i + '"' + (feitos[i] ? ' checked' : '') + '><span class="check__box" aria-hidden="true"></span><span class="check__n"><b>' + (i + 1) + '.</b> ' + esc(t) + '</span></label></li>';
       }).join('') + '</ol>' +
-      (r.dica ? '<p class="dica"><span class="script">dica</span>' + esc(r.dica) + '</p>' : '') +
+      (r.dica ? '<p class="dica"><span class="dica__k">Dica</span>' + esc(r.dica) + '</p>' : '') +
       (comb ? '<h3 class="ficha__h">Combina com</h3><div class="chips">' + comb + '</div>' : '') +
       '</article>';
   }

@@ -423,3 +423,102 @@ button { cursor: pointer; }
   .timer.is-on { animation: none; }
 }
 .dog--onb { display: block; width: 12rem; margin: 2.5rem auto 0; opacity: .9; }
+
+/* ---------- v8 · limpeza: um destaque por tela, 2 cores fortes, escala 4/8/12/16/24/32 ----------
+ * brasa = ação e estado ativo · cobalto = destaque de dados · Yellowtail só na abertura e na assinatura. */
+:root { --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --borda: rgba(23, 18, 15, .22);
+  --sombra: 0 1px 2px rgba(23, 18, 15, .06), 0 2px 8px rgba(23, 18, 15, .04); }
+.pad { padding: var(--s2) var(--s4) var(--s4); }
+.chips--scroll { margin: 0 calc(-1 * var(--s4)) var(--s4); padding: 2px var(--s4); }
+.mixes--row { margin: 0 calc(-1 * var(--s4)); padding: var(--s1) var(--s4) var(--s2); }
+
+/* tipografia */
+.h1, .onb__t, .ficha__t { color: var(--carvao); margin-bottom: var(--s4); }
+.h2 { margin: var(--s6) 0 var(--s3); font-size: 1.125rem; }
+.h2--flush { margin-top: 0; }
+.eyebrow, .onb__s, .ficha__k, .gcard__k, .rcard__k { color: var(--sal); font-size: .75rem; letter-spacing: .1em; }
+.onb__s { margin: 0 0 var(--s1); font-family: var(--font-body); line-height: 1.4; font-weight: 700; text-transform: uppercase; }
+.hello__s { margin: 0 0 var(--s1); font-size: .875rem; line-height: 1.4; color: var(--sal); font-family: var(--font-body); }
+.gcard__n, .rcard__n, .mix b, .empty__t, .termo__v, .count__v, .ings__q, .check__q, .qty output, .field input, .ordem__i time { color: var(--carvao); }
+.sig { margin-top: var(--s6); }
+
+/* superfícies: uma só borda, raio e sombra */
+.card, .atalhos, .gcard, .rcard__b, .mix, .pick, .mini-list button, .field--row, .next, .onb__prev, .dica, .seg span, .timer {
+  background: var(--papel); border: 1px solid var(--linha); border-radius: var(--r-lg); box-shadow: var(--sombra); }
+.mix[aria-checked="true"] { border-color: var(--carvao); background: var(--papel); box-shadow: inset 0 0 0 1px var(--carvao); }
+.btn, .top__btn, .stepper__b, .search, .field input, .hsel, .sheet__x, .gcard__add, .hora, .qty, .chip { border-width: 1px; border-color: var(--borda); }
+.btn--brasa, .gcard.is-on .gcard__add { border-color: var(--brasa); }
+.btn--zap { background: var(--brasa); border-color: var(--brasa); color: var(--carvao); }
+.check__box { border-width: 1.5px; border-color: var(--borda); }
+.btn--full { margin-top: var(--s5); }
+
+/* seleção ativa = carvão neutro (brasa fica para a ação) */
+.seg input:checked + span, .hora[aria-checked="true"] { background: var(--carvao); border-color: var(--carvao); color: var(--creme); }
+.seg input:checked + span small { color: #CFC4AD; }
+.hora[aria-checked="true"] { transform: none; }
+
+/* horário 24 h (select próprio) */
+.hsel { min-height: 48px; border-radius: var(--r-md); border-style: solid; background: var(--papel); padding: 0 var(--s4); font: 700 1.1rem var(--font-body); color: var(--carvao); font-variant-numeric: tabular-nums; }
+.field--row .hsel { min-height: 44px; }
+
+/* início */
+.hero { padding: var(--s5) var(--s4) var(--s4); }
+.hero__s { margin-top: var(--s3); padding-top: var(--s3); border-top: 1px solid rgba(251, 241, 222, .2); }
+.next { margin-top: var(--s3); padding: var(--s4); gap: var(--s1) var(--s3); color: var(--carvao); }
+.next__k { color: var(--sal); letter-spacing: .06em; }
+.next__k .i { color: var(--brasa); }
+.next__t { font-size: 1.0625rem; }
+.next__h { font-size: 1.25rem; color: var(--carvao); }
+.next__a { right: var(--s4); top: var(--s4); color: var(--sal); }
+.atalhos { grid-template-columns: 1fr; gap: 0; overflow: hidden; }
+.atalho { grid-template-columns: 20px 1fr; column-gap: var(--s3); row-gap: 0; align-items: center; min-height: 56px; padding: var(--s3) var(--s4); border: 0; border-radius: 0; background: none; }
+.atalho + .atalho { border-top: 1px solid var(--linha); }
+.atalho .i { grid-row: span 2; width: 20px; height: 20px; margin: 0; color: var(--sal); }
+.atalho b { font-size: .95rem; }
+.mini-list { gap: var(--s2); }
+.mini-list button { padding: 0 var(--s4); border-radius: var(--r-md); }
+.rc-ico { stroke: var(--sal); }
+
+/* planejar: total vira o destaque de dados (azul) */
+.total { margin: var(--s4) 0 var(--s6); padding: var(--s4); background: var(--cobalto); }
+.total__v { color: var(--creme); }
+.pick { padding: var(--s2); border-radius: var(--r-md); }
+.picks { gap: var(--s2); }
+
+/* cortes / receitas */
+.guia, .rlist { gap: var(--s3); }
+.rcard__b { padding: var(--s3); gap: var(--s3); }
+.rcard[data-cat] .rcard__ico { background: var(--creme-2); }
+
+/* na brasa: linha do tempo é o destaque (azul); zonas em tons neutros */
+.crono { margin: var(--s4) 0; padding: var(--s4); background: var(--cobalto); }
+.crono__axis { color: #D6DAF5; }
+.crono__bar--forte { background: var(--creme); }
+.crono__bar--media { background: rgba(251, 241, 222, .62); }
+.crono__bar--branda { background: rgba(251, 241, 222, .34); }
+.crono__bar--fogo { background: repeating-linear-gradient(90deg, rgba(251, 241, 222, .7) 0 6px, transparent 6px 10px); }
+.ztag, .ztag--forte, .ztag--media, .ztag--branda { background: var(--creme-2); color: var(--tinta); }
+.ztag--forte { box-shadow: inset 0 0 0 1px var(--carvao); color: var(--carvao); }
+.ordem__i--fogo time, .ordem__i--servir time { background: var(--creme-2); color: var(--carvao); }
+.timer { border-radius: 50%; }
+.grelha, .termo__tube, .termo__bulb { border-width: 1px; border-color: var(--borda); }
+.zona--media, .zona--branda { border-color: var(--borda); }
+
+/* fichas */
+.dica { border-style: solid; border-radius: var(--r-md); padding: var(--s4); margin-top: var(--s5); }
+.dica__k { display: block; margin-bottom: var(--s1); font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--sal); }
+.ficha__h { margin: var(--s5) 0 var(--s2); }
+.ficha__h span { color: var(--carvao); }
+.sheet__body { padding: var(--s2) var(--s4) var(--s6); }
+.onb__prev { color: var(--tinta); }
+.onb__prev .i { color: var(--sal); }
+
+/* ficha de corte (animal.js): mesmo critério — título carvão, bordas finas, barras neutras */
+.anm-root .anm-title { color: var(--carvao); }
+.anm-root .anm-head { border-bottom: 1px solid var(--linha); }
+.anm-root .anm-btn { border-width: 1px; border-color: var(--borda); }
+.anm-root .anm-btn-pri { border-color: var(--brasa); box-shadow: none; }
+.anm-root .anm-panel { border-top: 1px solid var(--linha); box-shadow: 0 -4px 16px rgba(23, 18, 15, .06); }
+.anm-root .anm-bar .anm-fill { background: var(--carvao); }
+.anm-root .anm-nota { border-width: 1px; }
