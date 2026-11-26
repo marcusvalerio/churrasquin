@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>churrasquin — Direção C · Mapa Modular</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wdth,wght@100,400;100,600;100,800;125,800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--r:#C8321A;--k:#14161B;--b:#F3EEE6;--k2:#2A2D35;--b2:#E4DCCF;--hl:var(--r);--dot:var(--r);--u:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Archivo,system-ui,sans-serif;background:var(--b);color:var(--k);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.d{font-family:"Archivo Black",Archivo,sans-serif;letter-spacing:-.03em;line-height:.92;font-weight:400}
+.mono{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--r);outline-offset:3px}
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+section{padding:112px 0;position:relative}
+.dark{background:var(--k);color:var(--b)} .red{background:var(--r);color:var(--b)}
+.lab{display:flex;gap:16px;align-items:baseline;margin-bottom:48px;border-top:2px solid currentColor;padding-top:14px}
+.lab b{font-family:"Archivo Black";font-weight:400}
+.lab .mono{margin-left:auto;opacity:.75}
+h2.d{font-size:clamp(44px,6.4vw,92px);max-width:13ch}
+p.lead{font-size:21px;max-width:56ch;margin-top:24px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+svg{display:block}
+/* hero */
+.hero{background:var(--r);color:var(--b);padding:40px 0 0;overflow:hidden}
+.hero nav{display:flex;justify-content:space-between;align-items:center}
+.hero .word{height:clamp(84px,15vw,210px);width:auto;margin:120px 0 56px;color:var(--b);--dot:var(--k)}
+.hero .row{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--b)}
+.hero .row div{padding:20px 16px 40px 0;font-size:15px}
+.hero .row b{display:block;font-family:"Archivo Black";font-weight:400;font-size:20px}
+/* map */
+.boi .m{fill:#4A4F5C;transition:fill .2s}
+.boi .m.mute,.boi .leg{fill:var(--k2)}
+.dark .boi .m{fill:#4A4F5C}.dark .boi .m.mute,.dark .boi .leg{fill:#262930}
+.boi .m.on{fill:var(--r)!important}
+.boi .ml{font:600 9.5px Archivo;fill:var(--b);pointer-events:none}
+.boi.big .m:not(.mute):not(.leg){cursor:pointer}
+.boi.big .m:not(.mute):not(.leg):hover{fill:#5A1A10}
+/* construction */
+.grid-c{background:var(--b2);aspect-ratio:1;display:grid;place-items:center;position:relative;background-image:linear-gradient(var(--k) 1px,transparent 1px),linear-gradient(90deg,var(--k) 1px,transparent 1px);background-size:33.333% 33.333%;background-position:-.5px -.5px;outline:1px solid var(--k)}
+.grid-c svg{width:100%;height:100%;color:var(--k)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:48px}
+.steps figure{background:var(--b2);padding:20px}
+.steps svg{width:100%;height:auto}
+.steps figcaption{margin-top:12px;font-size:14px}
+.steps figcaption b{display:block;font-family:"Archivo Black";font-weight:400}
+/* logos */
+.lockups{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto auto;gap:16px}
+.lockups>div{display:grid;place-items:center;padding:64px 40px;min-height:260px}
+.lockups img{max-width:100%;height:auto}
+.lockups .l1{grid-row:span 2;background:var(--b2)}
+/* type */
+.spec{display:grid;grid-template-columns:1.3fr 1fr;gap:48px}
+.alpha{font-size:clamp(90px,12vw,180px)}
+.scale p{border-top:1px solid var(--k);padding:14px 0;display:grid;grid-template-columns:120px 1fr;align-items:baseline}
+/* palette */
+.pal{display:grid;grid-template-columns:5fr 3fr 2fr;height:420px;gap:0}
+.pal div{padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+.pal b{font-family:"Archivo Black";font-weight:400;font-size:28px}
+.pal small{font-family:"JetBrains Mono";font-size:12px;line-height:1.7}
+.rule{margin-top:24px;font-size:15px;max-width:70ch}
+/* pattern */
+.pattern{height:520px;background:var(--r)}
+.pattern svg{width:100%;height:100%}
+/* icons */
+.icons{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.icons figure{background:var(--b2);aspect-ratio:1;display:grid;place-items:center;position:relative}
+.icons svg{width:46%;height:46%}
+.icons figcaption{position:absolute;left:14px;bottom:10px;font-size:14px;font-weight:600}
+.bars{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+/* modular bar */
+.mb{display:flex;gap:4px}.mb i{width:22px;height:22px;background:currentColor;opacity:.18}.mb i.f{opacity:1}
+.mb i:last-child.f{border-radius:0 22px 0 0}
+.meter{display:grid;grid-template-columns:72px 1fr;align-items:center;gap:8px;font-size:14px;font-weight:600}
+/* phones */
+.phones{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;justify-items:center}
+.phone{width:360px;height:760px;border-radius:52px;background:#000;padding:10px;box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+.scr{width:100%;height:100%;border-radius:43px;overflow:hidden;background:var(--b);color:var(--k);position:relative;display:flex;flex-direction:column;font-size:15px}
+.sb{display:flex;justify-content:space-between;padding:16px 28px 6px;font:600 14px Archivo}
+.ph{padding:6px 20px 0}
+.ap{display:flex;align-items:center;justify-content:space-between;height:48px}
+.ap .s{width:30px;height:30px;color:var(--k)}
+.ap h3{font-family:"Archivo Black";font-weight:400;font-size:15px;letter-spacing:-.01em}
+.btn{min-height:48px;min-width:48px;border:0;background:var(--k);color:var(--b);font:700 16px Archivo;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:0 20px;cursor:pointer}
+.btn.r{background:var(--r)}
+.btn.g{background:transparent;color:inherit;border:2px solid currentColor}
+.tabs{margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);background:var(--k);color:var(--b);padding:6px 6px 22px}
+.tabs a{min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:600 11.5px Archivo;text-decoration:none;color:#C9C3B8}
+.tabs a svg{width:22px;height:22px}
+.tabs a[aria-current]{color:var(--b)} .tabs a[aria-current] svg{color:var(--r)}
+.tabs a[aria-current]::after{content:"";width:18px;height:3px;background:var(--r)}
+.big{font-size:76px}
+.step{display:grid;grid-template-columns:1fr 48px 56px 48px;align-items:center;border-top:2px solid var(--k);min-height:62px}
+.step b{font-size:15px}.step small{display:block;font-size:13px;color:#4A4D55}
+.step output{font-family:"Archivo Black";font-size:26px;text-align:center}
+.alloc{display:flex;height:56px;gap:3px;margin:12px 0 8px}
+.alloc span{background:var(--k);color:var(--b);font:700 11px Archivo;padding:6px}
+.alloc span:first-child{background:var(--r);border-radius:0 0 0 0}
+.alloc span:last-child{border-radius:0 28px 0 0}
+.leg2{font-size:13px;display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}
+.leg2 b{float:right}
+.chip{min-height:44px;padding:0 14px;display:inline-flex;align-items:center;border:2px solid var(--k);font:700 14px Archivo;background:none;color:inherit}
+.chip[aria-pressed=true]{background:var(--k);color:var(--b)}
+.mapbox{background:var(--k);padding:16px 16px 12px;position:relative}
+.mapbox .boi{width:100%}
+.info{position:absolute;right:10px;top:10px;width:44px;height:44px;border-radius:0 44px 0 0;background:var(--r);color:var(--b);border:0;font:400 20px "Archivo Black"}
+.tag{display:inline-block;background:var(--r);color:var(--b);font:700 12px Archivo;padding:3px 8px}
+.kv{display:grid;grid-template-columns:1fr 1fr;border-top:2px solid var(--k);margin-top:12px}
+.kv div{padding:10px 0;border-bottom:1px solid #C9C0B2;font-size:13.5px}.kv div:nth-child(odd){padding-right:10px}
+.kv dt{font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#4A4D55}
+.timer{background:var(--r);color:var(--b);padding:18px 20px 20px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:end}
+.timer .t{font-family:"Archivo Black";font-size:68px;line-height:.9;letter-spacing:-.04em}
+.tl{list-style:none;padding:0 20px;margin-top:8px}
+.tl li{display:grid;grid-template-columns:48px 22px 1fr auto;gap:10px;align-items:center;min-height:54px;border-bottom:1px solid #C9C0B2;font-size:14px}
+.tl li time{font:600 13px "JetBrains Mono"}
+.tl li i{width:16px;height:16px;background:var(--k);opacity:.25}
+.tl li.done{color:#55585F}.tl li.done i{opacity:1;background:var(--k)}
+.tl li.now{background:var(--k);color:var(--b);margin:0 -20px;padding:0 20px;grid-template-columns:48px 22px 1fr auto}
+.tl li.now i{background:var(--r);opacity:1;border-radius:0 16px 0 0}
+.thermo{display:flex;gap:3px;margin-top:10px}
+.thermo span{flex:1;height:30px;background:#E2D9CB;font:700 10px Archivo;display:flex;align-items:flex-end;padding:3px}
+.thermo span.on{background:var(--k);color:var(--b)}
+.desk{background:var(--b2);padding:40px;margin-top:64px}
+.win{background:var(--b);border:2px solid var(--k);display:grid;grid-template-columns:220px 1fr 360px;min-height:620px}
+.win aside{background:var(--k);color:var(--b);padding:24px;display:flex;flex-direction:column;gap:6px}
+.win aside a{min-height:48px;display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:600;color:#CFC9BE;padding:0 10px}
+.win aside a svg{width:20px;height:20px}
+.win aside a[aria-current]{background:var(--r);color:var(--b)}
+.win main{padding:32px}
+.win .side{border-left:2px solid var(--k);padding:32px}
+.cuts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+.cuts button{min-height:64px;text-align:left;padding:10px 12px;border:2px solid var(--k);background:none;font:700 15px Archivo;color:var(--k);cursor:pointer}
+.cuts button small{display:block;font-weight:400;font-size:12.5px}
+.cuts button[aria-pressed=true]{background:var(--r);border-color:var(--r);color:var(--b)}
+.blind{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.blind div{border-top:2px solid currentColor;padding-top:14px;font-size:15px}
+.blind b{font-family:"Archivo Black";font-weight:400;font-size:20px;display:block;margin-bottom:6px}
+footer{padding:48px 0;font-size:14px}
+@media (max-width:900px){.wrap{padding:0 20px}section{padding:72px 0}.g2,.spec,.lockups{grid-template-columns:1fr}.lockups .l1{grid-row:auto}.steps,.icons{grid-template-columns:repeat(2,1fr)}.hero .row,.bars,.blind{grid-template-columns:1fr 1fr}.phones{grid-template-columns:1fr;gap:48px}.pal{grid-template-columns:1fr;height:auto}.pal div{min-height:160px}.win{grid-template-columns:1fr}.win aside{display:none}.win .side{border-left:0;border-top:2px solid var(--k)}.desk{padding:12px}.phone{width:100%;max-width:360px}.hero .word{margin:64px 0 40px}.pattern{height:320px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="sym" viewBox="0 0 120 120"><path fill="currentColor" d="M2.5 37.5A35 35 0 0 1 37.5 2.5V37.5Z"/><path fill="currentColor" d="M42.5 2.5h35v35h-35Z"/><path fill="var(--hl)" d="M82.5 2.5A35 35 0 0 1 117.5 37.5H82.5Z"/><path fill="currentColor" d="M2.5 42.5h35v35h-35Z"/><path fill="currentColor" d="M2.5 82.5A35 35 0 0 0 37.5 117.5V82.5Z"/><path fill="currentColor" d="M42.5 82.5h35v35h-35Z"/><path fill="currentColor" d="M82.5 82.5H117.5A35 35 0 0 1 82.5 117.5Z"/></symbol>
+<symbol id="i-plan" viewBox="0 0 24 24"><path fill="currentColor" d="M2 2h9v9H2zM13 2h9v9h-9zM2 13h9v9H2z"/><path fill="currentColor" d="M13 13h9A9 9 0 0 1 13 22z"/></symbol>
+<symbol id="i-cut" viewBox="0 0 24 24"><path fill="currentColor" d="M2 11A9 9 0 0 1 11 2v9zM13 2h9v9h-9zM2 13h20v9H2z"/></symbol>
+<symbol id="i-fire" viewBox="0 0 24 24"><path fill="currentColor" d="M2 22A20 20 0 0 1 22 2v9a11 11 0 0 0-11 11z"/><path fill="currentColor" d="M13 22a9 9 0 0 1 9-9v9z"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path fill="currentColor" d="M2 2h6v6H2zM10 3h12v4H10zM2 9h6v6H2zM10 10h12v4H10zM2 16h6v6H2zM10 17h12v4H10z"/></symbol>
+<symbol id="i-temp" viewBox="0 0 24 24"><path fill="currentColor" d="M8 2h8v13a6 6 0 1 1-8 0z" opacity=".3"/><path fill="currentColor" d="M10 9h4v7a3.2 3.2 0 1 1-4 0z"/></symbol>
+<symbol id="i-people" viewBox="0 0 24 24"><path fill="currentColor" d="M3 2h7v7H3zM14 2h7v7h-7zM2 22a8 8 0 0 1 9-9v9zM13 22v-9a8 8 0 0 1 9 9z"/></symbol>
+</defs></svg>
+
+<header class="hero">
+ <div class="wrap">
+  <nav><span class="mono">churrasquin · brand board · v5</span><span class="mono">Direção C — Mapa Modular</span></nav>
+  <svg class="word" viewBox="-4 -4 625 134" role="img" aria-label="churrasquin"><path fill="currentColor" d="M62.400000000000006 68.5H43.1Q43.1 59.5 33.300000000000004 59.5Q23.5 59.5 23.5 70.8V76.5Q23.5 87.7 33.7 87.7Q43.900000000000006 87.7 43.900000000000006 78.5H62.400000000000006Q62.400000000000006 90.0 54.35000000000001 95.6Q46.300000000000004 101.2 33.300000000000004 101.2Q19.400000000000002 101.2 11.500000000000002 94.2Q3.6 87.2 3.6 73.6Q3.6 60.0 11.500000000000002 53.0Q19.400000000000002 46.0 33.300000000000004 46.0Q46.300000000000004 46.0 54.35000000000001 51.55Q62.400000000000006 57.099999999999994 62.400000000000006 68.5Z M106.10000000000001 46.0Q115.30000000000001 46.0 119.9 51.099999999999994Q124.5 56.199999999999996 124.5 65.8V100.0H104.60000000000001V68.2Q104.60000000000001 64.8 102.85 62.75Q101.1 60.699999999999996 97.9 60.699999999999996Q94.2 60.699999999999996 91.9 63.099999999999994Q89.60000000000001 65.5 89.60000000000001 69.0V100.0H69.7V27.5H89.60000000000001V52.699999999999996Q92.80000000000001 49.5 97.10000000000001 47.75Q101.4 46.0 106.10000000000001 46.0Z M171.70000000000002 100.0 170.4 92.0Q167.3 96.3 162.25 98.75Q157.20000000000002 101.2 151.60000000000002 101.2Q142.4 101.2 137.8 96.1Q133.20000000000002 91.0 133.20000000000002 81.4V47.199999999999996H153.10000000000002V79.0Q153.10000000000002 82.4 154.85000000000002 84.45Q156.60000000000002 86.5 159.8 86.5Q163.5 86.5 165.8 84.1Q168.10000000000002 81.7 168.10000000000002 78.2V47.199999999999996H188.0V100.0Z M235.10000000000002 47.099999999999994V63.8H228.70000000000002Q222.50000000000003 63.8 219.75000000000003 67.0Q217.00000000000003 70.2 217.00000000000003 76.5V100.0H197.10000000000002V47.199999999999996H213.40000000000003L214.70000000000002 55.199999999999996Q216.50000000000003 50.599999999999994 220.40000000000003 48.25Q224.3 45.9 229.20000000000002 45.9Q231.50000000000003 45.9 233.3 46.45Q235.10000000000002 47.0 235.10000000000002 47.099999999999994Z M276.5 47.099999999999994V63.8H270.1Q263.90000000000003 63.8 261.15000000000003 67.0Q258.40000000000003 70.2 258.40000000000003 76.5V100.0H238.50000000000003V47.199999999999996H254.80000000000004L256.1 55.199999999999996Q257.90000000000003 50.599999999999994 261.80000000000007 48.25Q265.70000000000005 45.9 270.6 45.9Q272.90000000000003 45.9 274.70000000000005 46.45Q276.5 47.0 276.5 47.099999999999994Z M333.30000000000007 63.199999999999996V83.8Q333.30000000000007 85.5 334.1 86.6Q334.90000000000003 87.7 336.50000000000006 87.7H340.1V99.2Q339.80000000000007 99.4 338.55000000000007 99.85Q337.30000000000007 100.3 335.00000000000006 100.75Q332.70000000000005 101.2 329.70000000000005 101.2Q323.90000000000003 101.2 320.15000000000003 99.45Q316.40000000000003 97.7 315.00000000000006 94.6Q311.20000000000005 97.6 306.5 99.4Q301.8 101.2 295.50000000000006 101.2Q276.90000000000003 101.2 276.90000000000003 86.4Q276.90000000000003 78.7 281.05000000000007 74.65Q285.20000000000005 70.6 293.0 69.1Q300.8 67.6 313.40000000000003 67.6V65.0Q313.40000000000003 61.9 311.25 60.3Q309.1 58.699999999999996 305.70000000000005 58.699999999999996Q302.6 58.699999999999996 300.35 59.8Q298.1 60.9 298.1 63.3V63.699999999999996H278.50000000000006Q278.40000000000003 63.199999999999996 278.40000000000003 62.3Q278.40000000000003 54.8 285.55000000000007 50.4Q292.70000000000005 46.0 306.00000000000006 46.0Q318.1 46.0 325.70000000000005 50.05Q333.30000000000007 54.099999999999994 333.30000000000007 63.199999999999996ZM296.8 83.8Q296.8 88.8 303.6 88.8Q307.50000000000006 88.8 310.45000000000005 86.69999999999999Q313.40000000000003 84.6 313.40000000000003 81.5V77.0Q304.90000000000003 77.0 300.85 78.85Q296.8 80.7 296.8 83.8Z M394.0 63.0H375.5Q375.5 60.099999999999994 372.90000000000003 58.9Q371.1 57.9 368.40000000000003 57.9Q361.20000000000005 57.9 361.20000000000005 61.3Q361.20000000000005 63.199999999999996 363.70000000000005 64.0Q366.20000000000005 64.8 371.90000000000003 65.69999999999999Q378.90000000000003 66.69999999999999 383.6 68.05Q388.3 69.4 391.8 72.85Q395.3 76.3 395.3 82.5Q395.3 92.6 387.75 96.9Q380.20000000000005 101.2 368.0 101.2Q361.0 101.2 354.8 99.25Q348.6 97.3 344.70000000000005 93.19999999999999Q340.8 89.1 340.8 82.8H359.3V83.2Q359.40000000000003 86.6 362.15000000000003 87.94999999999999Q364.90000000000003 89.3 368.0 89.3Q376.3 89.3 376.3 85.4Q376.3 83.4 373.70000000000005 82.5Q371.1 81.6 365.20000000000005 80.6Q358.1 79.4 353.55 78.0Q349.0 76.6 345.6 73.25Q342.20000000000005 69.9 342.20000000000005 63.9Q342.20000000000005 54.199999999999996 349.55000000000007 50.099999999999994Q356.90000000000003 46.0 368.70000000000005 46.0Q379.3 46.0 386.65 50.15Q394.0 54.3 394.0 63.0Z M438.40000000000003 54.699999999999996 440.1 47.199999999999996H456.30000000000007V119.7H436.40000000000003V95.2Q430.80000000000007 101.2 421.6 101.2Q410.90000000000003 101.2 405.1 94.25Q399.30000000000007 87.3 399.30000000000007 73.7Q399.30000000000007 60.0 405.1 53.0Q410.90000000000003 46.0 421.6 46.0Q432.6 46.0 438.40000000000003 54.699999999999996ZM419.20000000000005 70.9V76.2Q419.20000000000005 86.5 427.80000000000007 86.5Q432.20000000000005 86.5 434.40000000000003 83.35Q436.6 80.2 436.6 75.2V71.9Q436.6 66.9 434.40000000000003 63.8Q432.20000000000005 60.699999999999996 427.80000000000007 60.699999999999996Q419.20000000000005 60.699999999999996 419.20000000000005 70.9Z M503.70000000000005 100.0 502.40000000000003 92.0Q499.30000000000007 96.3 494.25000000000006 98.75Q489.20000000000005 101.2 483.6 101.2Q474.40000000000003 101.2 469.80000000000007 96.1Q465.20000000000005 91.0 465.20000000000005 81.4V47.199999999999996H485.1V79.0Q485.1 82.4 486.85 84.45Q488.6 86.5 491.8 86.5Q495.50000000000006 86.5 497.80000000000007 84.1Q500.1 81.7 500.1 78.2V47.199999999999996H520.0V100.0Z M529.8000000000001 100.0V47.199999999999996H549.7V100.0Z M614.1999999999999 65.8V100.0H594.3V68.2Q594.3 64.8 592.55 62.75Q590.8 60.699999999999996 587.6 60.699999999999996Q583.9 60.699999999999996 581.5999999999999 63.099999999999994Q579.3 65.5 579.3 69.0V100.0H559.4V47.199999999999996H575.6999999999999L577.0 55.199999999999996Q580.1 51.0 585.15 48.5Q590.1999999999999 46.0 595.8 46.0Q605.0 46.0 609.5999999999999 51.099999999999994Q614.1999999999999 56.199999999999996 614.1999999999999 65.8Z"/><rect fill="var(--dot)" x="526.8" y="2.0" width="20.0" height="20.0"/></svg>
+  <div class="row">
+   <div><b>O boi, em peças.</b>Cada região de corte vira um módulo de uma grade 3×3.</div>
+   <div><b>Um símbolo, um sistema.</b>Os módulos montam o “c”, o padrão, as barras e os ícones.</div>
+   <div><b>Três cores, campos chapados.</b>Brasa, Carvão, Osso. Sem degradê, sem textura.</div>
+   <div><b>Ajuda, não açougue.</b>Planejar, conhecer o corte, acertar o ponto.</div>
+  </div>
+ </div>
+</header>
+
+<section>
+ <div class="wrap">
+  <div class="lab"><b>01</b> Conceito<span class="mono">mapa de cortes → módulo</span></div>
+  <div class="g2">
+   <div>
+    <h2 class="d">Todo churrasco começa no mapa.</h2>
+    <p class="lead">O churrasqueiro pensa em peças: picanha em cima, fraldinha embaixo, costela no meio. Pegamos o mapa de cortes e o reduzimos à sua geometria mínima — quadrados e quartos de círculo numa grade fixa. A curva é sempre gordura ou capa (picanha, cupim, peito); o quadrado é músculo. Essas peças são o vocabulário inteiro da marca.</p>
+   </div>
+   <div class="dark" style="padding:32px"><svg class="boi big" viewBox="-2 -2 296 156" role="img" aria-label="Mapa modular do boi, região picanha destacada"><path class="m mute" data-id="cabeca" d="M0 24.0h36v36h-36Z"><title>outros</title></path><path class="m" data-id="cupim" d="M40 36A36 36 0 0 1 76 0V36Z"><title>Cupim</title></path><path class="m" data-id="acem" d="M80 0h76v36h-76Z"><title>Acém</title></path><text x="88" y="28" class="ml">Acém</text><path class="m" data-id="contrafile" d="M160 0h36v36h-36Z"><title>Contrafilé</title></path><path class="m" data-id="alcatra" d="M200 0h36v36h-36Z"><title>Alcatra</title></path><path class="m on" data-id="picanha" d="M240 0A36 36 0 0 1 276 36H240Z"><title>Picanha</title></path><path class="m" data-id="paleta" d="M40 40h36v36h-36Z"><title>Paleta</title></path><path class="m" data-id="costela" d="M80 40h76v36h-76Z"><title>Costela</title></path><text x="88" y="68" class="ml">Costela</text><path class="m" data-id="file-mignon" d="M160 40h36v36h-36Z"><title>Filé</title></path><path class="m" data-id="maminha" d="M200 40h36v36h-36Z"><title>Maminha</title></path><path class="m mute" data-id="coxao" d="M240 40h36v36h-36Z"><title>outros</title></path><path class="m" data-id="peito" d="M40 80h76v36h-76Z"><title>Peito</title></path><text x="48" y="108" class="ml">Peito</text><path class="m" data-id="fraldinha" d="M120 80h76v36h-76Z"><title>Fraldinha</title></path><text x="128" y="108" class="ml">Fraldinha</text><path class="m mute" data-id="patinho" d="M200 80h76v36h-76Z"><title>outros</title></path><path class="m leg" d="M40 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M60.0 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M220.0 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M240 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M278 0h8v64.0h-8Z"/></svg><p class="mono" style="margin-top:16px;opacity:.8">Mapa modular · 7×4 módulos · Picanha destacada em Brasa — passe o mouse</p></div>
+  </div>
+ </div>
+</section>
+
+<section style="padding-top:0">
+ <div class="wrap">
+  <div class="lab"><b>02</b> Símbolo<span class="mono">grade 3×3 · módulo 40 · corte 5</span></div>
+  <div class="g2">
+   <div class="grid-c"><svg viewBox="0 0 120 120" aria-label="Símbolo churrasquin na grade de construção"><use href="#sym"/></svg></div>
+   <div>
+    <h2 class="d" style="font-size:64px">Sete peças fazem um “c”.</h2>
+    <p class="lead">Três quartos de círculo, quatro quadrados, uma casa vazia: o “c” de churrasquin, que é também um boi visto de lado — lombo em cima, peito embaixo, a abertura é a brasa. A peça superior direita é a <strong>picanha</strong>: a única que sempre aparece em Brasa. O corte de 5/40 entre módulos é a faca: nunca some, nunca muda.</p>
+    <div class="steps" style="grid-template-columns:repeat(2,1fr)">
+     <figure><svg viewBox="0 0 120 120"><path fill="#14161B" d="M0 35A35 35 0 0 1 35 0V35Z M40 0h35v35H40Z M0 40h35v35H0Z"/><rect x="40" y="40" width="35" height="35" fill="none" stroke="#14161B" stroke-dasharray="3 3"/></svg><figcaption><b>Peça</b>2 formas: quadrado (músculo), quarto (capa).</figcaption></figure>
+     <figure><svg viewBox="0 0 120 120"><use href="#sym" color="#14161B"/></svg><figcaption><b>Montagem</b>7 módulos, centro e lado direito vazados.</figcaption></figure>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="dark">
+ <div class="wrap">
+  <div class="lab"><b>03</b> Assinatura<span class="mono">Archivo Black redesenhada · pingo-módulo</span></div>
+  <div class="lockups">
+   <div class="l1"><img src="logo.svg" alt="Logotipo churrasquin em Carvão" width="620"></div>
+   <div style="background:var(--k);outline:2px solid #2F333B"><img src="logo-neg.svg" alt="Logotipo churrasquin negativo" width="320"></div>
+   <div style="background:var(--r)"><img src="app-icon.svg" alt="Ícone do app" width="150"></div>
+  </div>
+  <p class="rule">Lettering a partir da Archivo Black com espacejamento −3 e o pingo do “i” trocado por um módulo quadrado em Brasa: é o “i” de informação que abre a ficha do corte dentro do app. Área de proteção = 1 módulo. Tamanho mínimo: 96 px de largura (assinatura), 20 px (símbolo).</p>
+ </div>
+</section>
+
+<section>
+ <div class="wrap">
+  <div class="lab"><b>04</b> Tipografia<span class="mono">Archivo Black · Archivo · JetBrains Mono</span></div>
+  <div class="spec">
+   <div><p class="d alpha">Aa Ff<br>Gg 72°</p></div>
+   <div class="scale">
+    <p><span class="mono">Display</span><span class="d" style="font-size:40px">Na brasa</span></p>
+    <p><span class="mono">Título</span><span style="font:800 24px Archivo">Picanha, 1,8 kg</span></p>
+    <p><span class="mono">Texto</span><span>Cobre a parte de cima da alcatra: fibras finas e macias.</span></p>
+    <p><span class="mono">Dado</span><span style="font:500 16px 'JetBrains Mono'">54 °C · 15–20 MIN · R$ 70–110/KG</span></p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section style="padding-top:0">
+ <div class="wrap">
+  <div class="lab"><b>05</b> Paleta<span class="mono">50 · 30 · 20 · campos chapados</span></div>
+  <div class="pal">
+   <div style="background:var(--r);color:var(--b)"><b>Brasa</b><small>#C8321A · RGB 200 50 26<br>Osso sobre Brasa 4,9:1 AA</small></div>
+   <div style="background:var(--k);color:var(--b)"><b>Carvão</b><small>#14161B<br>Osso sobre Carvão 16,4:1 AAA</small></div>
+   <div style="background:var(--b);color:var(--k);outline:2px solid var(--k);outline-offset:-2px"><b>Osso</b><small>#F3EEE6<br>Carvão sobre Osso 16,4:1</small></div>
+  </div>
+  <p class="rule">Regra: uma tela, um campo dominante. Brasa nunca vira texto pequeno sobre Osso (só ≥24 px bold ou blocos). Nada de marrom, dourado, degradê ou sombra decorativa: a cor da carne vem da fotografia, não da paleta.</p>
+ </div>
+</section>
+
+<section class="pattern" aria-label="Padrão modular">
+ <svg aria-hidden="true"><defs><pattern id="pt" width="240" height="240" patternUnits="userSpaceOnUse"><use href="#sym" width="120" height="120" color="#F3EEE6" style="--hl:#14161B"/><use href="#sym" x="120" y="120" width="120" height="120" color="#14161B" style="--hl:#F3EEE6" transform="rotate(180 180 180)"/><path fill="#14161B" d="M120 0h35v35h-35zM160 0a35 35 0 0 1 35 35h-35z"/><path fill="#F3EEE6" d="M0 120h35v35H0zM40 155a35 35 0 0 1 35-35v35z"/></pattern></defs><rect width="100%" height="100%" fill="url(#pt)"/></svg>
+</section>
+
+<section>
+ <div class="wrap">
+  <div class="lab"><b>06</b> Ícones e medidas<span class="mono">grade 24 · corte 2 · só módulos</span></div>
+  <div class="icons">
+   <figure><svg><use href="#i-plan"/></svg><figcaption>Planejar</figcaption></figure>
+   <figure><svg><use href="#i-cut"/></svg><figcaption>Cortes</figcaption></figure>
+   <figure><svg style="color:var(--r)"><use href="#i-fire"/></svg><figcaption>Na brasa</figcaption></figure>
+   <figure><svg><use href="#i-list"/></svg><figcaption>Lista</figcaption></figure>
+   <figure><svg><use href="#i-temp"/></svg><figcaption>Ponto</figcaption></figure>
+   <figure><svg><use href="#i-people"/></svg><figcaption>Turma</figcaption></figure>
+  </div>
+  <div class="bars">
+   <div class="meter"><span>Maciez</span><span class="mb"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></div>
+   <div class="meter"><span>Gordura</span><span class="mb" style="color:var(--r)"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></div>
+   <div class="meter"><span>Sabor</span><span class="mb"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+  </div>
+  <p class="rule">As medidas são contadas em módulos, nunca em barras contínuas: 5 casas, a última cheia vira “capa” (quarto de círculo). O que se conta em peças se lê em peças.</p>
+ </div>
+</section>
+
+<section class="dark">
+ <div class="wrap">
+  <div class="lab"><b>07</b> Produto<span class="mono">390 × 844 · alvos ≥ 44 px · contraste AA</span></div>
+  <div class="phones">
+
+  <!-- PLANEJAR -->
+  <div class="phone"><div class="scr">
+   <div class="sb"><span>18:42</span><span>●●● 5G</span></div>
+   <div class="ph">
+    <div class="ap"><svg class="s"><use href="#sym"/></svg><h3>Sábado · Sítio do Lu</h3><button class="btn g" aria-label="Editar evento" style="padding:0;width:44px;min-height:44px;min-width:44px">✎</button></div>
+    <p class="mono" style="margin-top:14px">Planejar</p>
+    <p class="d big" style="margin-top:6px">6,8<span style="font-size:32px"> kg</span></p>
+    <p style="font-size:14px">de carne crua para 18 pessoas · ~380 g por adulto</p>
+    <div class="alloc" role="img" aria-label="Divisão: picanha 2,2 kg, fraldinha 1,8, linguiça 1,6, costela 1,2">
+     <span style="flex:2.2">Picanha</span><span style="flex:1.8">Fraldinha</span><span style="flex:1.6">Linguiça</span><span style="flex:1.2">Costela</span>
+    </div>
+    <div class="leg2"><span>Picanha <b>2,2</b></span><span>Fraldinha <b>1,8</b></span><span>Linguiça <b>1,6</b></span><span>Costela <b>1,2</b></span></div>
+    <div style="margin-top:18px">
+     <div class="step"><span><b>Adultos</b><small>comem bem</small></span><button class="btn g" aria-label="Menos adultos" style="padding:0">−</button><output>14</output><button class="btn" aria-label="Mais adultos" style="padding:0">+</button></div>
+     <div class="step" style="border-bottom:2px solid var(--k)"><span><b>Crianças</b><small>meia porção</small></span><button class="btn g" aria-label="Menos crianças" style="padding:0">−</button><output>4</output><button class="btn" aria-label="Mais crianças" style="padding:0">+</button></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px"><button class="chip">Leve</button><button class="chip" aria-pressed="true">Turma boa de garfo</button></div>
+    <button class="btn r" style="width:100%;margin-top:16px;min-height:56px">Gerar lista de compra →</button>
+   </div>
+   <nav class="tabs" aria-label="Seções"><a href="#" aria-current="page"><svg><use href="#i-plan"/></svg>Planejar</a><a href="#"><svg><use href="#i-cut"/></svg>Cortes</a><a href="#"><svg><use href="#i-fire"/></svg>Na brasa</a><a href="#"><svg><use href="#i-list"/></svg>Lista</a></nav>
+  </div></div>
+
+  <!-- CORTES -->
+  <div class="phone"><div class="scr">
+   <div class="sb"><span>18:44</span><span>●●● 5G</span></div>
+   <div class="mapbox">
+    <svg class="boi" viewBox="-2 -2 296 156" role="img" aria-label="Mapa modular do boi, região picanha destacada"><path class="m mute" data-id="cabeca" d="M0 24.0h36v36h-36Z"><title>outros</title></path><path class="m" data-id="cupim" d="M40 36A36 36 0 0 1 76 0V36Z"><title>Cupim</title></path><path class="m" data-id="acem" d="M80 0h76v36h-76Z"><title>Acém</title></path><path class="m" data-id="contrafile" d="M160 0h36v36h-36Z"><title>Contrafilé</title></path><path class="m" data-id="alcatra" d="M200 0h36v36h-36Z"><title>Alcatra</title></path><path class="m on" data-id="picanha" d="M240 0A36 36 0 0 1 276 36H240Z"><title>Picanha</title></path><path class="m" data-id="paleta" d="M40 40h36v36h-36Z"><title>Paleta</title></path><path class="m" data-id="costela" d="M80 40h76v36h-76Z"><title>Costela</title></path><path class="m" data-id="file-mignon" d="M160 40h36v36h-36Z"><title>Filé</title></path><path class="m" data-id="maminha" d="M200 40h36v36h-36Z"><title>Maminha</title></path><path class="m mute" data-id="coxao" d="M240 40h36v36h-36Z"><title>outros</title></path><path class="m" data-id="peito" d="M40 80h76v36h-76Z"><title>Peito</title></path><path class="m" data-id="fraldinha" d="M120 80h76v36h-76Z"><title>Fraldinha</title></path><path class="m mute" data-id="patinho" d="M200 80h76v36h-76Z"><title>outros</title></path><path class="m leg" d="M40 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M60.0 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M220.0 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M240 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M278 0h8v64.0h-8Z"/></svg>
+    <button class="info" aria-label="Ampliar região da picanha">i</button>
+   </div>
+   <div class="ph" style="overflow:hidden">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:10px"><h3 class="d" style="font-size:44px">Picanha</h3><span class="tag">Nobre</span></div>
+    <p style="font-size:13px;color:#4A4D55">AR Tapa de cuadril · UY Picaña · US Top sirloin cap</p>
+    <div style="display:grid;gap:6px;margin-top:12px">
+     <div class="meter"><span>Maciez</span><span class="mb"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></div>
+     <div class="meter"><span>Gordura</span><span class="mb" style="color:var(--r)"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></div>
+     <div class="meter"><span>Sabor</span><span class="mb"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+    </div>
+    <p style="font-size:13.5px;margin-top:10px">Cobre a parte de cima da alcatra, músculo que trabalha pouco: fibras finas e macias. A capa protege e perfuma a carne.</p>
+    <dl class="kv"><div><dt>Ponto</dt><dd>Mal a ao ponto</dd></div><div><dt>Tempo</dt><dd>Bifes 15–20 min</dd></div><div><dt>Brasa</dt><dd>1 palmo, depois 1,5</dd></div><div><dt>Rende</dt><dd>68% · peça ≤1,5 kg</dd></div></dl>
+   </div>
+   <nav class="tabs" aria-label="Seções"><a href="#"><svg><use href="#i-plan"/></svg>Planejar</a><a href="#" aria-current="page"><svg><use href="#i-cut"/></svg>Cortes</a><a href="#"><svg><use href="#i-fire"/></svg>Na brasa</a><a href="#"><svg><use href="#i-list"/></svg>Lista</a></nav>
+  </div></div>
+
+  <!-- NA BRASA -->
+  <div class="phone"><div class="scr">
+   <div class="sb" style="background:var(--r);color:var(--b)"><span>19:26</span><span>●●● 5G</span></div>
+   <div class="timer">
+    <span class="mono" style="grid-column:1/-1">Agora · Picanha em bifes</span>
+    <span class="t" role="timer" aria-label="12 minutos e 40 segundos restantes">12:40</span>
+    <button class="btn" aria-label="Pausar timer" style="min-width:56px;min-height:56px;padding:0;font-size:20px">❚❚</button>
+    <span style="grid-column:1/-1;font-size:14px">Virar em 3 min · 1,5 palmo da brasa</span>
+   </div>
+   <div class="ph" style="padding-top:14px">
+    <p style="font-weight:700;font-size:14px">Termômetro · mal passada a ao ponto</p>
+    <div class="thermo" role="img" aria-label="Centro da peça a 52 graus, alvo 54"><span>45°</span><span class="on">50°</span><span class="on">52°</span><span style="background:var(--r);color:var(--b)">54° alvo</span><span>60°</span><span style="border-radius:0 30px 0 0">65°</span></div>
+   </div>
+   <ol class="tl">
+    <li class="done"><time>18:30</time><i></i><span>Acender 3 kg de carvão</span><span>✓</span></li>
+    <li class="done"><time>18:40</time><i></i><span>Costela no alto, osso p/ baixo</span><span>✓</span></li>
+    <li class="now"><time>19:14</time><i></i><span><b>Picanha</b> · selar e subir</span><span>12:40</span></li>
+    <li><time>19:35</time><i></i><span>Fraldinha, fogo médio-alto</span><span></span></li>
+    <li><time>20:00</time><i></i><span>Descanso 5 min e fatiar</span><span></span></li>
+   </ol>
+   <nav class="tabs" aria-label="Seções"><a href="#"><svg><use href="#i-plan"/></svg>Planejar</a><a href="#"><svg><use href="#i-cut"/></svg>Cortes</a><a href="#" aria-current="page"><svg><use href="#i-fire"/></svg>Na brasa</a><a href="#"><svg><use href="#i-list"/></svg>Lista</a></nav>
+  </div></div>
+  </div>
+
+  <div class="desk">
+   <div class="win">
+    <aside><svg viewBox="-4 -4 625 134" style="width:150px;color:var(--b);margin:4px 0 24px"><path fill="currentColor" d="M62.400000000000006 68.5H43.1Q43.1 59.5 33.300000000000004 59.5Q23.5 59.5 23.5 70.8V76.5Q23.5 87.7 33.7 87.7Q43.900000000000006 87.7 43.900000000000006 78.5H62.400000000000006Q62.400000000000006 90.0 54.35000000000001 95.6Q46.300000000000004 101.2 33.300000000000004 101.2Q19.400000000000002 101.2 11.500000000000002 94.2Q3.6 87.2 3.6 73.6Q3.6 60.0 11.500000000000002 53.0Q19.400000000000002 46.0 33.300000000000004 46.0Q46.300000000000004 46.0 54.35000000000001 51.55Q62.400000000000006 57.099999999999994 62.400000000000006 68.5Z M106.10000000000001 46.0Q115.30000000000001 46.0 119.9 51.099999999999994Q124.5 56.199999999999996 124.5 65.8V100.0H104.60000000000001V68.2Q104.60000000000001 64.8 102.85 62.75Q101.1 60.699999999999996 97.9 60.699999999999996Q94.2 60.699999999999996 91.9 63.099999999999994Q89.60000000000001 65.5 89.60000000000001 69.0V100.0H69.7V27.5H89.60000000000001V52.699999999999996Q92.80000000000001 49.5 97.10000000000001 47.75Q101.4 46.0 106.10000000000001 46.0Z M171.70000000000002 100.0 170.4 92.0Q167.3 96.3 162.25 98.75Q157.20000000000002 101.2 151.60000000000002 101.2Q142.4 101.2 137.8 96.1Q133.20000000000002 91.0 133.20000000000002 81.4V47.199999999999996H153.10000000000002V79.0Q153.10000000000002 82.4 154.85000000000002 84.45Q156.60000000000002 86.5 159.8 86.5Q163.5 86.5 165.8 84.1Q168.10000000000002 81.7 168.10000000000002 78.2V47.199999999999996H188.0V100.0Z M235.10000000000002 47.099999999999994V63.8H228.70000000000002Q222.50000000000003 63.8 219.75000000000003 67.0Q217.00000000000003 70.2 217.00000000000003 76.5V100.0H197.10000000000002V47.199999999999996H213.40000000000003L214.70000000000002 55.199999999999996Q216.50000000000003 50.599999999999994 220.40000000000003 48.25Q224.3 45.9 229.20000000000002 45.9Q231.50000000000003 45.9 233.3 46.45Q235.10000000000002 47.0 235.10000000000002 47.099999999999994Z M276.5 47.099999999999994V63.8H270.1Q263.90000000000003 63.8 261.15000000000003 67.0Q258.40000000000003 70.2 258.40000000000003 76.5V100.0H238.50000000000003V47.199999999999996H254.80000000000004L256.1 55.199999999999996Q257.90000000000003 50.599999999999994 261.80000000000007 48.25Q265.70000000000005 45.9 270.6 45.9Q272.90000000000003 45.9 274.70000000000005 46.45Q276.5 47.0 276.5 47.099999999999994Z M333.30000000000007 63.199999999999996V83.8Q333.30000000000007 85.5 334.1 86.6Q334.90000000000003 87.7 336.50000000000006 87.7H340.1V99.2Q339.80000000000007 99.4 338.55000000000007 99.85Q337.30000000000007 100.3 335.00000000000006 100.75Q332.70000000000005 101.2 329.70000000000005 101.2Q323.90000000000003 101.2 320.15000000000003 99.45Q316.40000000000003 97.7 315.00000000000006 94.6Q311.20000000000005 97.6 306.5 99.4Q301.8 101.2 295.50000000000006 101.2Q276.90000000000003 101.2 276.90000000000003 86.4Q276.90000000000003 78.7 281.05000000000007 74.65Q285.20000000000005 70.6 293.0 69.1Q300.8 67.6 313.40000000000003 67.6V65.0Q313.40000000000003 61.9 311.25 60.3Q309.1 58.699999999999996 305.70000000000005 58.699999999999996Q302.6 58.699999999999996 300.35 59.8Q298.1 60.9 298.1 63.3V63.699999999999996H278.50000000000006Q278.40000000000003 63.199999999999996 278.40000000000003 62.3Q278.40000000000003 54.8 285.55000000000007 50.4Q292.70000000000005 46.0 306.00000000000006 46.0Q318.1 46.0 325.70000000000005 50.05Q333.30000000000007 54.099999999999994 333.30000000000007 63.199999999999996ZM296.8 83.8Q296.8 88.8 303.6 88.8Q307.50000000000006 88.8 310.45000000000005 86.69999999999999Q313.40000000000003 84.6 313.40000000000003 81.5V77.0Q304.90000000000003 77.0 300.85 78.85Q296.8 80.7 296.8 83.8Z M394.0 63.0H375.5Q375.5 60.099999999999994 372.90000000000003 58.9Q371.1 57.9 368.40000000000003 57.9Q361.20000000000005 57.9 361.20000000000005 61.3Q361.20000000000005 63.199999999999996 363.70000000000005 64.0Q366.20000000000005 64.8 371.90000000000003 65.69999999999999Q378.90000000000003 66.69999999999999 383.6 68.05Q388.3 69.4 391.8 72.85Q395.3 76.3 395.3 82.5Q395.3 92.6 387.75 96.9Q380.20000000000005 101.2 368.0 101.2Q361.0 101.2 354.8 99.25Q348.6 97.3 344.70000000000005 93.19999999999999Q340.8 89.1 340.8 82.8H359.3V83.2Q359.40000000000003 86.6 362.15000000000003 87.94999999999999Q364.90000000000003 89.3 368.0 89.3Q376.3 89.3 376.3 85.4Q376.3 83.4 373.70000000000005 82.5Q371.1 81.6 365.20000000000005 80.6Q358.1 79.4 353.55 78.0Q349.0 76.6 345.6 73.25Q342.20000000000005 69.9 342.20000000000005 63.9Q342.20000000000005 54.199999999999996 349.55000000000007 50.099999999999994Q356.90000000000003 46.0 368.70000000000005 46.0Q379.3 46.0 386.65 50.15Q394.0 54.3 394.0 63.0Z M438.40000000000003 54.699999999999996 440.1 47.199999999999996H456.30000000000007V119.7H436.40000000000003V95.2Q430.80000000000007 101.2 421.6 101.2Q410.90000000000003 101.2 405.1 94.25Q399.30000000000007 87.3 399.30000000000007 73.7Q399.30000000000007 60.0 405.1 53.0Q410.90000000000003 46.0 421.6 46.0Q432.6 46.0 438.40000000000003 54.699999999999996ZM419.20000000000005 70.9V76.2Q419.20000000000005 86.5 427.80000000000007 86.5Q432.20000000000005 86.5 434.40000000000003 83.35Q436.6 80.2 436.6 75.2V71.9Q436.6 66.9 434.40000000000003 63.8Q432.20000000000005 60.699999999999996 427.80000000000007 60.699999999999996Q419.20000000000005 60.699999999999996 419.20000000000005 70.9Z M503.70000000000005 100.0 502.40000000000003 92.0Q499.30000000000007 96.3 494.25000000000006 98.75Q489.20000000000005 101.2 483.6 101.2Q474.40000000000003 101.2 469.80000000000007 96.1Q465.20000000000005 91.0 465.20000000000005 81.4V47.199999999999996H485.1V79.0Q485.1 82.4 486.85 84.45Q488.6 86.5 491.8 86.5Q495.50000000000006 86.5 497.80000000000007 84.1Q500.1 81.7 500.1 78.2V47.199999999999996H520.0V100.0Z M529.8000000000001 100.0V47.199999999999996H549.7V100.0Z M614.1999999999999 65.8V100.0H594.3V68.2Q594.3 64.8 592.55 62.75Q590.8 60.699999999999996 587.6 60.699999999999996Q583.9 60.699999999999996 581.5999999999999 63.099999999999994Q579.3 65.5 579.3 69.0V100.0H559.4V47.199999999999996H575.6999999999999L577.0 55.199999999999996Q580.1 51.0 585.15 48.5Q590.1999999999999 46.0 595.8 46.0Q605.0 46.0 609.5999999999999 51.099999999999994Q614.1999999999999 56.199999999999996 614.1999999999999 65.8Z"/><rect fill="var(--dot)" x="526.8" y="2.0" width="20.0" height="20.0"/></svg>
+     <a href="#"><svg><use href="#i-plan"/></svg>Planejar</a><a href="#" aria-current="page"><svg><use href="#i-cut"/></svg>Cortes</a><a href="#"><svg><use href="#i-fire"/></svg>Na brasa</a><a href="#"><svg><use href="#i-list"/></svg>Lista</a><a href="#"><svg><use href="#i-temp"/></svg>Ponto</a></aside>
+    <main style="color:var(--k)"><p class="mono">Guia de cortes · boi</p><h3 class="d" style="font-size:56px;margin:8px 0 20px">Escolha a peça<br>no mapa.</h3>
+     <div style="background:var(--k);padding:24px"><svg class="boi big" viewBox="-2 -2 296 156" role="img" aria-label="Mapa modular do boi, região picanha destacada"><path class="m mute" data-id="cabeca" d="M0 24.0h36v36h-36Z"><title>outros</title></path><path class="m" data-id="cupim" d="M40 36A36 36 0 0 1 76 0V36Z"><title>Cupim</title></path><path class="m" data-id="acem" d="M80 0h76v36h-76Z"><title>Acém</title></path><text x="88" y="28" class="ml">Acém</text><path class="m" data-id="contrafile" d="M160 0h36v36h-36Z"><title>Contrafilé</title></path><path class="m" data-id="alcatra" d="M200 0h36v36h-36Z"><title>Alcatra</title></path><path class="m on" data-id="picanha" d="M240 0A36 36 0 0 1 276 36H240Z"><title>Picanha</title></path><path class="m" data-id="paleta" d="M40 40h36v36h-36Z"><title>Paleta</title></path><path class="m" data-id="costela" d="M80 40h76v36h-76Z"><title>Costela</title></path><text x="88" y="68" class="ml">Costela</text><path class="m" data-id="file-mignon" d="M160 40h36v36h-36Z"><title>Filé</title></path><path class="m" data-id="maminha" d="M200 40h36v36h-36Z"><title>Maminha</title></path><path class="m mute" data-id="coxao" d="M240 40h36v36h-36Z"><title>outros</title></path><path class="m" data-id="peito" d="M40 80h76v36h-76Z"><title>Peito</title></path><text x="48" y="108" class="ml">Peito</text><path class="m" data-id="fraldinha" d="M120 80h76v36h-76Z"><title>Fraldinha</title></path><text x="128" y="108" class="ml">Fraldinha</text><path class="m mute" data-id="patinho" d="M200 80h76v36h-76Z"><title>outros</title></path><path class="m leg" d="M40 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M60.0 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M220.0 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M240 120h16.0v30.0h-16.0Z"/><path class="m leg" d="M278 0h8v64.0h-8Z"/></svg></div>
+     <div class="cuts" id="cuts"></div></main>
+    <div class="side" style="color:var(--k)" id="ficha"></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section>
+ <div class="wrap">
+  <div class="lab"><b>08</b> Teste às cegas<span class="mono">5 pessoas · símbolo isolado, 2 s</span></div>
+  <div class="blind">
+   <div><b>Lê como carne?</b>Sim, com o mapa ao lado: os módulos são lidos como “peças”, e a curva em Brasa como picanha/capa. Sozinho, lê como “c” geométrico, o que queremos.</div>
+   <div><b>Parece Frigomatoso?</b>Não: não há cabeça, chifre nem face frontal. É perfil lateral, grade 3×3, vazio no lugar do olho — outra família geométrica.</div>
+   <div><b>Risco</b>Pode lembrar marca de tecnologia em tamanhos médios. Mitigação: sempre com a peça em Brasa e, em comunicação, com foto real de carne/brasa em campo inteiro.</div>
+  </div>
+ </div>
+</section>
+<footer class="red"><div class="wrap" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px"><span>churrasquin — app de auxílio ao churrasco. Não vende carne.</span><span class="mono">Brand v5 · C · Mapa Modular</span></div></footer>
+
+<script>
+const CORTES=[{"id":"picanha","nome":"Picanha","nomes":{"ar":"Tapa de cuadril","uy":"Picaña","us":"Top sirloin cap (coulotte)"},"maciez":4,"gordura":4,"sabor":5,"porque":"Cobre a parte de cima da alcatra, músculo que trabalha pouco: fibras finas e macias. A capa de gordura protege e perfuma a carne na brasa.","preparo":"Em bifes grossos (3 dedos) dobrados no espeto, gordura para fora, ou peça inteira. Sal grosso na hora. Não tire a capa.","ponto":"Mal passada a ao ponto","tempo":"Bifes: 15-20 min; peça inteira: 40-50 min","pesoPeca":"1 a 1,5 kg (peça boa não passa de ~1,5 kg)","rend":0.68,"preco":{"min":70,"max":110}},{"id":"maminha","nome":"Maminha","nomes":{"ar":"Colita de cuadril","uy":"Colita de cuadril","us":"Tri-tip"},"maciez":4,"gordura":2,"sabor":4,"porque":"Ponta da alcatra, músculo de pouco esforço; fibras longas e pouca gordura entremeada. Fica suculenta se não passar do ponto.","preparo":"Inteira, com a gordurinha, em fogo médio; vire poucas vezes. Fatie contra a fibra.","ponto":"Ao ponto para menos","tempo":"35-45 min inteira","pesoPeca":"0,8 a 1,5 kg","rend":0.72,"preco":{"min":45,"max":65}},{"id":"fraldinha","nome":"Fraldinha","nomes":{"ar":"Vacío (parte)","uy":"Vacío (parte)","us":"Bottom sirloin flap"},"maciez":3,"gordura":3,"sabor":5,"porque":"Músculo da parede abdominal, de fibras longas e soltas com gordura entre elas: muito sabor e suculência, maciez média.","preparo":"Inteira, fogo médio-alto, selando os dois lados. Descanse 5 min e fatie fino contra a fibra.","ponto":"Ao ponto","tempo":"25-35 min","pesoPeca":"0,8 a 1,5 kg","rend":0.72,"preco":{"min":40,"max":60}},{"id":"alcatra","nome":"Alcatra (miolo)","nomes":{"ar":"Cuadril","uy":"Cuadril","us":"Top sirloin"},"maciez":3,"gordura":2,"sabor":4,"porque":"Região do quadril, músculos de esforço moderado. Magra e com bom sabor; a peça inteira reúne picanha, maminha e miolo.","preparo":"Bifes grossos ou em cubos no espeto, brasa forte. Tempere só com sal.","ponto":"Ao ponto para menos","tempo":"15-25 min","pesoPeca":"Miolo 2 a 3 kg; peça completa 5 a 7 kg","rend":0.75,"preco":{"min":45,"max":65}},{"id":"cupim","nome":"Cupim","nomes":{"us":"Hump (zebu)"},"maciez":4,"gordura":5,"sabor":4,"porque":"Corcova de bois zebuínos (nelore). Músculo cheio de gordura entremeada e colágeno: duro se rápido, desmancha no cozimento lento.","preparo":"Longe da brasa ou embrulhado em papel-alumínio/manteiga, por horas. Finalize na brasa forte para dourar.","ponto":"Bem passado, desmanchando","tempo":"4-6 h em fogo baixo","pesoPeca":"2 a 4 kg","rend":0.6,"preco":{"min":35,"max":55}},{"id":"costela","nome":"Costela (ripa / minga)","nomes":{"ar":"Asado (costillar entero)","uy":"Asado (costillar)","us":"Beef plate ribs"},"maciez":3,"gordura":5,"sabor":5,"porque":"Carne entre os ossos da costela, músculos com muito colágeno e gordura. Precisa de calor baixo e longo para virar gelatina macia.","preparo":"Fogo de chão ou churrasqueira em altura alta, osso para baixo primeiro. Sal grosso. Paciência.","ponto":"Bem passada, soltando do osso","tempo":"6-10 h na churrasqueira; 10-12 h no fogo de chão","pesoPeca":"Ripa inteira 4 a 10 kg","rend":0.5,"preco":{"min":25,"max":40}}];
+const cuts=document.getElementById('cuts'),fi=document.getElementById('ficha');
+const bar=(n,c)=>`<span class="mb" ${c?'style="color:var(--r)"':''}>${[1,2,3,4,5].map(i=>`<i class="${i<=n?'f':''}"></i>`).join('')}</span>`;
+function sel(id){const c=CORTES.find(x=>x.id===id);if(!c)return;
+ document.querySelectorAll('.win .boi .m').forEach(m=>m.classList.toggle('on',m.dataset.id===id));
+ cuts.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id));
+ fi.innerHTML=`<p class="mono">Ficha do corte</p><h3 class="d" style="font-size:48px;margin:6px 0 4px">${c.nome}</h3><p style="font-size:13px;color:#4A4D55">${Object.entries(c.nomes).map(([k,v])=>k.toUpperCase()+' '+v).join(' · ')}</p>
+ <div style="display:grid;gap:6px;margin:16px 0"><div class="meter"><span>Maciez</span>${bar(c.maciez)}</div><div class="meter"><span>Gordura</span>${bar(c.gordura,1)}</div><div class="meter"><span>Sabor</span>${bar(c.sabor)}</div></div>
+ <p style="font-size:15px">${c.porque}</p><p style="font-size:15px;margin-top:10px"><strong>Preparo.</strong> ${c.preparo}</p>
+ <dl class="kv"><div><dt>Ponto</dt><dd>${c.ponto}</dd></div><div><dt>Tempo</dt><dd>${c.tempo}</dd></div><div><dt>Peça</dt><dd>${c.pesoPeca}</dd></div><div><dt>Rende</dt><dd>${Math.round(c.rend*100)}% · R$ ${c.preco.min}–${c.preco.max}/kg est.</dd></div></dl>`;}
+cuts.innerHTML=CORTES.map(c=>`<button data-id="${c.id}" aria-pressed="false">${c.nome.split(' (')[0]}<small>${c.tempo.split(';')[0]}</small></button>`).join('');
+cuts.onclick=e=>{const b=e.target.closest('button');b&&sel(b.dataset.id)};
+document.querySelectorAll('.win .boi .m').forEach(m=>m.onclick=()=>sel(m.dataset.id));
+sel('picanha');
+</script>
+</body>
+</html>

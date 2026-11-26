@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>churrasquin — Direção B · Letreiro Brasileiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Leckerli+One&family=Figtree:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--cob:#1D2A9E;--cob2:#141E78;--bra:#FF5F1F;--cal:#FBF1DE;--car:#17120F;--cal2:#F1E2C4}
+*{box-sizing:border-box;margin:0}
+body{font:400 17px/1.5 Figtree,system-ui,sans-serif;color:var(--car);background:var(--cal)}
+.d{font-family:Anton,Impact,sans-serif;text-transform:uppercase;letter-spacing:.02em;font-weight:400;line-height:.95}
+.s{font-family:'Leckerli One',cursive;font-weight:400}
+.sh{text-shadow:1px 1px 0 var(--cob),2px 2px 0 var(--cob),3px 3px 0 var(--cob),4px 4px 0 var(--cob),5px 5px 0 var(--cob)}
+.shb{text-shadow:1px 1px 0 var(--bra),2px 2px 0 var(--bra),3px 3px 0 var(--bra),4px 4px 0 var(--bra)}
+section{padding:96px clamp(20px,6vw,96px)}
+.k{font:800 13px/1 Figtree;letter-spacing:.18em;text-transform:uppercase;display:flex;gap:12px;align-items:center;margin-bottom:28px}
+.k:before{content:"";width:28px;height:4px;background:currentColor}
+h2{font-size:clamp(48px,7vw,104px)}
+.fil{border:0;height:0;border-top:3px solid currentColor;box-shadow:0 7px 0 -4px currentColor;margin:28px 0;opacity:.9}
+.grid{display:grid;gap:24px}
+/* pattern */
+.pat{background-color:var(--cob);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23FF5F1F'%3E%3Cg transform='rotate(-18 60 60)'%3E%3Crect x='14' y='57' width='86' height='6' rx='3'/%3E%3Cpath d='M100 53l14 7-14 7z'/%3E%3Crect x='34' y='48' width='14' height='24' rx='4'/%3E%3Crect x='54' y='48' width='14' height='24' rx='4' fill='%23FBF1DE'/%3E%3Crect x='74' y='48' width='14' height='24' rx='4'/%3E%3C/g%3E%3Cpath d='M20 10l2 6 6 2-6 2-2 6-2-6-6-2 6-2z' fill='%23FBF1DE'/%3E%3C/g%3E%3C/svg%3E")}
+/* hero */
+.hero{padding:96px clamp(20px,6vw,96px);background:var(--cob);color:var(--cal);min-height:100vh;display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:48px;position:relative;overflow:hidden}
+.hero img.l{width:100%;max-width:760px}
+.hero p{font-size:22px;max-width:30ch;margin-top:24px}.hero .photo{margin-right:14px}body{overflow-x:hidden}
+.tagb{position:absolute;top:28px;left:clamp(20px,6vw,96px);right:clamp(20px,6vw,96px);display:flex;justify-content:space-between;font:800 13px Figtree;letter-spacing:.18em;text-transform:uppercase}
+.photo{aspect-ratio:4/5;border-radius:4px;position:relative}
+.photo figcaption{position:absolute;left:0;bottom:0;background:var(--bra);color:var(--car);padding:10px 16px;font:800 13px Figtree;letter-spacing:.14em;text-transform:uppercase}
+/* concept */
+.con{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.con p{font-size:20px;max-width:46ch;margin-bottom:16px}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.pills span{border:2px solid var(--car);border-radius:999px;padding:8px 16px;font-weight:700}
+/* logo */
+.logo{background:var(--bra);color:var(--car)}
+.lg{grid-template-columns:2fr 1fr}
+.tile{border-radius:6px;padding:40px;display:grid;place-items:center;min-height:300px;position:relative}
+.tile small{position:absolute;left:16px;bottom:12px;font:700 12px Figtree;letter-spacing:.14em;text-transform:uppercase}
+.cons{background:var(--cal);position:relative}
+.cons:after{content:"";position:absolute;inset:40px;background:repeating-linear-gradient(-4deg,transparent 0 49px,rgba(29,42,158,.18) 49px 50px);pointer-events:none}
+.notes{grid-template-columns:repeat(4,1fr);margin-top:24px}.notes div{border-top:3px solid var(--car);padding-top:12px;font-size:15px}.notes b{display:block;font:22px Anton;text-transform:uppercase}
+/* type */
+.type{background:var(--cal)}
+.tg{grid-template-columns:repeat(3,1fr)}
+.spec{background:#fff;border-radius:6px;padding:32px;border:2px solid var(--car)}
+.spec .big{font-size:120px;color:var(--cob)}
+.hier{margin-top:24px;background:var(--car);color:var(--cal);border-radius:6px;padding:48px;display:grid;gap:18px}
+/* palette */
+.pal{grid-template-columns:3fr 2fr 1.4fr 1fr;height:420px}.pal>div{border-radius:6px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;font-weight:700}
+.pal b{font:44px Anton;text-transform:uppercase;display:block}
+/* icons */
+.ic{grid-template-columns:repeat(8,1fr)}.ic div{background:var(--cal);border:2px solid var(--car);border-radius:6px;aspect-ratio:1;display:grid;place-items:center;align-content:center;gap:8px;font:700 13px Figtree}
+.ic svg{width:44px;height:44px;stroke:var(--cob);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+/* phones */
+.phones{background:var(--car);color:var(--cal)}
+.pr{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+.ph{width:390px;height:844px;border-radius:52px;background:#000;padding:12px;box-shadow:0 40px 80px rgba(0,0,0,.5);flex:none}
+.sc{width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--cal);color:var(--car);position:relative;display:flex;flex-direction:column}
+.stb{height:48px;display:flex;justify-content:space-between;align-items:center;padding:0 28px;font:700 15px Figtree;flex:none}
+.cap{text-align:center;font:800 13px Figtree;letter-spacing:.16em;text-transform:uppercase;margin-top:20px;color:var(--cal)}
+.tab{margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);background:var(--cal);border-top:3px solid var(--car);padding:6px 8px 26px;flex:none}
+.tab a{min-height:56px;display:grid;place-items:center;align-content:center;gap:2px;font:700 12px Figtree;color:var(--car);text-decoration:none;border-radius:12px}
+.tab a svg{width:24px;height:24px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tab.dk a{color:var(--cal)}.tab a[aria-current]{background:var(--cob);color:var(--cal)}
+.btn{min-height:56px;border-radius:14px;border:0;font:800 17px Figtree;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;cursor:pointer}
+.b1{background:var(--bra);color:var(--car);box-shadow:0 5px 0 var(--car)}
+.step{width:48px;height:48px;border-radius:50%;border:3px solid var(--car);background:var(--cal);font:800 24px Figtree;display:grid;place-items:center;cursor:pointer}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;border-bottom:2px dashed rgba(23,18,15,.25)}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;border:2px solid var(--car);display:inline-flex;align-items:center;font:700 15px Figtree;background:transparent;white-space:nowrap}
+.chip.on{background:var(--car);color:var(--cal)}
+.desk{margin-top:64px;border-radius:14px;overflow:hidden;border:10px solid #000;max-width:1240px;margin-inline:auto;background:var(--cal);color:var(--car);display:grid;grid-template-columns:260px 1fr 360px;min-height:720px}
+.foot{background:var(--bra);padding:48px clamp(20px,6vw,96px);display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.reg{cursor:pointer;transition:fill .2s}
+@media (max-width:900px){.hero,.con,.lg,.tg{grid-template-columns:1fr}.pal{grid-template-columns:1fr 1fr;height:auto}.pal>div{min-height:160px}.ic{grid-template-columns:repeat(4,1fr)}.notes{grid-template-columns:1fr 1fr}.ph{transform:scale(.88);transform-origin:top center;margin-bottom:-90px}.desk{display:none}.hero{padding-top:110px}}
+</style></head><body>
+
+<header class="hero">
+ <div class="tagb"><span>churrasquin · identidade v5</span><span>Direção B — Letreiro brasileiro</span></div>
+ <div>
+  <img class="l" src="logo-neg.svg" alt="churrasquin — pra quem toca a brasa">
+  <p>Um app que ajuda a turma a planejar, escolher o corte e acertar o ponto. Com a voz pintada à mão da placa de espetinho da esquina.</p>
+ </div>
+ <figure class="photo pat" style="display:grid;place-items:center;border:6px solid var(--cal);box-shadow:14px 14px 0 var(--bra)"><div style="background:var(--cal);color:var(--car);padding:28px 32px;transform:rotate(-4deg);box-shadow:8px 8px 0 var(--car);text-align:center"><div class="s" style="font-size:54px;color:var(--bra);line-height:1">Espetinho</div><div class="d" style="font-size:40px;color:var(--cob)">com o ponto certo</div><hr class="fil" style="margin:12px 0;color:var(--cob)"><div style="font:800 13px Figtree;letter-spacing:.16em">PLACA · APLICAÇÃO DA MARCA</div></div><figcaption>Foto de carne real entra aqui (ensaio próprio)</figcaption></figure>
+</header>
+
+<section class="con">
+ <div><div class="k">01 · Conceito</div><h2 class="d">A placa<br>que a gente<br><span class="s" style="text-transform:none;color:var(--bra);font-size:.9em" >conhece</span></h2></div>
+ <div>
+  <p>Toda cidade do Brasil tem uma: a placa de compensado na beira da estrada, “espetinho R$ 8”, letra cursiva gorda com sombra de bloco e uma condensada embaixo, filete duplo, duas cores e nada mais. É honesta, alegre, legível a 50 metros.</p>
+  <p>O churrasquin pega essa gramática e a leva para um app de auxílio: o <b>script com sombra</b> é a voz (o nome, os momentos de celebração), a <b>condensada</b> é a informação (quanto, quando, qual ponto), e o <b>filete</b> organiza tudo como num letreiro bem pintado.</p>
+  <p>O símbolo é o espeto atravessando o “c”: a ferramenta mais democrática do churrasco brasileiro. Ele vira padrão, ícone, timer e marcador no mapa do boi.</p>
+  <div class="pills"><span>Pintado, não ilustrado</span><span>2 cores + cal</span><span>Sombra de bloco</span><span>Sem pastiche</span></div>
+ </div>
+</section>
+
+<section class="logo">
+ <div class="k">02 · Logo e construção</div>
+ <div class="grid lg">
+  <div class="tile cons"><img src="logo.svg" alt="Logo churrasquin" style="width:92%;position:relative;z-index:1"><small>Linha de base inclinada a −4°, como placa pregada</small></div>
+  <div class="grid">
+   <div class="tile" style="background:var(--cob)"><img src="simbolo.svg" alt="Selo churrasquin" style="width:200px"><small style="color:var(--cal)">Selo</small></div>
+   <div class="tile" style="background:var(--car)"><img src="app-icon.svg" alt="Ícone do app" style="width:140px"><small style="color:var(--cal)">Ícone do app</small></div>
+  </div>
+ </div>
+ <div class="grid notes">
+  <div><b>Script com volume</b>Cursiva de pincel redesenhada a partir de Leckerli One (OFL), entreletra fechada −4 para os “rr” se tocarem como num traço contínuo.</div>
+  <div><b>Sombra de bloco</b>8 camadas a 45° em cobalto: a profundidade do letreiro pintado, sem degradê.</div>
+  <div><b>Filete creme</b>Contorno de 3 pt separa letra e sombra, como o pintor faz com a tinta clara por último.</div>
+  <div><b>Rabisco-sublinhado</b>O “swash” afinando nas pontas sustenta o tagline condensado. Área de proteção = altura do “h”.</div>
+ </div>
+</section>
+
+<section class="type">
+ <div class="k">03 · Alfabeto de títulos</div>
+ <div class="grid tg">
+  <div class="spec"><div class="s big sh" style="color:var(--bra)">Aa</div><b>Leckerli One</b> — voz. Só para palavras de emoção: “Bora”, “Tá no ponto”, nomes de corte em destaque. Máx. 3 palavras.</div>
+  <div class="spec"><div class="d big">Aa</div><b>Anton</b> — letreiro condensado. Números, títulos, rótulos, cronômetro. Sempre em caixa alta.</div>
+  <div class="spec"><div class="big" style="font-family:Figtree;font-weight:800">Aa</div><b>Figtree</b> — texto e interface. 400/500/700/800, 17 px mínimo de corpo no app.</div>
+ </div>
+ <div class="hier">
+  <div class="d" style="font-size:80px;color:var(--bra)">16 pessoas · 6,4 kg</div>
+  <div class="s shb" style="font-size:64px;line-height:1">Picanha no ponto!</div>
+  <div style="font-size:20px;max-width:60ch">Cobre a parte de cima da alcatra, músculo que trabalha pouco: fibras finas e macias. A capa de gordura protege e perfuma a carne na brasa.</div>
+ </div>
+</section>
+
+<section>
+ <div class="k">04 · Paleta — campos chapados</div>
+ <div class="grid pal">
+  <div style="background:var(--cob);color:var(--cal)"><span>Tinta de fundo da placa</span><div><b>Cobalto</b>#1D2A9E · creme sobre ele 11,4:1 AAA</div></div>
+  <div style="background:var(--bra);color:var(--car)"><span>A brasa. Ação e destaque</span><div><b>Brasa</b>#FF5F1F · carvão sobre ele 6,9:1 AA</div></div>
+  <div style="background:var(--cal);color:var(--car);border:2px solid var(--car)"><span>O papel / a cal</span><div><b>Cal</b>#FBF1DE</div></div>
+  <div style="background:var(--car);color:var(--cal)"><span>Texto</span><div><b>Carvão</b>#17120F</div></div>
+ </div>
+ <p style="margin-top:16px;font-size:15px">Regra: no máximo duas cores fortes por tela. Laranja nunca vira texto pequeno sobre creme (2,6:1) — só campo, botão com texto carvão ou título ≥ 32 px sobre cobalto.</p>
+</section>
+
+<section class="pat" style="min-height:420px;display:grid;place-items:center">
+ <div style="background:var(--cal);padding:32px 48px;border-radius:6px;box-shadow:8px 8px 0 var(--bra)"><div class="k" style="margin:0">05 · Padrão “espetinho”</div><p style="max-width:40ch;margin-top:12px">Espetos a −18° (o mesmo ângulo do símbolo) com faíscas-estrela de letreiro. Embalagem, splash, estados vazios.</p></div>
+</section>
+
+<section>
+ <div class="k">06 · Ícones — traço de pincel 2,5 px, pontas redondas</div>
+ <div class="grid ic" id="icons"></div>
+</section>
+
+<section class="phones">
+ <div class="k" style="color:var(--bra)">07 · O app</div>
+ <h2 class="d" style="margin-bottom:56px">Planeja. <span style="color:var(--bra)">Escolhe.</span> Assa.</h2>
+ <div class="pr">
+  <!-- PLANEJAR -->
+  <div><div class="ph"><div class="sc">
+   <div class="stb" style="background:var(--cob);color:var(--cal)"><span>19:42</span><span>5G ▮</span></div>
+   <div style="background:var(--cob);color:var(--cal);padding:8px 24px 28px">
+    <div style="font:800 13px Figtree;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Sábado · Planejar</div>
+    <div class="s shb" style="font-size:46px;line-height:1.05;margin-top:6px">Quanto comprar?</div>
+   </div>
+   <div style="padding:20px 24px 0;flex:1;overflow:hidden">
+    <div class="row"><b style="font-size:18px">Adultos</b><div style="display:flex;align-items:center;gap:14px"><button class="step" aria-label="Menos adultos">−</button><span class="d" style="font-size:36px;width:44px;text-align:center">14</span><button class="step" aria-label="Mais adultos">+</button></div></div>
+    <div class="row"><b style="font-size:18px">Crianças</b><div style="display:flex;align-items:center;gap:14px"><button class="step" aria-label="Menos crianças">−</button><span class="d" style="font-size:36px;width:44px;text-align:center">4</span><button class="step" aria-label="Mais crianças">+</button></div></div>
+    <div style="margin:16px 0 8px;font-weight:700">A turma come…</div>
+    <div style="display:flex;gap:8px"><button class="chip">Pouco</button><button class="chip on">Confortável</button><button class="chip">Bem</button></div>
+    <div style="margin-top:18px;background:var(--bra);border-radius:16px;padding:18px 20px;box-shadow:6px 6px 0 var(--car)">
+     <div style="font:800 12px Figtree;letter-spacing:.16em;text-transform:uppercase">Leve pra casa</div>
+     <div class="d" style="font-size:72px;line-height:1">6,4 kg</div>
+     <div style="font-weight:600;font-size:15px">400 g por adulto · 200 g por criança</div>
+    </div>
+    <div style="margin-top:14px;font-size:15px;display:grid;gap:6px">
+     <div style="display:flex;justify-content:space-between"><span>Picanha · 2 peças</span><b>2,4 kg</b></div>
+     <div style="display:flex;justify-content:space-between"><span>Fraldinha</span><b>2,0 kg</b></div>
+     <div style="display:flex;justify-content:space-between"><span>Linguiça toscana</span><b>2,0 kg</b></div>
+    </div>
+   </div>
+   <div style="padding:12px 24px"><button class="btn b1">Gerar lista de compras →</button></div>
+   <nav class="tab" data-on="0"></nav>
+  </div></div><div class="cap">Planejar</div></div>
+
+  <!-- CORTES -->
+  <div><div class="ph"><div class="sc">
+   <div class="stb"><span>19:44</span><span>5G ▮</span></div>
+   <div style="padding:0 24px;display:flex;align-items:center;gap:12px"><button class="step" aria-label="Voltar" style="border-width:2px">←</button><span style="font:800 13px Figtree;letter-spacing:.16em;text-transform:uppercase">Guia de cortes · Boi</span></div>
+   <div style="margin:14px 16px 0;background:var(--cob);border-radius:20px;padding:12px 8px 4px;position:relative">
+    <svg id="boi" viewBox="0 0 400 220" width="100%" role="img" aria-label="Mapa do boi com a picanha destacada"></svg>
+    <button aria-label="Ampliar região da picanha" style="position:absolute;right:12px;top:12px;width:44px;height:44px;border-radius:50%;border:0;background:var(--cal);font:800 20px Figtree;color:var(--cob)">i</button>
+   </div>
+   <div style="padding:16px 24px 0;flex:1">
+    <div style="display:flex;justify-content:space-between;align-items:end"><div class="s" style="font-size:52px;line-height:1;color:var(--cob)">Picanha</div><span class="chip on" style="min-height:32px;font-size:13px;background:var(--bra);color:var(--car);border-color:var(--bra)">NOBRE</span></div>
+    <div style="font-size:14px;opacity:.8;margin-top:4px">AR Tapa de cuadril · UY Picaña · US Top sirloin cap</div>
+    <hr class="fil" style="margin:14px 0">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center" id="meters"></div>
+    <p style="font-size:15px;margin-top:12px;line-height:1.45">Em bifes grossos (3 dedos) dobrados no espeto, gordura para fora. Sal grosso na hora. <b>Não tire a capa.</b></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;font-size:14px">
+     <div style="border:2px solid var(--car);border-radius:12px;padding:8px 12px"><b class="d" style="font-size:22px;display:block">15–20 min</b>bifes no espeto</div>
+     <div style="border:2px solid var(--car);border-radius:12px;padding:8px 12px"><b class="d" style="font-size:22px;display:block">55 °C</b>mal a ao ponto</div>
+    </div>
+   </div>
+   <nav class="tab" data-on="1"></nav>
+  </div></div><div class="cap">Cortes · ficha + mapa</div></div>
+
+  <!-- NA BRASA -->
+  <div><div class="ph"><div class="sc" style="background:var(--car);color:var(--cal)">
+   <div class="stb"><span>20:31</span><span>5G ▮</span></div>
+   <div style="padding:0 24px"><div style="font:800 13px Figtree;letter-spacing:.16em;text-transform:uppercase;color:var(--bra)">Na brasa · 3 de 6</div></div>
+   <div style="display:grid;place-items:center;margin:14px 0 4px;position:relative">
+    <svg width="248" height="248" viewBox="0 0 248 248" aria-hidden="true"><circle cx="124" cy="124" r="108" fill="none" stroke="#3a302a" stroke-width="18"/><circle cx="124" cy="124" r="108" fill="none" stroke="var(--bra)" stroke-width="18" stroke-dasharray="678" stroke-dashoffset="250" transform="rotate(-90 124 124)" stroke-linecap="round"/></svg>
+    <div style="position:absolute;text-align:center"><div class="s" style="font-size:22px;color:var(--bra)">Vira a picanha</div><div class="d" style="font-size:76px">07:24</div><div style="font-size:14px;opacity:.85">2º lado · 1 palmo da brasa</div></div>
+   </div>
+   <div style="display:flex;gap:10px;padding:8px 24px 14px"><button class="btn b1" style="box-shadow:0 5px 0 #000">❚❚ Pausar</button><button class="btn" style="background:transparent;color:var(--cal);border:2px solid var(--cal);width:auto;padding:0 18px">+1 min</button></div>
+   <ol style="list-style:none;padding:0 24px;flex:1;position:relative" id="tl"></ol>
+   <nav class="tab dk" data-on="2" style="background:var(--car);border-color:var(--bra)"></nav>
+  </div></div><div class="cap">Na brasa · linha do tempo + timer</div></div>
+ </div>
+
+ <!-- DESKTOP -->
+ <div class="desk" aria-label="Tela desktop">
+  <aside style="background:var(--cob);color:var(--cal);padding:28px 20px;display:flex;flex-direction:column;gap:6px">
+   <img src="logo-neg.svg" alt="churrasquin" style="width:210px;margin:-12px 0 20px -8px;background:var(--cob)">
+   <div id="dnav"></div>
+   <div style="margin-top:auto;font-size:14px;opacity:.85">Churrasco de sábado<br><b style="font-size:16px;opacity:1">18 pessoas · 13h</b></div>
+  </aside>
+  <main style="padding:36px 40px">
+   <div style="font:800 13px Figtree;letter-spacing:.16em;text-transform:uppercase">Guia de cortes</div>
+   <div style="display:flex;align-items:end;gap:16px;margin:4px 0 20px"><h3 class="d" style="font-size:72px">Boi</h3><div style="display:flex;gap:8px;margin-bottom:10px"><button class="chip on">Boi</button><button class="chip">Porco</button><button class="chip">Frango</button><button class="chip">Linguiça</button></div></div>
+   <div style="background:var(--cob);border-radius:20px;padding:24px"><svg id="boi2" viewBox="0 0 400 220" width="100%" role="img" aria-label="Mapa do boi"></svg></div>
+   <div id="dcards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px"></div>
+  </main>
+  <aside style="border-left:3px solid var(--car);padding:36px 28px;background:#fff">
+   <div class="s sh" style="font-size:56px;line-height:1;color:var(--bra)">Fraldinha</div>
+   <div style="font-size:14px;margin-top:8px">AR/UY Vacío (parte) · US Bottom sirloin flap</div><hr class="fil">
+   <p>Músculo da parede abdominal, de fibras longas e soltas com gordura entre elas: muito sabor e suculência, maciez média.</p>
+   <div style="background:var(--cal);border-radius:14px;padding:16px;margin:16px 0"><b>Como fazer</b><p style="font-size:15px">Inteira, fogo médio-alto, selando os dois lados. Descanse 5 min e fatie fino contra a fibra.</p></div>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><span class="d" style="font-size:30px">25–35</span><br>minutos</div><div><span class="d" style="font-size:30px">72%</span><br>rendimento</div></div>
+   <button class="btn b1" style="margin-top:24px">Adicionar à brasa</button>
+  </aside>
+ </div>
+</section>
+
+<footer class="foot"><img src="logo.svg" alt="churrasquin" style="height:90px"><span>Direção B · Letreiro brasileiro · v5 — proposta para aprovação</span></footer>
+
+<script>
+const IC={planejar:'<path d="M5 20V9l7-5 7 5v11z"/><path d="M9 20v-6h6v6"/>',cortes:'<path d="M3 12c0-4 4-7 9-7 4 0 7 2 8 5l1 4-3 1c-1 3-4 4-7 4-5 0-8-3-8-7z"/><circle cx="16" cy="10" r="1"/>',brasa:'<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/>',lista:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>',termo:'<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z"/><path d="M12 9v7"/>',espeto:'<path d="M3 21L21 3"/><rect x="8" y="8" width="4" height="6" rx="1" transform="rotate(45 10 11)"/><rect x="12" y="4" width="4" height="6" rx="1" transform="rotate(45 14 7)"/>',turma:'<circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-4 3-6 6-6s6 2 6 6M14 20c0-3 1-5 3-5s4 2 4 5"/>',timer:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M10 2h4"/>'};
+const NM={planejar:'Planejar',cortes:'Cortes',brasa:'Na brasa',lista:'Lista',termo:'Ponto',espeto:'Espeto',turma:'Turma',timer:'Timer'};
+const sv=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`;
+icons.innerHTML=Object.keys(IC).map(k=>`<div>${sv(k)}${NM[k]}</div>`).join('');
+document.querySelectorAll('.tab').forEach(t=>{t.innerHTML=['planejar','cortes','brasa','lista'].map((k,i)=>`<a href="#" ${i==t.dataset.on?'aria-current="page"':''}>${sv(k)}${NM[k]}</a>`).join('')});
+dnav.innerHTML=['planejar','cortes','brasa','lista','termo'].map((k,i)=>`<a href="#" style="display:flex;gap:12px;align-items:center;min-height:48px;padding:0 14px;border-radius:12px;color:inherit;text-decoration:none;font-weight:700;${i==1?'background:var(--bra);color:var(--car)':''}"><span style="width:24px;height:24px;display:inline-block">${sv(k).replace('<svg','<svg style="width:24px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"')}</span>${NM[k]}</a>`).join('');
+// boi: regiões chapadas
+const R={cupim:'M118 52 L150 40 L168 56 L130 66Z',acem:'M78 70 L118 52 L130 66 L140 110 L96 118 L70 96Z',peito:'M70 96 L96 118 L100 162 L72 150 L60 120Z',contrafile:'M130 66 L168 56 L250 58 L252 92 L140 96Z','file-mignon':'M140 96 L252 92 L252 108 L140 110Z',costela:'M140 110 L230 108 L226 150 L108 160 L100 120Z',fraldinha:'M230 108 L262 110 L262 146 L226 150Z',alcatra:'M250 58 L298 62 L300 108 L252 108Z',picanha:'M298 62 L338 66 L342 92 L300 96Z',maminha:'M262 110 L300 108 L304 140 L262 146Z',coxao:'M300 96 L342 92 L340 150 L304 150Z',musculo:'M304 150 L340 150 L332 196 L312 196Z'};
+function boi(el,hi,lbl){let s='<path d="M60 86 L40 70 L28 76 L22 96 L34 112 L60 120Z" fill="#141E78"/><path d="M44 66 L36 50 L52 62Z" fill="#FBF1DE"/>';s+='<path d="M100 160 L96 200 L112 200 L118 160Z M210 152 L208 200 L224 200 L226 150Z M342 70 L362 120 L356 124 L340 90Z" fill="#141E78"/>';
+for(const k in R)s+=`<path class="reg" d="${R[k]}" fill="${k===hi?'#FF5F1F':'#FBF1DE'}" stroke="#1D2A9E" stroke-width="3" stroke-linejoin="round"><title>${k}</title></path>`;
+if(lbl){s+=`<g transform="translate(250 30)"><rect x="-38" y="-16" width="76" height="26" rx="13" fill="#17120F"/><text x="0" y="3" text-anchor="middle" fill="#FBF1DE" font-family="Figtree" font-weight="800" font-size="12" letter-spacing="1">PICANHA</text><path d="M0 10 L60 38" stroke="#17120F" stroke-width="2.5"/></g>`}el.innerHTML=s}
+boi(document.getElementById('boi'),'picanha',1);boi(boi2,'fraldinha');
+meters.innerHTML=[['Maciez',4],['Gordura',4],['Sabor',5]].map(([n,v])=>`<div style="background:var(--cal2);border-radius:12px;padding:8px 4px"><div style="font:700 12px Figtree;text-transform:uppercase;letter-spacing:.1em">${n}</div><div style="display:flex;gap:3px;justify-content:center;margin-top:6px">${[1,2,3,4,5].map(i=>`<i style="width:10px;height:18px;border-radius:3px;background:${i<=v?'var(--cob)':'#d8c7a6'}"></i>`).join('')}</div></div>`).join('');
+const T=[['19:30','Acender o carvão','done'],['20:00','Linguiça toscana · 1,5 palmo','done'],['20:24','Picanha em bifes · selar','now'],['20:40','Fraldinha inteira · fogo médio',''],['21:10','Descansar e fatiar',''],['21:15','Servir a turma','']];
+tl.innerHTML='<i style="position:absolute;left:39px;top:8px;bottom:8px;width:3px;background:#3a302a"></i>'+T.map(([h,t,s])=>`<li style="display:flex;gap:14px;align-items:center;min-height:44px;position:relative;opacity:${s=='done'?.55:1}"><span style="width:32px;height:32px;flex:none;border-radius:50%;display:grid;place-items:center;background:${s=='now'?'var(--bra)':s=='done'?'var(--cal)':'var(--car)'};border:3px solid ${s?'transparent':'#6b5f55'};color:var(--car);font-weight:800;font-size:14px">${s=='done'?'✓':''}</span><span class="d" style="font-size:18px;width:48px">${h}</span><span style="font-weight:${s=='now'?800:500};font-size:15px;${s=='now'?'color:var(--bra)':''}">${t}</span></li>`).join('');
+const DC=[['Picanha','nobre','R$ 70–95/kg'],['Fraldinha','tradicional','R$ 40–55/kg'],['Cupim','tradicional','R$ 35–50/kg'],['Acém','popular','R$ 28–38/kg']];
+dcards.innerHTML=DC.map(([n,c,p],i)=>`<button style="text-align:left;min-height:96px;border-radius:14px;border:2px solid var(--car);padding:14px;background:${i==1?'var(--bra)':'#fff'};font:inherit;cursor:pointer"><span class="s" style="font-size:26px;color:${i==1?'var(--car)':'var(--cob)'}">${n}</span><br><span style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">${c} · ${p}</span></button>`).join('');
+</script></body></html>
