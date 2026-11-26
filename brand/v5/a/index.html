@@ -100,7 +100,7 @@ ul{padding:0}
 .ficha{padding:36px 32px}
 .meter{display:flex;gap:4px}.meter i{flex:1;height:10px;border:1.5px solid var(--ink)}.meter i.f{background:var(--ink)}
 footer{background:var(--ember);padding:56px 0;color:var(--ink)}
-@media (max-width:900px){.wrap{padding:0 20px}.hero .big,.logogrid,.type,.cols,.patterns{grid-template-columns:1fr}.pal{grid-template-columns:1fr;height:auto}.pal div{min-height:180px}.icons{grid-template-columns:repeat(4,1fr)}.icons figure:nth-child(4){border-right:0}.icons figure:nth-child(-n+4){border-bottom:1.5px solid var(--ink)}.spec{font-size:120px}.desk{overflow-x:auto}.dgrid{width:1100px}.phone{transform:scale(.92);margin:-30px 0}section{padding:64px 0}}
+@media (max-width:900px){.type>*{min-width:0}.scale div{flex-wrap:wrap}.hero .big,.logogrid,.type,.cols,.patterns{grid-template-columns:minmax(0,1fr)!important}.wrap{padding:0 20px}.hero .big,.logogrid,.type,.cols,.patterns{grid-template-columns:1fr}.pal{grid-template-columns:1fr;height:auto}.pal div{min-height:180px}.icons{grid-template-columns:repeat(4,1fr)}.icons figure:nth-child(4){border-right:0}.icons figure:nth-child(-n+4){border-bottom:1.5px solid var(--ink)}.spec{font-size:120px}.desk{overflow-x:auto}.dgrid{width:1100px}.phone{zoom:.9}section{padding:64px 0}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <clipPath id="boiclip"><path d="M8 66 C6 56 12 46 20 40 L4 16 C16 16 27 28 31 35 C35 33 39 33 42 34 L40 6 C48 12 51 24 50 32 L52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L162 26 C174 26 182 32 184 42 C188 46 191 52 191 62 L191 86 L186 86 L186 64 C186 72 184 78 181 84 L178 120 L166 120 L162 92 C140 96 100 97 78 92 L70 120 L58 120 L56 90 C50 92 44 86 42 80 C38 74 32 72 26 72 C18 72 10 66 10 58Z"/></clipPath>
@@ -225,7 +225,7 @@ footer{background:var(--ember);padding:56px 0;color:var(--ink)}
 <div style="display:flex;gap:6px;margin:12px 0 12px"><button class="chip on">Come bem</button><button class="chip">Almoço</button><button class="chip">Só carne</button></div>
 <div style="background:var(--ink);color:var(--paper);padding:16px 16px 14px;position:relative;overflow:hidden">
 <div class="lbl" style="color:#CFC5B3">Total de carne crua</div>
-<div class="row"><span class="disp" style="font-size:56px">5,6<small style="font-size:30px"> kg</small></span><span style="color:var(--ember);font:700 14px var(--sans);text-align:right">≈ R$ 410<br><small style="color:#CFC5B3;font-weight:500">estimativa</small></span></div>
+<div class="row"><span class="disp" style="font-size:56px">5,6<small style="font-size:30px"> kg</small></span><span style="color:var(--paper);font:700 14px var(--sans);text-align:right">≈ R$ 410<br><small style="color:#CFC5B3;font-weight:500">estimativa</small></span></div>
 </div>
 <ul class="buy">
 <li><div>Picanha<small>2 peças de ~1,2 kg · rende 68%</small></div><b>2,4 kg</b></li>
@@ -279,7 +279,7 @@ footer{background:var(--ember);padding:56px 0;color:var(--ink)}
 <ol style="list-style:none;padding:0;position:relative;border-left:2px solid #6b6259;margin-left:8px">
 <li style="padding:0 0 14px 20px;position:relative;color:#A89E8E"><i style="position:absolute;left:-7px;top:4px;width:12px;height:12px;background:#6b6259"></i><b>18:50</b> Acender 3 kg de carvão <span style="float:right">✓</span></li>
 <li style="padding:0 0 14px 20px;position:relative;color:#A89E8E"><i style="position:absolute;left:-7px;top:4px;width:12px;height:12px;background:#6b6259"></i><b>19:10</b> Linguiça na grelha <span style="float:right">✓</span></li>
-<li style="padding:0 0 14px 20px;position:relative"><i style="position:absolute;left:-9px;top:2px;width:16px;height:16px;background:var(--ember);transform:rotate(45deg)"></i><b>19:15</b> Picanha · selar <span style="float:right;color:var(--ember)">agora</span></li>
+<li style="padding:0 0 14px 20px;position:relative"><i style="position:absolute;left:-9px;top:2px;width:16px;height:16px;background:var(--ember);transform:rotate(45deg)"></i><b>19:15</b> Picanha · selar <span style="float:right;background:var(--ember);color:var(--ink);padding:0 6px;font-weight:700">agora</span></li>
 <li style="padding:0 0 14px 20px;position:relative"><i style="position:absolute;left:-7px;top:4px;width:12px;height:12px;border:2px solid var(--paper);background:var(--ink)"></i><b>19:35</b> Fraldinha · fogo médio-alto</li>
 <li style="padding:0 0 0 20px;position:relative"><i style="position:absolute;left:-7px;top:4px;width:12px;height:12px;border:2px solid var(--paper);background:var(--ink)"></i><b>20:05</b> Descansar 5 min e fatiar</li>
 </ol>
@@ -322,7 +322,7 @@ footer{background:var(--ember);padding:56px 0;color:var(--ink)}
 </div></div></div>
 </div></section>
 </main>
-<footer><div class="wrap row"><img src="logo.svg" alt="churrasquin" style="height:72px"><span style="font:600 13px var(--sans);letter-spacing:.14em;text-transform:uppercase">Direção A · Gravura · v5</span></div></footer>
+<footer><div class="wrap row" style="flex-wrap:wrap"><img src="logo.svg" alt="churrasquin" style="height:72px"><span style="font:600 13px var(--sans);letter-spacing:.14em;text-transform:uppercase">Direção A · Gravura · v5</span></div></footer>
 <script>
 // padrão: rebanho com cortes variando
 (function(){var el=document.getElementById('pat1');var cuts=['M52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L80 34Z','M142 26 L162 26 C174 26 182 32 184 42 L168 54 L144 50Z','M80 54 L112 52 L112 96 C100 97 90 95 80 92Z','M112 52 L144 50 L150 94 C138 96 124 96 112 96Z'];var s='<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" aria-hidden="true">';for(var r=0;r<4;r++)for(var c=0;c<8;c++){var x=c*130+(r%2?65:0)-40,y=r*84-10,k=cuts[(r+c)%4];s+='<g transform="translate('+x+' '+y+') scale(.55)"><g clip-path="url(#boiclip)" stroke="#F2EBDD" stroke-width="2.6">';for(var l=12;l<124;l+=5)s+='<path d="M0 '+l+'H200"/>';s+='</g><path d="'+k+'" fill="#E8431A" clip-path="url(#boiclip)"/><path d="M8 66 C6 56 12 46 20 40 L4 16 C16 16 27 28 31 35 C35 33 39 33 42 34 L40 6 C48 12 51 24 50 32 L52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L162 26 C174 26 182 32 184 42 C188 46 191 52 191 62 L191 86 L186 86 L186 64 C186 72 184 78 181 84 L178 120 L166 120 L162 92 C140 96 100 97 78 92 L70 120 L58 120 L56 90 C50 92 44 86 42 80 C38 74 32 72 26 72 C18 72 10 66 10 58Z" fill="none" stroke="#F2EBDD" stroke-width="4"/></g>'}el.innerHTML=s+'</svg>'})();
