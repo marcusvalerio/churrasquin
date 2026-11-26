@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>churrasquin — D · Brasa Viva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--carvao:#161210;--brasa:#E8341C;--osso:#F5ECDF;--cinza:#6B615A;
+--h1:#FFB21A;--h2:#FF7A1A;--h3:#E8341C;--h4:#A3200F;--h5:#4A1712;--h6:#161210;
+--heat:linear-gradient(90deg,var(--h1),var(--h2),var(--h3),var(--h4),var(--h5),var(--h6))}
+*{box-sizing:border-box;margin:0}
+body{background:var(--osso);color:var(--carvao);font:16px/1.5 Archivo,system-ui,sans-serif}
+.d{font-family:Anton,Impact,sans-serif;text-transform:lowercase;letter-spacing:-.01em;line-height:.9}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+section{padding:96px 6vw;position:relative}
+.wrap{max-width:1280px;margin:0 auto}
+.lbl{display:flex;gap:16px;align-items:center;margin-bottom:40px}
+.lbl b{background:var(--carvao);color:var(--osso);padding:6px 10px}
+h2.d{font-size:clamp(56px,8vw,120px)}
+/* hero */
+.hero{background:var(--brasa);color:var(--carvao);min-height:92vh;display:grid;align-content:space-between;overflow:hidden}
+.hero .top{display:flex;justify-content:space-between}
+.hero h1{font-size:clamp(88px,19vw,300px);line-height:.82}
+.hero p{max-width:560px;font-size:20px;font-weight:500}
+.heatbar{height:28px;background:var(--heat)}
+.ticks{display:grid;grid-template-columns:repeat(6,1fr)}
+.ticks span{padding-top:8px;border-left:2px solid var(--carvao);padding-left:6px}
+.dark{background:var(--carvao);color:var(--osso)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.card{padding:40px;display:grid;place-items:center;min-height:300px}
+.concept{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:end}
+.concept p{font-size:20px;max-width:620px}
+.concept p+p{margin-top:16px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.steps div{border-top:3px solid currentColor;padding-top:16px}
+/* construção */
+.build{background:#fff;position:relative;aspect-ratio:1;max-width:420px;width:100%;background-image:linear-gradient(#0001 1px,transparent 1px),linear-gradient(90deg,#0001 1px,transparent 1px);background-size:10% 10%}
+.build img{width:100%;display:block}
+/* type */
+.type{display:grid;grid-template-columns:1.4fr 1fr;gap:48px}
+.spec{font-size:clamp(120px,16vw,240px)}
+/* paleta */
+.pal{display:grid;grid-template-columns:2fr 1.4fr 1fr;height:380px}
+.pal div{padding:24px;display:flex;flex-direction:column;justify-content:space-between}
+.ramp{display:grid;grid-template-columns:repeat(6,1fr);margin-top:24px}
+.ramp div{height:150px;padding:12px;display:flex;flex-direction:column;justify-content:flex-end;font-size:13px;font-weight:600}
+/* padrão */
+.pattern{height:440px;background-color:var(--carvao);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='120' height='120'%3E%3Cpath d='M78 30A34 34 0 1 0 78 70' fill='none' stroke='%23E8341C' stroke-width='22'/%3E%3Crect x='34' y='45' width='62' height='10' fill='%23E8341C'/%3E%3Crect x='40' y='38' width='24' height='24' fill='%23FFB21A'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' width='120' height='120'%3E%3Crect x='0' y='45' width='100' height='10' fill='%234A1712'/%3E%3C/svg%3E");background-size:120px 120px;background-position:0 0,60px 60px}
+.pat2{height:440px;background:repeating-linear-gradient(90deg,var(--brasa) 0 40px,var(--carvao) 40px 52px)}
+/* ícones */
+.icons{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;background:var(--carvao)}
+.icons div{background:var(--osso);aspect-ratio:1;display:grid;place-items:center;align-content:center;gap:10px;font-size:13px;font-weight:600}
+.icons svg{width:48px;height:48px}
+/* fones */
+.phones{display:flex;gap:40px;justify-content:center;flex-wrap:wrap}
+.ph{width:360px;height:760px;border-radius:52px;background:#000;padding:10px;box-shadow:0 40px 80px -30px #0009}
+.scr{width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--osso);color:var(--carvao);position:relative;display:flex;flex-direction:column;font-size:15px}
+.sb{display:flex;justify-content:space-between;padding:14px 26px 6px;font-weight:600;font-size:14px}
+.cap{text-align:center;margin-top:16px}
+.tab{margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);background:var(--carvao);color:var(--osso);padding:6px 8px 22px}
+.tab a{min-height:56px;display:grid;place-items:center;align-content:center;gap:2px;color:inherit;text-decoration:none;font-size:11px;font-weight:600}
+.tab a svg{width:24px;height:24px}
+.tab a[aria-current]{color:var(--h1)}
+.btn{min-height:56px;border:0;background:var(--carvao);color:var(--osso);font:800 16px Archivo;display:flex;align-items:center;justify-content:space-between;padding:0 20px;width:100%}
+.step{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:2px solid #16121022}
+.step .ctl{display:flex;align-items:center;gap:6px}
+.step button{width:44px;height:44px;border:2px solid var(--carvao);background:none;font:800 22px Archivo;color:var(--carvao)}
+.step .n{font:32px Anton;width:56px;text-align:center}
+.chip{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:2px solid var(--carvao);font-weight:700;font-size:14px}
+.chip.on{background:var(--carvao);color:var(--osso)}
+.bar{height:10px;background:var(--heat)}
+.meter{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.meter i{height:8px;background:#16121022}.meter i.f{background:var(--carvao)}
+/* desktop */
+.desk{background:#000;border-radius:18px;padding:14px;max-width:1240px;margin:0 auto}
+.dscr{background:var(--osso);border-radius:6px;overflow:hidden;display:grid;grid-template-columns:240px 1fr 380px;min-height:640px}
+.side{background:var(--carvao);color:var(--osso);padding:28px 20px;display:flex;flex-direction:column;gap:4px}
+.side a{color:inherit;text-decoration:none;min-height:48px;display:flex;align-items:center;gap:12px;padding:0 12px;font-weight:600}
+.side a[aria-current]{background:var(--brasa);color:var(--carvao)}
+footer{padding:48px 6vw;display:flex;justify-content:space-between;align-items:center}
+@media (max-width:900px){.concept,.type,.grid2{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.icons{grid-template-columns:repeat(4,1fr)}.pal{grid-template-columns:1fr;height:auto}.pal div{min-height:140px}.ramp{grid-template-columns:repeat(3,1fr)}.dscr{grid-template-columns:1fr}.side{display:none}.ph{width:100%;max-width:360px}section{padding:64px 20px}}
+</style></head><body>
+
+<section class="hero"><div class="wrap" style="width:100%">
+<div class="top mono"><span>churrasquin · direção D</span><span>brand board · v5 · 2026</span></div></div>
+<div class="wrap" style="width:100%"><h1 class="d">brasa<br>viva.</h1></div>
+<div class="wrap" style="width:100%;display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap">
+<p>O app de quem comanda a churrasqueira. Planejar a compra, conhecer o corte, controlar o fogo e acertar o ponto — com a mesma linguagem: o calor.</p>
+<img src="logo.svg" alt="churrasquin" style="height:72px"></div></section>
+<div class="heatbar" role="img" aria-label="Gradiente de calor, de chama a carvão"></div>
+
+<section><div class="wrap">
+<div class="lbl mono"><b>01</b>conceito</div>
+<div class="concept"><h2 class="d">o calor é<br>a interface.</h2>
+<div><p>Churrasco é gestão de calor. Por isso a marca não desenha uma chama: ela <strong>mede</strong> o fogo. Um único gradiente — da chama amarela ao carvão — vira a régua de tudo no app.</p>
+<p>O mesmo degradê que indica brasa forte ou fogo indireto indica o ponto da carne: selado, mal, ao ponto, bem passado. Quem aprende uma escala lê o app inteiro.</p></div></div>
+<div class="steps"><div><span class="mono">Símbolo</span><p>O "c" é a boca da churrasqueira vista de lado; o espeto atravessa; o quadrado é a brasa.</p></div>
+<div><span class="mono">Campos chapados</span><p>Vermelho-brasa, carvão e osso em áreas grandes, sem sombras nem texturas fake.</p></div>
+<div><span class="mono">Escala de calor</span><p>Seis degraus que codificam fogo e ponto — dado, não decoração.</p></div></div>
+</div></section>
+
+<section class="dark"><div class="wrap">
+<div class="lbl mono"><b style="background:var(--brasa);color:var(--carvao)">02</b>logo e construção</div>
+<div class="grid2">
+<div class="card" style="background:var(--osso)"><img src="logo.svg" alt="Logo churrasquin, versão positiva" style="width:85%"></div>
+<div class="card" style="background:var(--carvao);outline:2px solid #F5ECDF22"><img src="logo-neg.svg" alt="Logo churrasquin, versão negativa" style="width:85%"></div>
+<div class="card" style="background:var(--brasa)"><div class="build"><img src="simbolo.svg" alt="Símbolo sobre grade de construção"></div></div>
+<div class="card" style="background:var(--osso);color:var(--carvao);place-items:start;align-content:center;gap:24px">
+<div style="display:flex;gap:24px;align-items:end"><img src="app-icon.svg" alt="Ícone do app" width="160"><img src="app-icon.svg" alt="" width="64"><img src="app-icon.svg" alt="" width="32"></div>
+<p style="max-width:440px"><strong>Grade 10×10.</strong> Anel de 22 u (raio 34) aberto a ±45°; espeto 10 u cruza o vão e sai do anel; brasa 24 u alinhada ao eixo. Lettering em Anton, caixa baixa, tracking −20, altura de x igual ao vão do "c". Área de proteção = 1 brasa.</p></div>
+</div></div></section>
+
+<section><div class="wrap">
+<div class="lbl mono"><b>03</b>tipografia</div>
+<div class="type"><div><div class="d spec">Aa 180°</div><p class="mono" style="margin-top:16px">Display — Anton · caixa baixa · números de timer e peso</p></div>
+<div style="align-self:end"><p style="font:800 40px/1.05 Archivo">Archivo para interface e leitura.</p>
+<p style="margin-top:16px;font-size:18px">Picanha: bifes grossos dobrados no espeto, gordura para fora. Sal grosso na hora. Não tire a capa.</p>
+<p class="mono" style="margin-top:24px">JetBrains Mono — temperaturas, etiquetas · 54°C</p></div></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+<div class="lbl mono"><b>04</b>paleta</div>
+<div class="pal"><div style="background:var(--brasa)"><span class="mono">Brasa</span><span class="d" style="font-size:44px">#e8341c</span></div>
+<div style="background:var(--carvao);color:var(--osso)"><span class="mono">Carvão</span><span class="d" style="font-size:44px">#161210</span></div>
+<div style="background:var(--osso);outline:2px solid var(--carvao);outline-offset:-2px"><span class="mono">Osso</span><span class="d" style="font-size:44px">#f5ecdf</span></div></div>
+<p style="margin-top:16px;font-weight:600">Contraste: carvão/osso 16,9:1 · carvão/brasa 5,1:1 (AA) · texto sobre brasa sempre carvão, nunca branco.</p>
+<div class="ramp" aria-label="Escala de calor">
+<div style="background:var(--h1)">Chama<br>selar · 300°+</div><div style="background:var(--h2)">Brasa forte<br>mal passado · 50°</div><div style="background:var(--h3)">Brasa<br>ao ponto · 57°</div>
+<div style="background:var(--h4);color:var(--osso)">Média<br>ao ponto+ · 63°</div><div style="background:var(--h5);color:var(--osso)">Indireto<br>bem passado · 70°</div><div style="background:var(--h6);color:var(--osso)">Carvão<br>descanso · apagado</div></div>
+</div></section>
+
+<section class="dark" style="padding:0"><div class="grid2" style="gap:0">
+<div class="pattern" role="img" aria-label="Padrão: símbolo repetido com espetos em carvão"></div>
+<div class="pat2" role="img" aria-label="Padrão: grelha em faixas brasa e carvão"></div></div>
+<div class="wrap" style="padding:40px 6vw"><div class="lbl mono" style="margin:0"><b style="background:var(--brasa);color:var(--carvao)">05</b>padrão — espetada (símbolo em linha) e grelha (para embalagens de app, avental, redes)</div></div></section>
+
+<section><div class="wrap">
+<div class="lbl mono"><b>06</b>ícones — traço 2.5, cantos retos, um ponto de brasa</div>
+<div class="icons">
+<div><svg viewBox="0 0 24 24" fill="none" stroke="#161210" stroke-width="2.5"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="9" r="2.5"/><path d="M3 20c0-3 2-5 5-5s5 2 5 5M13 20c0-2.5 1.5-4 3-4s5 1 5 4"/><rect x="18" y="2" width="4" height="4" fill="#E8341C" stroke="none"/></svg>Turma</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="#161210" stroke-width="2.5"><path d="M4 14c0-5 4-9 10-9 4 0 6 3 6 6 0 5-5 8-10 8-4 0-6-2-6-5Z"/><rect x="11" y="9" width="4" height="4" fill="#E8341C" stroke="none"/></svg>Cortes</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="#161210" stroke-width="2.5"><circle cx="12" cy="13" r="8"/><path d="M12 13V8M9 2h6"/><rect x="10" y="11" width="4" height="4" fill="#E8341C" stroke="none"/></svg>Timer</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="#161210" stroke-width="2.5"><path d="M10 3h4v11a4 4 0 1 1-4 0Z"/><rect x="10" y="15" width="4" height="4" fill="#E8341C" stroke="none"/></svg>Ponto</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="#161210" stroke-width="2.5"><path d="M3 10h18M3 14h18M6 18l-2 4M18 18l2 4"/><rect x="10" y="4" width="4" height="4" fill="#E8341C" stroke="none"/></svg>Grelha</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="#161210" stroke-width="2.5"><path d="M2 12h20"/><rect x="6" y="8" width="5" height="8" fill="#E8341C" stroke="none"/><rect x="13" y="8" width="5" height="8"/></svg>Espeto</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="#161210" stroke-width="2.5"><path d="M5 4h14v17H5zM9 9h6M9 13h6M9 17h3"/><rect x="15" y="15" width="4" height="4" fill="#E8341C" stroke="none"/></svg>Lista</div>
+<div><svg viewBox="0 0 24 24" fill="none" stroke="#161210" stroke-width="2.5"><path d="M4 18h16M7 18V9M12 18V5M17 18v-6"/><rect x="10" y="3" width="4" height="4" fill="#E8341C" stroke="none"/></svg>Fogo</div>
+</div></div></section>
+
+<section class="dark"><div class="wrap">
+<div class="lbl mono"><b style="background:var(--brasa);color:var(--carvao)">07</b>app — planejar · cortes · na brasa</div>
+<div class="phones">
+
+<!-- PLANEJAR -->
+<div><div class="ph"><div class="scr">
+<div class="sb"><span>18:42</span><span>5G ▮▮▮</span></div>
+<div style="background:var(--brasa);padding:12px 22px 22px">
+<div style="display:flex;justify-content:space-between;align-items:center"><img src="simbolo.svg" alt="churrasquin" width="36"><span class="mono">sáb · 13h</span></div>
+<p class="mono" style="margin-top:22px">planejar</p>
+<p class="d" style="font-size:64px">5,4 kg<br>de carne</p>
+<p style="font-weight:600;margin-top:6px">comprar para 12 pessoas · rendimento já descontado</p></div>
+<div style="padding:8px 22px;flex:1;overflow:hidden">
+<div class="step"><span><strong>Homens</strong><br><small>~400 g cada</small></span><div class="ctl"><button aria-label="menos">–</button><span class="n">7</span><button aria-label="mais">+</button></div></div>
+<div class="step"><span><strong>Mulheres</strong><br><small>~300 g cada</small></span><div class="ctl"><button aria-label="menos">–</button><span class="n">4</span><button aria-label="mais">+</button></div></div>
+<div class="step"><span><strong>Crianças</strong><br><small>~150 g cada</small></span><div class="ctl"><button aria-label="menos">–</button><span class="n">1</span><button aria-label="mais">+</button></div></div>
+<p class="mono" style="margin:14px 0 8px">cortes</p>
+<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip on">Picanha 1,5 kg</span><span class="chip on">Fraldinha 2 kg</span><span class="chip">Cupim</span><span class="chip on">Linguiça 1,9 kg</span></div>
+</div>
+<div style="padding:0 22px 12px"><button class="btn" style="background:var(--carvao)"><span>Gerar lista de compras</span><span>→</span></button></div>
+<nav class="tab" aria-label="principal"><a aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2-5 6-5s6 2 6 5"/></svg>Planejar</a><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 14c0-5 4-9 10-9 4 0 6 3 6 6 0 5-5 8-10 8-4 0-6-2-6-5Z"/></svg>Cortes</a><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="13" r="8"/><path d="M12 13V8M9 2h6"/></svg>Na brasa</a><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 4h14v17H5zM9 9h6M9 13h6"/></svg>Lista</a></nav>
+</div></div><p class="cap mono">planejar</p></div>
+
+<!-- CORTES -->
+<div><div class="ph"><div class="scr">
+<div class="sb"><span>18:44</span><span>5G ▮▮▮</span></div>
+<div style="padding:6px 22px 0;display:flex;justify-content:space-between;align-items:center"><button class="chip" style="background:none;width:44px;justify-content:center" aria-label="voltar">←</button><span class="mono">cortes · boi · nobre</span></div>
+<div style="padding:10px 22px 0"><p class="d" style="font-size:72px">picanha</p>
+<p style="font-weight:600">AR Tapa de cuadril · UY Picaña · US Coulotte</p></div>
+<div style="margin:14px 22px 0;background:var(--carvao);position:relative;height:178px">
+<svg viewBox="0 0 320 170" width="100%" height="100%" role="img" aria-label="Mapa do boi com a região da picanha destacada">
+<path d="M40 62 58 40 92 46 120 38 210 36 262 42 290 58 300 92 286 120 250 128 236 150 216 150 214 128 120 128 114 150 94 150 92 124 64 110 34 98 22 78Z" fill="#4A1712"/>
+<path d="M120 38 160 37 160 128 120 128Z" fill="#5a1d15"/><path d="M210 36 262 42 268 80 210 80Z" fill="#5a1d15"/>
+<path d="M238 39 262 42 290 58 268 62 240 52Z" fill="#E8341C"/>
+<path d="M22 78 40 62 58 40 50 72Z" fill="#3a120e"/>
+<circle cx="268" cy="22" r="0"/><path d="M262 50 276 16" stroke="#F5ECDF" stroke-width="2"/></svg>
+<button style="position:absolute;right:20px;top:4px;width:44px;height:44px;border-radius:50%;border:0;background:var(--osso);font:700 italic 20px Georgia" aria-label="Ampliar região da picanha">i</button>
+<span class="mono" style="position:absolute;left:14px;bottom:10px;color:var(--osso)">alcatra › picanha · traseiro</span></div>
+<div style="padding:16px 22px;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;align-items:center;font-weight:600;font-size:14px">
+<span>Maciez</span><div class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div>
+<span>Gordura</span><div class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div>
+<span>Sabor</span><div class="meter"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div></div>
+<div style="padding:0 22px;font-size:14px"><p><strong>Na brasa:</strong> bifes grossos (3 dedos) dobrados no espeto, gordura para fora. Sal grosso na hora.</p>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:12px;background:var(--carvao)">
+<div style="background:var(--h2);padding:8px"><small class="mono">ponto</small><br><strong>mal–ao ponto</strong></div><div style="background:var(--osso);padding:8px"><small class="mono">tempo</small><br><strong>15–20 min</strong></div><div style="background:var(--osso);padding:8px"><small class="mono">rende</small><br><strong>68%</strong></div></div></div>
+<nav class="tab" aria-label="principal"><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2-5 6-5s6 2 6 5"/></svg>Planejar</a><a aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 14c0-5 4-9 10-9 4 0 6 3 6 6 0 5-5 8-10 8-4 0-6-2-6-5Z"/></svg>Cortes</a><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="13" r="8"/><path d="M12 13V8M9 2h6"/></svg>Na brasa</a><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 4h14v17H5zM9 9h6M9 13h6"/></svg>Lista</a></nav>
+</div></div><p class="cap mono">cortes · ficha + mapa</p></div>
+
+<!-- NA BRASA -->
+<div><div class="ph"><div class="scr" style="background:var(--carvao);color:var(--osso)">
+<div class="sb"><span>19:51</span><span>5G ▮▮▮</span></div>
+<div style="padding:6px 22px"><p class="mono" style="color:var(--h1)">na brasa · ao vivo</p>
+<p class="d" style="font-size:40px;margin-top:6px">picanha · bifes</p></div>
+<div style="background:var(--h2);color:var(--carvao);margin:10px 22px 0;padding:18px 20px">
+<div style="display:flex;justify-content:space-between" class="mono"><span>virar em</span><span>brasa forte · 1 palmo</span></div>
+<p class="d" style="font-size:110px;line-height:.95">04:12</p>
+<div style="height:8px;background:#16121033"><div style="width:62%;height:100%;background:var(--carvao)"></div></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 22px"><button class="btn" style="background:var(--osso);color:var(--carvao)">Pausar</button><button class="btn" style="background:var(--brasa);color:var(--carvao)">Virei ✓</button></div>
+<div style="padding:6px 22px;flex:1">
+<p class="mono" style="margin-bottom:10px">linha do tempo · 13h00 → 15h10</p>
+<ol style="list-style:none;padding:0;border-left:10px solid;border-image:linear-gradient(var(--h1),var(--h3),var(--h5)) 1;font-size:14px">
+<li style="padding:2px 0 10px 14px;opacity:.6"><strong>12:20</strong> Acender carvão · 3 kg</li>
+<li style="padding:0 0 10px 14px;opacity:.6"><strong>13:00</strong> Linguiça toscana · 30 min ✓</li>
+<li style="padding:0 0 10px 14px;color:var(--h1)"><strong>13:20 ● agora</strong> Picanha · selar e virar</li>
+<li style="padding:0 0 10px 14px"><strong>13:45</strong> Fraldinha · alta · 20 min</li>
+<li style="padding:0 0 0 14px"><strong>14:30</strong> Cupim (indireto, desde 10h) sai</li></ol></div>
+<div style="padding:8px 22px 14px"><div class="bar"></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px;font-weight:600"><span>selado</span><span>▲ 54°C mal passado</span><span>bem</span></div></div>
+<nav class="tab" aria-label="principal" style="background:#000"><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2-5 6-5s6 2 6 5"/></svg>Planejar</a><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 14c0-5 4-9 10-9 4 0 6 3 6 6 0 5-5 8-10 8-4 0-6-2-6-5Z"/></svg>Cortes</a><a aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="13" r="8"/><path d="M12 13V8M9 2h6"/></svg>Na brasa</a><a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 4h14v17H5zM9 9h6M9 13h6"/></svg>Lista</a></nav>
+</div></div><p class="cap mono">na brasa · timer + linha do tempo</p></div>
+</div></div></section>
+
+<section><div class="wrap">
+<div class="lbl mono"><b>08</b>desktop — guia de cortes</div>
+<div class="desk"><div class="dscr">
+<nav class="side" aria-label="desktop"><img src="logo-neg.svg" alt="churrasquin" style="width:180px;margin-bottom:24px"><a>Planejar</a><a aria-current="page">Cortes</a><a>Na brasa</a><a>Ponto</a><a>Lista</a></nav>
+<div style="padding:32px"><p class="mono">40 cortes · boi · porco · cordeiro</p>
+<p class="d" style="font-size:80px;margin:8px 0 20px">cortes</p>
+<div style="display:flex;gap:6px;margin-bottom:20px"><span class="chip on">Boi</span><span class="chip">Porco</span><span class="chip">Cordeiro</span><span class="chip">Econômicos</span></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--carvao)">
+<div style="background:var(--brasa);padding:18px;min-height:120px"><p class="d" style="font-size:30px">picanha</p><small>nobre · 15–20 min</small></div>
+<div style="background:var(--osso);padding:18px"><p class="d" style="font-size:30px">fraldinha</p><small>tradicional · 20–30 min</small></div>
+<div style="background:var(--osso);padding:18px"><p class="d" style="font-size:30px">cupim</p><small>lento · 4–6 h</small></div>
+<div style="background:var(--osso);padding:18px;min-height:120px"><p class="d" style="font-size:30px">ancho</p><small>nobre · 15 min</small></div>
+<div style="background:var(--osso);padding:18px"><p class="d" style="font-size:30px">entraña</p><small>parrilla · 10 min</small></div>
+<div style="background:var(--osso);padding:18px"><p class="d" style="font-size:30px">costela</p><small>lento · 4–8 h</small></div></div></div>
+<div style="background:var(--carvao);color:var(--osso);padding:32px"><p class="mono" style="color:var(--h1)">ficha</p><p class="d" style="font-size:56px;margin:8px 0">picanha</p>
+<p>Cobre a parte de cima da alcatra, músculo que trabalha pouco: fibras finas e macias. A capa de gordura protege e perfuma a carne na brasa.</p>
+<div class="bar" style="margin-top:28px"></div><div style="display:flex;justify-content:space-between;font-size:13px;margin-top:6px"><span>selado</span><strong style="color:var(--h2)">alvo 52–57°C</strong><span>bem</span></div>
+<button class="btn" style="background:var(--brasa);color:var(--carvao);margin-top:28px"><span>Pôr na brasa</span><span>→</span></button></div>
+</div></div></div></section>
+
+<footer class="dark"><img src="logo-neg.svg" alt="churrasquin" style="height:44px"><span class="mono">direção D · brasa viva</span></footer>
+</body></html>
