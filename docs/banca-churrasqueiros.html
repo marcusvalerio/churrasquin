@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Banca de churrasqueiros</title>
+<style>
+/* VOICE: relatório de usabilidade, direto. IDEA: comanda de açougue. PICTURE: placar de notas. COLOUR/TYPE: papel, carvão, vermelhão. LAYOUT: veredito, placar, prioridades, fichas. */
+:root{color-scheme:light dark;--bg:light-dark(#F3EADB,#1F1A17);--ink:light-dark(#1F1A17,#F3EADB);--mut:light-dark(#5d544c,#b9ac9f);--card:light-dark(#fbf6ee,#2a231f);--red:#EB6440;--grn:#3FA295;--line:light-dark(#d9cdb9,#3d332d)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px);max-width:1240px;margin:auto}
+h1{font-size:clamp(30px,4.5vw,46px);line-height:1.05;margin:0 0 12px;text-wrap:balance}
+h2{font-size:26px;line-height:1.1;margin:0 0 16px}
+h3{font-size:19px;margin:0 0 4px}
+.lead{color:var(--mut);max-width:68ch;margin:0}
+.note{font-size:13px;color:var(--mut);margin-top:10px}
+.board{display:grid;gap:10px;margin-top:24px}
+.row{display:grid;grid-template-columns:minmax(0,15em) minmax(0,1fr) 3.5em;gap:14px;align-items:center}
+.bar{height:22px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:6px}
+.n{text-align:right;font-weight:800;font-size:20px;font-variant-numeric:tabular-nums}
+.who small{display:block;color:var(--mut);font-size:13px}
+ol.prio{padding-left:1.4em;margin:0;display:grid;gap:12px}
+ol.prio li b{display:block}
+ol.prio li span{color:var(--mut)}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;margin-right:6px;background:var(--red);color:#1F1A17}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.card q{display:block;font-style:italic;margin:8px 0 10px}
+.card ul{margin:0;padding-left:1.1em}
+.ok{color:var(--grn);font-weight:700}
+@media(max-width:600px){.row{grid-template-columns:minmax(0,1fr) 3em}.bar{grid-column:1/-1;order:3}}
+</style></head><body>
+<section class="band">
+<h1>O app ensina bem, mas ainda não planeja o churrasco por você</h1>
+<p class="lead">Sete churrasqueiros usaram o churrasquin de verdade no navegador, cada um com sua tarefa e seu aparelho. Média 5,6 de 10. Quem quer aprender sobre os cortes gostou; quem queria resolver "quanto e o que comprar, gastando quanto" travou.</p>
+<p class="note">As sete pessoas são personas simuladas, não usuários reais. Servem para achar problemas antes de testar com gente de verdade.</p>
+<div class="board" id="board"></div>
+</section>
+
+<section class="band">
+<h2>As 6 correções que mais importam</h2>
+<ol class="prio">
+<li><b>Começar pela pergunta "quantas pessoas?"</b><span>Hoje o app calcula para quantos a sua lista dá; o iniciante quer o contrário. Pergunta no topo (adultos e crianças, criança = meia porção) e o app distribui os kg entre os cortes escolhidos. Rafa, Juliana, Héctor.</span></li>
+<li><b>Preço por kg e total estimado em R$</b><span>Filtro "econômico", ordenar por preço e sugestão de completar com cortes baratos. Lucas, Rafa; também é o que faria a Marina pagar.</span></li>
+<li><b>Enviar a lista no WhatsApp</b><span>Botão fixo que monta o texto com os kg de cada corte, mais carvão, sal e acompanhamentos. Juliana, Rafa, Marina.</span></li>
+<li><b>Janela do "i": explicação visível sem rolar</b><span>Testei: no celular o texto existe, mas entra animado abaixo do mapa e só aparece depois de ~1 s e rolando. Mostrar resumo de 2 linhas junto do mapa e lado a lado no computador. Rafa, Valdir, Marina, Héctor.</span></li>
+<li><b>Acessibilidade</b><span>Botões com no mínimo 44 px, textos que crescem com a fonte do celular, número escrito ao lado das bolinhas de maciez/gordura/sabor. Dona Cida.</span></li>
+<li><b>Conteúdo</b><span>Entraña é o diafragma (hoje acende a fraldinha); "asado de tira ancho" está errado; adicionar ponta de peito, salsichão e costela minga; distância da brasa em palmos/cm; rendimento da picanha para ~0,68. Héctor, Valdir, Marina.</span></li>
+</ol>
+</section>
+
+<section class="band">
+<h2>O que cada um disse</h2>
+<div class="grid" id="cards"></div>
+</section>
+
+<script>
+{
+const P=[
+{n:'Marina, 41',p:'dona de boutique de carnes · notebook e tablet',s:7,c:'#3FA295',q:'Eu indicaria hoje. Pagaria se tivesse pedido e estoque.',a:['Anatomia e pesos de peça corretos','Ancho usa a mesma região do contrafilé','Picanha e maminha parecem o mesmo bloco no desenho','Pagaria por: catálogo da loja com preço, estoque do dia, pedido no WhatsApp com instrução de corte, encomenda, selo de maturadas']},
+{n:'Dona Cida, 68',p:'baixa visão, fonte grande · celular',s:7,c:'#3FA295',q:'Achei a costela e apareceu em letra enorme: dá para 10 pessoas. Mas o “i” é miudinho para o meu dedo.',a:['Botões de 36–38 px (mínimo 44)','Chips e rótulos não crescem com a fonte','Textos cortados com zoom','Bolinhas sem o número escrito','Bom: janela do “i” funciona com teclado e leitor de tela']},
+{n:'Seu Héctor, 52',p:'parrillero uruguaio · notebook',s:6,c:'#d79b3a',q:'A entraña é o diafragma, fica do lado de dentro, não no flanco.',a:['Entraña acende a região errada','Calculadora não reparte os kg entre os cortes','Busca por “vacío” traz fraldinha primeiro','Nomes AR/UY errados em costela e short rib','500 g/pessoa é realista para parrilla']},
+{n:'Tchê Valdir, 45',p:'gaúcho, fogo de chão · Android',s:6,c:'#d79b3a',q:'Sabe do que fala, mas fala mais portenho e americano que gaúcho.',a:['Falta distância da brasa (palmos, cm)','Faltam ponta de peito, salsichão, costela minga','Costela de 12 h e espeto corrido ausentes','Bom: sal grosso, “osso pra baixo”, tom simpático']},
+{n:'Juliana, 38',p:'aniversário do filho, uma mão · celular',s:5,c:'#EB6440',q:'Não tem botão para mandar no WhatsApp. Teria que tirar print.',a:['Sem compartilhar a lista','Sem separar adultos e crianças','Resultado longe do polegar; aviso cobre o campo de quantidade','Cada corte entra com 1 kg automático e confunde','Bom: a lista continua após fechar o app']},
+{n:'Rafa, 27',p:'primeiro churrasco, 12 amigos · celular',s:4,c:'#EB6440',q:'Eu só queria saber o que comprar para 12 pessoas.',a:['Número de pessoas fica escondido no fim','Botão de sugestão fixo em 10 pessoas','Sem preço nem opção mais barata','Falta carvão, sal, bebida, pão de alho','Nomes repetidos confundem (maminha / colita)']},
+{n:'Lucas, 21',p:'R$ 400 para 20 pessoas · celular simples',s:4,c:'#EB6440',q:'Para calcular os kg funciona. Para economizar, não ajuda.',a:['Nenhum preço ou total em R$','Sugestão de completar com cortes caros','Página pesada (166 cards) em celular fraco','Carregou em ~1,1 s com CPU 4× mais lenta']}
+];
+const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.getElementById('board').innerHTML=P.map(x=>`<div class="row"><div class="who"><b>${e(x.n)}</b><small>${e(x.p)}</small></div><div class="bar"><i style="width:${x.s*10}%;background:${x.c}"></i></div><div class="n">${x.s}</div></div>`).join('');
+document.getElementById('cards').innerHTML=P.map(x=>`<article class="card"><h3>${e(x.n)} · ${x.s}/10</h3><small style="color:var(--mut)">${e(x.p)}</small><q>${e(x.q)}</q><ul>${x.a.map(a=>`<li>${e(a)}</li>`).join('')}</ul></article>`).join('');
+}
+</script>
+</body></html>
