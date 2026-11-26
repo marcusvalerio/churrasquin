@@ -3,6 +3,10 @@
  * rendimento = fração do peso cru que vira carne servida (após limpar, osso, gordura derretida
  * e perda de água na brasa). Referência usual: peça sem osso e com pouca gordura perde ~25-30%;
  * com capa grossa ou osso, perde bem mais. Valores aproximados, arredondados.
+ * Campos extras (adicionados no fim do arquivo, todos opcionais para quem consome):
+ *   precoKg {min,max} R$/kg ESTIMADO + precoFonte:'estimativa'; brasa: distância da brasa (palmos/cm);
+ *   nota: observação curta (ex. entraña = peça interna). window.CORTES_ECONOMICOS: ids baratos, ordenados.
+ * Cortes novos ponta-de-peito, salsichao, costela-minga podem não ter arte em CUT_ART: tratar ausência.
  */
 (function () {
   function c(id, nome, nomes, paises, animal, regiao, categoria, maciez, gordura, sabor, porque, preparo, ponto, tempo, pesoPeca, rendimento) {
@@ -15,7 +19,7 @@
     c('picanha', 'Picanha', { ar: 'Tapa de cuadril', uy: 'Picaña', us: 'Top sirloin cap (coulotte)' }, ALL, 'boi', 'picanha', 'nobre', 4, 4, 5,
       'Cobre a parte de cima da alcatra, músculo que trabalha pouco: fibras finas e macias. A capa de gordura protege e perfuma a carne na brasa.',
       'Em bifes grossos (3 dedos) dobrados no espeto, gordura para fora, ou peça inteira. Sal grosso na hora. Não tire a capa.',
-      'Mal passada a ao ponto', 'Bifes: 15-20 min; peça inteira: 40-50 min', '1 a 1,5 kg (peça boa não passa de ~1,5 kg)', 0.75),
+      'Mal passada a ao ponto', 'Bifes: 15-20 min; peça inteira: 40-50 min', '1 a 1,5 kg (peça boa não passa de ~1,5 kg)', 0.68),
     c('maminha', 'Maminha', { ar: 'Colita de cuadril', uy: 'Colita de cuadril', us: 'Tri-tip' }, ALL, 'boi', 'maminha', 'tradicional', 4, 2, 4,
       'Ponta da alcatra, músculo de pouco esforço; fibras longas e pouca gordura entremeada. Fica suculenta se não passar do ponto.',
       'Inteira, com a gordurinha, em fogo médio; vire poucas vezes. Fatie contra a fibra.',
@@ -44,11 +48,11 @@
       'Corcova de bois zebuínos (nelore). Músculo cheio de gordura entremeada e colágeno: duro se rápido, desmancha no cozimento lento.',
       'Longe da brasa ou embrulhado em papel-alumínio/manteiga, por horas. Finalize na brasa forte para dourar.',
       'Bem passado, desmanchando', '4-6 h em fogo baixo', '2 a 4 kg', 0.6),
-    c('costela', 'Costela (ripa / minga)', { ar: 'Asado de tira (peça)', uy: 'Asado', us: 'Beef ribs' }, ['BR', 'AR', 'UY', 'US'], 'boi', 'costela', 'tradicional', 3, 5, 5,
+    c('costela', 'Costela (ripa / minga)', { ar: 'Asado (costillar entero)', uy: 'Asado (costillar)', us: 'Beef plate ribs' }, ['BR', 'AR', 'UY', 'US'], 'boi', 'costela', 'tradicional', 3, 5, 5,
       'Carne entre os ossos da costela, músculos com muito colágeno e gordura. Precisa de calor baixo e longo para virar gelatina macia.',
       'Fogo de chão ou churrasqueira em altura alta, osso para baixo primeiro. Sal grosso. Paciência.',
-      'Bem passada, soltando do osso', '6-10 h em fogo baixo', 'Ripa inteira 4 a 10 kg', 0.5),
-    c('costela-janela', 'Costela janela', { ar: 'Asado ancho', uy: 'Asado de tira ancho' }, ['BR', 'AR', 'UY'], 'boi', 'costela', 'tradicional', 3, 4, 5,
+      'Bem passada, soltando do osso', '6-10 h na churrasqueira; 10-12 h no fogo de chão', 'Ripa inteira 4 a 10 kg', 0.5),
+    c('costela-janela', 'Costela janela', { ar: 'Costillar (parte central)', uy: 'Costillar (parte central)' }, ['BR', 'AR', 'UY'], 'boi', 'costela', 'tradicional', 3, 4, 5,
       'Parte da costela com ossos mais curtos e carne alta entre eles (as "janelas"). Mesma lógica de colágeno: pede tempo.',
       'Em peça, fogo baixo e indireto, osso virado para a brasa no início.',
       'Bem passada', '4-6 h', '3 a 6 kg', 0.5),
@@ -124,10 +128,22 @@
       'Nome americano da maminha. Famoso na Califórnia, assado inteiro com tempero seco.',
       'Inteiro, sele e vá para o indireto; fatie contra a fibra (ela muda de direção no meio).',
       'Ao ponto para menos', '35-45 min', '0,8 a 1,5 kg', 0.72),
-    c('short-rib', 'Short rib', { ar: 'Asado de tira (alto)', us: 'Short rib' }, ['US', 'BR'], 'boi', 'costela', 'steak', 4, 5, 5,
+    c('short-rib', 'Short rib', { ar: 'Costilla en bloque', uy: 'Costilla en bloque', us: 'Short rib' }, ['US', 'BR'], 'boi', 'costela', 'steak', 4, 5, 5,
       'Costela do boi em blocos altos com osso: muita gordura e colágeno, sabor intenso.',
       'Fogo indireto baixo, com fumaça, até amolecer. Cortado fino (flanken) vai direto na brasa.',
       'Bem passado (lento)', '5-8 h lento; 10 min se cortado fino', 'Bloco de 0,5 a 1,5 kg', 0.5),
+    c('ponta-de-peito', 'Ponta de peito', { ar: 'Pecho (punta)', uy: 'Pecho (punta)', us: 'Brisket point' }, ['BR', 'AR', 'UY', 'US'], 'boi', 'peito', 'popular', 2, 4, 5,
+      'Parte final do peito, mais gorda que o resto: colágeno e capa de gordura que derretem devagar. Clássico gaúcho, barato e saboroso.',
+      'Inteira, sal grosso, longe da brasa (ou no fogo de chão) por horas, gordura para cima; finalize perto da brasa para dourar.',
+      'Bem passada, macia', '3-5 h', '2 a 4 kg', 0.55),
+    c('salsichao', 'Salsichão', { ar: 'Salchicha parrillera', uy: 'Salchicha parrillera', us: 'Fresh pork sausage (coil)' }, ['BR'], 'porco', 'barriga', 'popular', 4, 4, 4,
+      'Linguiça fresca fina e comprida do Sul (porco, às vezes com boi), temperada leve. Gordura da barriga dá suculência.',
+      'Em espiral no espeto ou grelha, brasa média, sem furar. Vire uma vez.',
+      'Bem passado', '20-30 min', 'Rolo de 0,5 a 1 kg', 0.8),
+    c('costela-minga', 'Costela minga', { ar: 'Asado (parte trasera)', uy: 'Asado (parte trasera)', us: 'Plate short ribs (traseira)' }, ['BR'], 'boi', 'costela', 'tradicional', 3, 5, 5,
+      'Parte traseira da costela, junto à barriga: ossos mais curtos, mais carne e gordura que a ponta. Muito colágeno: pede fogo lento.',
+      'Fogo de chão ou churrasqueira alta, osso para a brasa primeiro, sal grosso. Vire só quando o osso soltar.',
+      'Bem passada, soltando do osso', '6-8 h na churrasqueira; 10-12 h no fogo de chão', '3 a 6 kg', 0.5),
     c('pancetta-suina', 'Pancetta suína (barriga)', { ar: 'Panceta', uy: 'Panceta', us: 'Pork belly' }, ['BR', 'AR', 'UY', 'US'], 'porco', 'barriga', 'popular', 4, 5, 5,
       'Barriga do porco com camadas de carne e gordura, com ou sem pele. A gordura derrete e a pele pode pururucar.',
       'Fogo indireto até ficar macia, depois brasa forte com a pele para baixo para estourar.',
@@ -181,6 +197,44 @@
       'Brasa fraca, só para aquecer e firmar a pele; fogo forte estoura.',
       'Aquecida por dentro', '10-15 min', 'Gomos de 150-200 g', 0.9)
   ];
+
+  /* precoKg: faixa de preço ESTIMADA em R$/kg [mín, máx], média de varejo no Brasil (2026),
+   * valores redondos. São referências aproximadas para orientar: o usuário pode editar o preço
+   * de cada corte na calculadora (fica salvo só no aparelho). Cortes importados/raros no BR
+   * usam preço de casa de carnes. precoFonte: 'estimativa' em todos. */
+  var PRECO = {
+    picanha: [70, 110], maminha: [45, 65], fraldinha: [40, 60], contrafile: [45, 70], ancho: [60, 95], 'file-mignon': [80, 120],
+    alcatra: [45, 65], cupim: [35, 55], costela: [25, 40], 'costela-janela': [28, 42], acem: [30, 42], peito: [30, 45],
+    vazio: [45, 70], entrana: [60, 100], 'tira-de-asado': [35, 55], matambre: [35, 55], 'ojo-de-bife': [60, 95],
+    'bife-de-chorizo': [50, 80], 'colita-de-cuadril': [45, 65], entrecot: [60, 95], 't-bone': [60, 95], porterhouse: [70, 110],
+    tomahawk: [80, 130], ribeye: [70, 110], 'ny-strip': [60, 95], 'flat-iron': [50, 80], denver: [50, 80], 'tri-tip': [45, 65],
+    'short-rib': [50, 80], 'pancetta-suina': [28, 40], 'costelinha-suina': [25, 38], 'lombo-suino': [22, 32], 'copa-lombo': [25, 35],
+    panceta: [28, 40], 'linguica-toscana': [20, 30], 'carre-cordeiro': [100, 150], 'pernil-cordeiro': [55, 80],
+    'coracao-frango': [25, 35], 'coxa-sobrecoxa': [12, 18], 'asa-frango': [18, 26], chorizo: [40, 60], morcilla: [40, 60],
+    'ponta-de-peito': [28, 40], salsichao: [22, 32], 'costela-minga': [28, 42]
+  };
+  /* brasa: distância da brasa (1 palmo ≈ 20 cm). nota: observação de anatomia/compra. */
+  var BRASA = {
+    costela: 'Longe: 2 a 3 palmos (40-60 cm) da brasa, osso para baixo; no fogo de chão, estaca a ~1 m do fogo, 10-12 h.',
+    'costela-minga': 'Longe: 2 a 3 palmos (40-60 cm), osso para baixo; fogo de chão 10-12 h.',
+    'costela-janela': 'Longe: 2 palmos (~40 cm), osso para baixo primeiro.',
+    'ponta-de-peito': 'Longe: 2 palmos (~40 cm); perto (1 palmo) só no fim para dourar.',
+    picanha: 'Espeto: 1 palmo (~20 cm) para selar, depois 1,5 palmo (~30 cm) até o ponto.',
+    alcatra: 'Espeto: 1 palmo (~20 cm), brasa forte.',
+    'coracao-frango': 'Espeto: 1 palmo (~20 cm), brasa forte, girando.',
+    salsichao: 'Espeto ou grelha: 1,5 palmo (~30 cm), brasa média.',
+    'linguica-toscana': 'Espeto: 1,5 palmo (~30 cm), brasa média.'
+  };
+  var NOTA = { entrana: 'peça interna (diafragma)', vazio: 'nome usado na Argentina e no Uruguai' };
+  window.CORTES.forEach(function (k) {
+    var p = PRECO[k.id];
+    if (p) { k.precoKg = { min: p[0], max: p[1] }; k.precoFonte = 'estimativa'; }
+    if (BRASA[k.id]) k.brasa = BRASA[k.id];
+    if (NOTA[k.id]) k.nota = NOTA[k.id];
+  });
+  /* ids dos cortes mais baratos (preço médio estimado ≤ R$ 40/kg), do mais barato ao mais caro */
+  window.CORTES_ECONOMICOS = window.CORTES.filter(function (k) { return k.precoKg && (k.precoKg.min + k.precoKg.max) / 2 <= 40; })
+    .sort(function (a, b) { return (a.precoKg.min + a.precoKg.max) - (b.precoKg.min + b.precoKg.max); }).map(function (k) { return k.id; });
 
   /* Apetite em gramas de CARNE CRUA por pessoa, já pensando num cardápio típico
    * (cortes variados, com alguma perda). Referências usuais de churrasco BR:
