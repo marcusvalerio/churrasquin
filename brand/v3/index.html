@@ -1,0 +1,198 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>churrasquin — v3 · Riso de brasa</title>
+<link rel="stylesheet" href="tokens.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--m:clamp(20px,5vw,72px);--v:var(--c-brasa);--t:var(--c-ervas);--k:var(--c-carvao);--p:var(--c-osso)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--p);color:var(--k);font-family:Archivo,var(--font-body);-webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.wrap{max-width:1440px;margin:0 auto;padding:0 var(--m)}
+header.top{display:flex;justify-content:space-between;padding:22px var(--m);border-bottom:1.5px solid var(--k)}
+section{padding:clamp(56px,8vw,120px) 0;border-bottom:1.5px solid var(--k)}
+h2{font:800 clamp(34px,5vw,64px)/.95 Archivo;font-stretch:75%;letter-spacing:-.01em;margin:10px 0 22px}
+p.lead{font-size:clamp(17px,1.6vw,21px);line-height:1.45;max-width:62ch}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,64px);align-items:center}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.hero{padding:clamp(48px,8vw,120px) 0 clamp(40px,6vw,90px)}
+.hero .lock{display:flex;align-items:center;gap:clamp(16px,3vw,40px);flex-wrap:wrap}
+.hero .lock img.s{width:clamp(110px,16vw,220px)}.hero .lock img.w{width:min(100%,820px)}
+.hero .meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:44px}
+.tag{display:inline-block;background:var(--k);color:var(--p);padding:6px 10px;border-radius:99px}
+.expl{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--k);border:2px solid var(--k);margin-top:36px}
+@media(max-width:820px){.expl{grid-template-columns:repeat(2,1fr)}}
+.expl figure{background:var(--p);padding:22px 18px 16px;position:relative}
+.expl figure.on{background:var(--c-gordura)}
+.expl svg{width:100%;height:auto;display:block;max-width:180px;margin:0 auto}
+.expl figcaption{margin-top:12px;font-size:14px;line-height:1.3}.expl figcaption b{display:block;font:600 10px "IBM Plex Mono";letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.constr{background:#E8DECB;padding:clamp(16px,3vw,40px);border-radius:var(--r-md)}
+.constr svg{width:100%;height:auto;display:block}
+.small{display:flex;gap:28px;align-items:flex-end;flex-wrap:wrap;margin-top:28px}
+.small div{text-align:center}.small span{display:block;margin-top:8px}
+.pal{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:820px){.pal{grid-template-columns:1fr 1fr}}
+.sw{border-radius:var(--r-md);aspect-ratio:3/4;padding:18px;display:flex;flex-direction:column;justify-content:space-between;border:1.5px solid var(--k)}
+.sw h3{font:800 28px/1 Archivo;font-stretch:75%}.sw .mono{font-size:10px;line-height:1.7}
+.blend{display:flex;gap:30px;flex-wrap:wrap;align-items:center;margin-top:36px}
+.blend .pair{display:flex;align-items:center;gap:14px}
+.blend .pair div{position:relative;width:120px;height:80px;isolation:isolate}
+.blend .pair i{position:absolute;width:80px;height:80px;border-radius:50%;mix-blend-mode:multiply}
+.icons{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;background:var(--k);border:2px solid var(--k)}
+@media(max-width:820px){.icons{grid-template-columns:repeat(4,1fr)}}
+.icons figure{background:var(--p);padding:22px 10px 12px;text-align:center}
+.icons img{width:64px;height:64px}.icons figcaption{margin-top:10px;font-size:9.5px}
+.isz{display:flex;gap:20px;align-items:center;margin-top:20px}
+.apps{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:clamp(18px,3vw,40px);align-items:start}
+@media(max-width:1000px){.apps{grid-template-columns:1fr}}
+.apps figcaption{margin-top:14px}
+.phone{width:min(100%,330px);margin:0 auto;border:10px solid var(--k);border-radius:44px;background:var(--p);overflow:hidden;aspect-ratio:9/19}
+.phone .bar{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px}
+.phone .bar img{height:22px}
+.phone h4{font:800 30px/.95 Archivo;font-stretch:75%;padding:6px 16px 12px}
+.chips{display:flex;gap:6px;padding:0 16px 12px}.chips span{font:600 11px Archivo;border:1.5px solid var(--k);border-radius:99px;padding:5px 10px}.chips span.on{background:var(--k);color:var(--p)}
+.card{margin:0 12px 10px;background:#fff8ec;border-radius:var(--r-md);overflow:hidden;border:1.5px solid var(--k)}
+.card .art{height:118px;background:var(--c-gordura);position:relative}
+.card .art svg{width:100%;height:100%}
+.card .row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px}
+.card b{font:800 20px/1 Archivo;font-stretch:75%}.card small{display:block;font-size:11px;color:#5a504a;margin-top:3px}
+.btn{background:var(--c-brasa);color:var(--k);font:700 12px Archivo;border-radius:99px;padding:8px 12px;display:flex;gap:6px;align-items:center}
+.ibtn{position:absolute;right:10px;top:10px;width:30px;height:30px;background:var(--p);border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--k)}
+.ibtn img{width:20px}
+.dots{display:flex;gap:10px;padding:0 12px 10px;font-size:10px}.dots img{width:16px;vertical-align:-4px;margin-right:3px}
+.calc{margin:10px 12px;background:var(--k);color:var(--p);border-radius:var(--r-md);padding:12px;display:flex;gap:10px;align-items:center}.calc img{background:var(--p);border-radius:50%;padding:3px}.calc b{font:800 16px Archivo;font-stretch:75%;display:block}.calc small{font-size:11px;color:var(--c-sal)}.calc span{margin-left:auto;background:var(--c-brasa);color:var(--k);font:700 12px Archivo;padding:7px 12px;border-radius:99px}
+.phone{aspect-ratio:auto!important}
+.pack,.post{border-radius:var(--r-md);overflow:hidden;border:1.5px solid var(--k)}
+.pack svg,.post svg{display:block;width:100%;height:auto}
+footer{padding:40px var(--m);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+ul.rules{list-style:none;margin-top:22px;display:grid;gap:10px;font-size:15px;line-height:1.4;max-width:60ch}
+ul.rules li{padding-left:22px;position:relative}ul.rules li:before{content:"";position:absolute;left:0;top:5px;width:11px;height:11px;border-radius:50%;background:var(--v);mix-blend-mode:multiply;box-shadow:5px 0 0 var(--t)}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <filter id="riso-grao" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -.9 1.3" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in" result="g"/><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="1" seed="3" result="w"/><feDisplacementMap in="g" in2="w" scale="1.6" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="riso-desregistro" x="-5%" y="-5%" width="110%" height="110%"><feOffset in="SourceGraphic" dx="2.4" dy="-1.6" result="o"/><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="11" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -.9 1.3" result="m"/><feComposite in="o" in2="m" operator="in"/></filter>
+  <pattern id="ret-v" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2" cy="2" r="1.1" fill="#EB6440"/></pattern>
+  <pattern id="ret-k" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2" cy="2" r="1" fill="#1F1A17"/></pattern>
+  <pattern id="ret-t" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2.5" cy="2.5" r="1.3" fill="#3FA295"/></pattern>
+  <symbol id="sym" viewBox="0 1.5 26 26"><circle cx="6" cy="12" r="6" fill="#EB6440"/><circle cx="13" cy="12" r="6" fill="#EB6440"/><circle cx="20" cy="12" r="6" fill="#EB6440"/><path d="M9.5 6.9A6 6 0 0 1 9.5 17.1A6 6 0 0 1 9.5 6.9Z" fill="#D92710"/><path d="M16.5 6.9A6 6 0 0 1 16.5 17.1A6 6 0 0 1 16.5 6.9Z" fill="#D92710"/><rect x="2" y="20" width="22" height="3" rx="1.5" fill="#1F1A17"/></symbol>
+  <symbol id="picanha" viewBox="0 0 320 220"><g style="isolation:isolate"><g filter="url(#riso-desregistro)" style="mix-blend-mode:multiply"><rect x="30" y="170" width="260" height="20" rx="10" fill="#3FA295"/><circle cx="262" cy="70" r="20" fill="url(#ret-t)"/></g><g filter="url(#riso-grao)" style="mix-blend-mode:multiply"><circle cx="100" cy="118" r="48" fill="#EB6440"/><circle cx="156" cy="118" r="48" fill="#EB6440" style="mix-blend-mode:multiply"/><circle cx="212" cy="118" r="48" fill="#EB6440" style="mix-blend-mode:multiply"/><path d="M52 118a48 48 0 0 1 96 0h-7a41 41 0 0 0-82 0Z" fill="#F6DDB8" style="mix-blend-mode:multiply"/><path d="M60 100a48 48 0 0 1 80 0" fill="url(#ret-v)"/></g><g filter="url(#riso-grao)" style="mix-blend-mode:multiply"><path d="M212 70a48 48 0 0 1 48 48" fill="none" stroke="#1F1A17" stroke-width="4" stroke-linecap="round"/><path d="M164 118a48 48 0 0 0 96 0Z" fill="url(#ret-k)" opacity=".55"/></g></g></symbol>
+</defs></svg>
+
+<header class="top mono"><span>churrasquin · marca v3</span><span>Riso de brasa · 2026</span></header>
+
+<div class="wrap">
+<section class="hero">
+  <div class="lock"><img class="s" src="simbolo.svg" alt="símbolo churrasquin: três fatias sobrepostas sobre a tábua"><img class="w" src="wordmark.svg" alt="churrasquin"></div>
+  <div class="meta mono"><span class="tag">conceito</span><span>Fatias sobrepostas · tinta sobre tinta · a turma na mesma tábua</span></div>
+</section>
+
+<section>
+  <span class="mono">01 · conceito</span>
+  <h2>Onde uma fatia encosta na outra, a cor esquenta.</h2>
+  <div class="grid2"><p class="lead">A direção A tinha o ofício (a faca a 30°, o q em gancho) mas pouco calor. A v3 traz o calor pela <b>sobreposição</b>: três fatias redondas, impressas como risografia, deitadas sobre a tábua. Onde uma encosta na outra, a tinta dobra e nasce a cor da carne. É o churrasco servido: picanha fatiada, cada fatia tocando a próxima, como a turma em volta da mesma tábua.</p>
+  <ul class="rules"><li><b>Círculo</b> é a forma-mãe: fatia, brasa, cabeça da turma, pingo do i.</li><li><b>Multiply</b> é a regra de cor: duas tintas sempre geram uma terceira, nunca opacidade.</li><li><b>Riso</b> é a textura: retícula e desregistro nas ilustrações, nunca no símbolo pequeno.</li></ul></div>
+  <div class="expl" id="expl"></div>
+</section>
+
+<section>
+  <span class="mono">02 · construção</span>
+  <h2>Grade de 13x. Três círculos de 6x.</h2>
+  <div class="constr"><svg viewBox="-70 -50 400 400" id="cons" font-family="IBM Plex Mono, monospace"></svg></div>
+  <div class="grid2" style="margin-top:36px;align-items:start">
+    <p class="lead">Módulo x = 1/13 da largura. Fatias: r = 3x, centros a 3.5x — cada sobreposição tem 2.5x, larga o bastante para ler como uma terceira cor a 16 px. A tábua tem 1.5x, mesma espessura do traço mínimo dos ícones, com respiro de 1x. O pingo do i no lettering é o mesmo círculo de brasa.</p>
+    <div><span class="mono">redução · 128 / 48 / 32 / 24 / 16 px</span><div class="small" id="sizes"></div></div>
+  </div>
+</section>
+
+<section>
+  <span class="mono">03 · lettering</span>
+  <h2>A faca continua. O pingo virou brasa.</h2>
+  <div class="grid2"><div><img src="logo-horizontal.svg" alt="assinatura horizontal" style="width:100%;border-radius:var(--r-md);border:1.5px solid var(--k)"><img src="logo-horizontal-neg.svg" alt="assinatura negativa" style="width:100%;border-radius:var(--r-md);margin-top:16px"></div>
+  <p class="lead">Mantivemos o esqueleto estreito da direção A (corte de 30° nas hastes, o q que termina em gancho de açougue) porque ele dá ofício e reconhecimento. O que faltava era calor: o pingo do i, antes um paralelogramo, agora é um círculo vermelhão do mesmo diâmetro do raio dos bojos, o elo direto com as fatias do símbolo. Contornos em curvas, sem fonte no SVG.</p></div>
+</section>
+
+<section>
+  <span class="mono">04 · paleta risográfica</span>
+  <h2>Três tintas, um papel, uma regra.</h2>
+  <div class="pal">
+    <div class="sw" style="background:#EB6440"><span class="mono">tinta 1 · --c-brasa</span><div><h3>Vermelhão</h3><div class="mono">#EB6440<br>texto carvão 5.3:1 AA</div></div></div>
+    <div class="sw" style="background:#3FA295"><span class="mono">tinta 2 · --c-ervas</span><div><h3>Chimichurri</h3><div class="mono">#3FA295<br>sobre carvão 5.6:1 AA</div></div></div>
+    <div class="sw" style="background:#1F1A17;color:#F3EADB"><span class="mono">tinta 3 · --c-carvao</span><div><h3>Carvão</h3><div class="mono">#1F1A17<br>papel sobre 14.5:1 AAA</div></div></div>
+    <div class="sw" style="background:#F3EADB"><span class="mono">papel · --c-osso</span><div><h3>Papel creme</h3><div class="mono">#F3EADB<br>gordura #F6DDB8</div></div></div>
+  </div>
+  <div class="blend">
+    <div class="pair"><div><i style="background:#EB6440;left:0"></i><i style="background:#EB6440;left:40px"></i></div><span class="mono">verm × verm = #D92710<br>--c-carne</span></div>
+    <div class="pair"><div><i style="background:#EB6440;left:0"></i><i style="background:#3FA295;left:40px"></i></div><span class="mono">verm × chimichurri = #3A4025<br>brasa sob ervas</span></div>
+    <div class="pair"><div><i style="background:#3FA295;left:0"></i><i style="background:#3FA295;left:40px"></i></div><span class="mono">chimi × chimi = #0F6857</span></div>
+  </div>
+  <p class="lead" style="margin-top:28px;font-size:15px">Não usar: texto papel sobre vermelhão (2.7:1) e texto chimichurri sobre papel (2.6:1) — tintas claras só como forma; texto sempre carvão ou papel.</p>
+</section>
+
+<section>
+  <span class="mono">05 · ícones blend · grade 24 · 2 tintas + interseção</span>
+  <h2>Formas chapadas que se encostam.</h2>
+  <div class="icons" id="icons"></div>
+  <div class="isz" id="isz"></div>
+</section>
+
+<section>
+  <span class="mono">06 · textura riso · riso.svg</span>
+  <h2>Retícula, grão e um leve desregistro.</h2>
+  <div class="grid2"><div class="pack" style="background:#F3EADB"><svg viewBox="0 0 320 220"><use href="#picanha"/></svg></div>
+  <p class="lead">Kit em <code>riso.svg</code>: <code>#riso-grao</code> (tinta em papel poroso), <code>#riso-desregistro</code> (1.2 px fora de registro, aplicado a uma única camada) e retículas de 45° por tinta. Uma camada por tinta, todas em multiply. Para as ilustrações dos cortes no app: forma chapada em vermelhão, gordura em papel/gordura, volume com retícula, osso e grelha em carvão.</p></div>
+</section>
+
+<section>
+  <span class="mono">07 · aplicações</span>
+  <h2>No celular, na sacola, no feed.</h2>
+  <div class="apps">
+    <figure><div class="phone">
+      <div class="bar"><img src="logo-horizontal.svg" style="height:26px;mix-blend-mode:multiply" alt=""><img src="icons/calculadora.svg" style="height:26px" alt=""></div>
+      <h4>Hoje tem<br>churrasco.</h4>
+      <div class="chips"><span class="on">Boi</span><span>Porco</span><span>Cordeiro</span><span>Frango</span></div>
+      <div class="card"><div class="art"><svg viewBox="0 0 320 220" preserveAspectRatio="xMidYMid slice"><use href="#picanha"/></svg><span class="ibtn"><img src="icons/info.svg" alt="Saiba de onde vem a picanha"></span></div>
+        <div class="dots"><span><img src="icons/maciez.svg" alt="">maciez 4</span><span><img src="icons/gordura.svg" alt="">gordura 4</span><span><img src="icons/sabor.svg" alt="">sabor 5</span></div>
+        <div class="row"><div><b>Picanha</b><small>BR · tapa de cuadril (AR)</small></div><span class="btn"><img src="icons/adicionar.svg" width="16" alt="">levar</span></div></div>
+      <div class="card"><div class="row"><div><b>Fraldinha</b><small>BR · vacío (AR)</small></div><span class="btn"><img src="icons/adicionar.svg" width="16" alt="">levar</span></div></div>
+      <div class="card"><div class="row"><div><b>Costelinha</b><small>porco · BR · US: baby back</small></div><span class="btn"><img src="icons/adicionar.svg" width="16" alt="">levar</span></div></div>
+      <div class="calc"><img src="icons/turma.svg" width="26" alt=""><div><b>12 pessoas · 4,8 kg</b><small>3 cortes na lista</small></div><span>ver</span></div>
+    </div><figcaption class="mono">tela do app · catálogo</figcaption></figure>
+    <figure><div class="pack"><svg viewBox="0 0 300 380"><rect width="300" height="380" fill="#C9A77A"/><rect x="0" y="0" width="300" height="380" fill="url(#ret-k)" opacity=".08"/><path d="M40 60h220l10 300H30Z" fill="#F3EADB"/><g transform="translate(80 92) scale(5.4)"><use href="#sym" width="26" height="26"/></g><g transform="translate(62 270) scale(.21)"><image href="wordmark.svg" x="-10" y="-160" width="846" height="223"/></g><text x="150" y="320" text-anchor="middle" font-family="IBM Plex Mono" font-size="9" letter-spacing="2" fill="#1F1A17">CORTES PARA A TURMA · 1,2 KG</text><circle cx="232" cy="88" r="22" fill="#3FA295" style="mix-blend-mode:multiply"/><text x="232" y="92" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="11" fill="#1F1A17">BR</text></svg></div><figcaption class="mono">sacola kraft · etiqueta riso</figcaption></figure>
+    <figure><div class="post"><svg viewBox="0 0 300 300"><rect width="300" height="300" fill="#3FA295"/><g style="isolation:isolate"><g style="mix-blend-mode:multiply"><circle cx="96" cy="166" r="62" fill="#EB6440"/><circle cx="150" cy="166" r="62" fill="#EB6440" style="mix-blend-mode:multiply"/><circle cx="204" cy="166" r="62" fill="#EB6440" style="mix-blend-mode:multiply"/></g></g><rect x="34" y="246" width="232" height="14" rx="7" fill="#1F1A17"/><text x="24" y="44" font-family="Archivo" font-weight="800" font-stretch="75%" font-size="30" fill="#1F1A17">Quanto comprar</text><text x="24" y="74" font-family="Archivo" font-weight="800" font-stretch="75%" font-size="30" fill="#1F1A17">pra 12 pessoas?</text><text x="24" y="285" font-family="IBM Plex Mono" font-size="9" letter-spacing="2" fill="#1F1A17">CHURRASQUIN · CALCULADORA</text><text x="150" y="182" text-anchor="middle" font-family="Archivo" font-weight="800" font-stretch="75%" font-size="46" fill="#1F1A17">4,8 kg</text></svg></div><figcaption class="mono">post 1:1 · calculadora</figcaption></figure>
+  </div>
+</section>
+</div>
+<footer class="mono"><span>brand/v3 · tokens.css · riso.svg · icons/</span><span>churrasquin</span></footer>
+<script>
+const V='#EB6440',T='#3FA295',K='#1F1A17',P='#F3EADB',VV='#D92710';
+const M='style="mix-blend-mode:multiply"';
+// explorações (8) — mesma grade de círculos
+const ex=[
+ ['Fatias na tábua','escolhido · lê "fatiado" e "servido"',`<use href="#sym"/>`,1],
+ ['Brasa + carne','fatia sobre a brasa; interseção = selado',`<circle cx="10" cy="11" r="7" fill="${V}"/><circle cx="16" cy="15" r="6" fill="${T}" ${M}/>`],
+ ['A turma','3 cabeças em volta da grelha',`<circle cx="6" cy="9" r="4" fill="${V}"/><circle cx="13" cy="7" r="4" fill="${T}" ${M}/><circle cx="20" cy="9" r="4" fill="${V}" ${M}/><path d="M2 22a11 9 0 0 1 22 0Z" fill="${V}" ${M}/>`],
+ ['Picanha','círculo de carne + capa de gordura (vesica)',`<circle cx="13" cy="14" r="9" fill="${V}"/><circle cx="13" cy="24" r="14" fill="${P}"/><circle cx="13" cy="14" r="9" fill="none"/><path d="M4 14a9 9 0 0 1 18 0" fill="${V}"/><path d="M4 14a9 9 0 0 1 18 0h-3a6 6 0 0 0-12 0Z" fill="${T}" ${M}/>`],
+ ['Espeto','círculos no espeto',`<rect x="2" y="12" width="22" height="2" fill="${K}"/><circle cx="8" cy="13" r="4.5" fill="${V}"/><circle cx="14" cy="13" r="4.5" fill="${T}" ${M}/><circle cx="19" cy="13" r="3.5" fill="${V}" ${M}/>`],
+ ['Q-gancho','monograma: o gancho do q pendura uma fatia',`<circle cx="11" cy="10" r="7" fill="${V}"/><path d="M15 4h3v13a4 4 0 0 0 8 0" fill="none" stroke="${K}" stroke-width="3"/><circle cx="20" cy="20" r="4" fill="${T}" ${M}/>`],
+ ['Fogo de chão','3 chamas = 3 círculos cortados',`<path d="M4 22a5 5 0 0 1 0-10a5 5 0 0 1 0 10Z" fill="${V}"/><circle cx="9" cy="16" r="6" fill="${V}"/><circle cx="17" cy="16" r="6" fill="${T}" ${M}/><circle cx="13" cy="11" r="5" fill="${V}" ${M}/>`],
+ ['Prato cheio','prato + fatias',`<circle cx="13" cy="13" r="11" fill="${T}"/><circle cx="10" cy="12" r="5" fill="${V}" ${M}/><circle cx="16" cy="14" r="5" fill="${V}" ${M}/>`],
+];
+document.getElementById('expl').innerHTML=ex.map(([t,d,s,on],i)=>`<figure class="${on?'on':''}"><svg viewBox="${on?'0 1.5 26 26':'0 0 26 26'}" style="isolation:isolate">${s}</svg><figcaption><b>${String(i+1).padStart(2,'0')}${on?' · escolhido':''}</b>${t} — ${d}</figcaption></figure>`).join('');
+// construção
+(function(){const u=20,g=[];const L='#9C8462';
+ for(let i=0;i<=13;i++){g.push(`<line x1="${i*u}" y1="0" x2="${i*u}" y2="${13*u}" stroke="${L}" stroke-width=".4" opacity=".55"/>`,`<line x1="0" y1="${i*u}" x2="${13*u}" y2="${i*u}" stroke="${L}" stroke-width=".4" opacity=".55"/>`);}
+ const cx=[3,6.5,10].map(v=>v*u),cy=6*u,r=3*u;
+ g.push(`<g style="isolation:isolate">`+cx.map(x=>`<circle cx="${x}" cy="${cy}" r="${r}" fill="#EB6440" opacity=".22" style="mix-blend-mode:multiply"/>`).join('')+`</g>`);
+ const h=Math.sqrt(r*r-(1.75*u)**2);[0,1].forEach(i=>{const m=(cx[i]+cx[i+1])/2;g.push(`<path d="M${m} ${cy-h}A${r} ${r} 0 0 1 ${m} ${cy+h}A${r} ${r} 0 0 1 ${m} ${cy-h}Z" fill="#D92710" opacity=".55"/>`,`<circle cx="${m}" cy="${cy-h}" r="2.6" fill="${L}"/><circle cx="${m}" cy="${cy+h}" r="2.6" fill="${L}"/>`)});
+ cx.forEach(x=>{g.push(`<circle cx="${x}" cy="${cy}" r="${r}" fill="none" stroke="${K}" stroke-width=".8"/><circle cx="${x}" cy="${cy}" r="2.6" fill="${L}"/>`);[[0,-r],[0,r],[-r,0],[r,0]].forEach(([a,b])=>g.push(`<circle cx="${x+a}" cy="${cy+b}" r="2.2" fill="none" stroke="${L}" stroke-width=".8"/>`))});
+ g.push(`<rect x="${u}" y="${10*u}" width="${11*u}" height="${1.5*u}" rx="${.75*u}" fill="${K}"/>`);
+ const dim=(x1,y1,x2,y2,t,tx,ty)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${L}" stroke-width="1"/><circle cx="${x1}" cy="${y1}" r="2.6" fill="${L}"/><circle cx="${x2}" cy="${y2}" r="2.6" fill="${L}"/><text x="${tx}" y="${ty}" font-size="9" font-weight="600" fill="${L}" text-anchor="middle">${t}</text>`;
+ g.push(dim(0,-24,13*u,-24,'13X',6.5*u,-32),dim(cx[0]-r,13*u+20,cx[0]+r,13*u+20,'6X · Ø FATIA',cx[0],13*u+38),dim(cx[1]-r,2*u-6,cx[0]+r,2*u-6,'2.5X',(cx[1]-r+cx[0]+r)/2,2*u-14),dim(cx[0],13*u+56,cx[1],13*u+56,'3.5X',(cx[0]+cx[1])/2,13*u+74),dim(-22,10*u,-22,11.5*u,'1.5X',-44,10.75*u+3),dim(13*u+22,9*u,13*u+22,10*u,'1X',13*u+42,9.5*u+3),dim(-22,3*u,-22,9*u,'6X',-40,6*u+3));
+ document.getElementById('cons').innerHTML=g.join('');})();
+// tamanhos
+document.getElementById('sizes').innerHTML=[128,48,32,24,16].map(s=>`<div><img src="simbolo.svg" width="${s}" height="${s}" alt=""><span class="mono">${s}</span></div>`).join('')+`<div><img src="simbolo-neg.svg" width="48" alt=""><span class="mono">neg</span></div><div><img src="simbolo-mono.svg" width="48" alt=""><span class="mono">mono</span></div>`;
+// ícones
+const ic=['boi','porco','cordeiro','frango','pais-br','pais-ar','pais-uy','pais-us','maciez','gordura','sabor','turma','calculadora','info','adicionar','brasa'];
+document.getElementById('icons').innerHTML=ic.map(n=>`<figure><img src="icons/${n}.svg" alt="${n}"><figcaption class="mono">${n}</figcaption></figure>`).join('');
+document.getElementById('isz').innerHTML='<span class="mono">16 px →</span>'+ic.map(n=>`<img src="icons/${n}.svg" width="16" alt="">`).join('');
+</script>
+</body></html>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220">
+<!--
+  churrasquin v3 — kit RISO reutilizável. Copie o <defs> para o SVG da ilustração (ou referencie riso.svg#id no mesmo documento).
+  COMO USAR (uma camada = uma tinta):
+    <g filter="url(#riso-grao)" style="mix-blend-mode:multiply"> ...formas chapadas em #EB6440... </g>
+    <g filter="url(#riso-desregistro)" style="mix-blend-mode:multiply"> ...formas em #3FA295... </g>  (desloca 1.2px, como tambor fora de registro)
+    Sombra/meio-tom: fill="url(#riso-reticula-verm)" (ou -turq / -carvao): retícula de 45°, pontos de 1.1px a cada 4px.
+  FILTROS
+    #riso-grao        : turbulência fina erode a borda e "come" 6% da tinta — aspecto de tinta de soja em papel poroso.
+    #riso-desregistro : grão + feOffset dx=1.2 dy=-0.8 — aplique em UMA das camadas apenas.
+  PADRÕES
+    #riso-reticula-{verm,turq,carvao}: meio-tom 45°, use em áreas de sombra/volume sobre a mesma forma chapada.
+  REGRA: no máximo 3 tintas + papel; toda tinta sobreposta usa multiply; nunca use opacidade para "clarear" — use retícula.
+-->
+<defs>
+  <filter id="riso-grao" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="7" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -.9 1.3" result="m"/>
+    <feComposite in="SourceGraphic" in2="m" operator="in" result="g"/>
+    <feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="1" seed="3" result="w"/>
+    <feDisplacementMap in="g" in2="w" scale="1.6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="riso-desregistro" x="-5%" y="-5%" width="110%" height="110%">
+    <feOffset in="SourceGraphic" dx="1.2" dy="-0.8" result="o"/>
+    <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="11" result="n"/>
+    <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -.9 1.3" result="m"/>
+    <feComposite in="o" in2="m" operator="in"/>
+  </filter>
+  <pattern id="riso-reticula-verm" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2" cy="2" r="1.1" fill="#EB6440"/></pattern>
+  <pattern id="riso-reticula-turq" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2" cy="2" r="1.1" fill="#3FA295"/></pattern>
+  <pattern id="riso-reticula-carvao" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="2" cy="2" r="1" fill="#1F1A17"/></pattern>
+</defs>
+<!-- demonstração: picanha fatiada, 3 tintas -->
+<rect width="320" height="220" fill="#F3EADB"/>
+<g style="isolation:isolate">
+  <g filter="url(#riso-desregistro)" style="mix-blend-mode:multiply"><rect x="40" y="150" width="240" height="22" rx="11" fill="#3FA295"/><ellipse cx="236" cy="96" rx="40" ry="40" fill="#3FA295"/></g>
+  <g filter="url(#riso-grao)" style="mix-blend-mode:multiply">
+    <circle cx="100" cy="110" r="44" fill="#EB6440"/><circle cx="150" cy="110" r="44" fill="#EB6440"/><circle cx="200" cy="110" r="44" fill="#EB6440"/>
+    <path d="M60 96a44 44 0 0 1 80 0" fill="url(#riso-reticula-verm)"/>
+  </g>
+  <g filter="url(#riso-grao)" style="mix-blend-mode:multiply"><path d="M64 128a44 44 0 0 0 72 10" fill="none" stroke="#1F1A17" stroke-width="3" stroke-linecap="round"/><circle cx="200" cy="110" r="44" fill="url(#riso-reticula-carvao)" opacity=".5"/></g>
+</g>
+</svg>

@@ -1,0 +1,21 @@
+/* churrasquin v3 — "Riso de brasa". Mesmos nomes do CONTRATO.md: troque só este arquivo.
+   Tintas riso: carvão #1F1A17 · vermelhão #EB6440 · turquesa chimichurri #3FA295 · papel #F3EADB.
+   Regra de blend: a 2ª tinta entra com mix-blend-mode:multiply sobre a 1ª (vermelhão×turquesa = #3A4025; vermelhão×vermelhão = #D92710 = --c-carne).
+   Contrastes WCAG: osso/carvao 14.5 · carvao sobre brasa 5.3 (texto de botão = --c-carvao) · carvao/brasa-2 6.5 · sal/carvao 7.9 · sal/carvao-2 6.8
+   · ervas/carvao 5.6 · ervas/carvao-2 4.8 · carvao/gordura 13.1 · osso/carvao-2 12.3. NÃO use texto osso sobre brasa (2.7) nem ervas sobre osso (2.6). */
+:root{
+  --c-carvao:#1F1A17;   /* tinta carvão / fundo escuro */
+  --c-carvao-2:#2E2723; /* superfície/cards no escuro */
+  --c-brasa:#EB6440;    /* tinta vermelhão — primária/ação (texto em cima: carvao) */
+  --c-brasa-2:#F47E5C;  /* hover (vermelhão a 85% de tinta) */
+  --c-osso:#F3EADB;     /* papel creme — fundo claro / texto no escuro */
+  --c-sal:#BCAE9E;      /* texto suave no escuro */
+  --c-ervas:#3FA295;    /* tinta turquesa chimichurri — acento */
+  --c-gordura:#F6DDB8;  /* creme gordura (retícula de vermelhão a 30%) */
+  --c-carne:#D92710;    /* vermelhão × vermelhão (multiply) — carne */
+  --font-display:"Archivo Narrow","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+  --font-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r-sm:8px; --r-md:14px; --r-lg:26px; /* cantos redondos: herdam o círculo do símbolo */
+  --ease-brasa:cubic-bezier(.2,.8,.2,1.15);
+  --dur-1:140ms; --dur-2:260ms; --dur-3:520ms;
+}
