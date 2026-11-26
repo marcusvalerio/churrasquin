@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Análise: Carnova e Quintal</title>
+<style>
+/* VOICE: documento de decisão, sóbrio. IDEA: ficha técnica de referência. PICTURE: o ponto de partida (ícone B, logo C). TYPE: sistema. LAYOUT: tabela de 3 colunas que vira pilha no celular. */
+:root{color-scheme:light dark;--bg:light-dark(#fff,#151311);--ink:light-dark(#151311,#f1ebe1);--mut:light-dark(#5b554e,#b5aca2);--line:light-dark(#e3ddd3,#3a332d);--hi:light-dark(#fbf3e6,#241e19);--acc:#C4361B}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px);max-width:1240px;margin:auto}
+h1{font-size:clamp(30px,4vw,44px);line-height:1.08;margin:0 0 12px;text-wrap:balance}h2{font-size:24px;margin:0 0 14px}
+.lead{max-width:70ch;color:var(--mut);margin:0}
+.start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:24px}
+.start figure{margin:0;border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;align-content:start}
+.start img{width:100%;height:120px;object-fit:contain;background:#F7EFE2;border-radius:8px}
+.start figcaption{font-size:14px;color:var(--mut)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;vertical-align:top;padding:12px 10px;border-bottom:1px solid var(--line)}
+th{font-size:13px;color:var(--mut);font-weight:600}
+td:first-child{font-weight:700;width:12%}
+td:last-child{background:var(--hi)}
+.q{display:inline-block;font-size:12px;font-weight:700;color:#fff;background:var(--acc);border-radius:99px;padding:1px 8px;margin-left:4px}
+ol{padding-left:1.3em}ol li{margin-bottom:8px}
+a{color:inherit}
+@media(max-width:700px){.start{grid-template-columns:1fr}thead{display:none}tr{display:grid;padding:10px 0;border-bottom:1px solid var(--line)}td{border:0;padding:4px 0;width:auto!important}td::before{content:attr(data-l);display:block;font-size:12px;color:var(--mut);font-weight:600}}
+</style></head><body>
+<section class="band">
+<h1>Carnova e Quintal da Carne, peça por peça</h1>
+<p class="lead">Antes de desenhar qualquer coisa: o que cada referência faz, e o que o churrasquin vai fazer igual. Marque o que concorda e corrija o resto. As duas peças que você já escolheu ficam fixas.</p>
+<div class="start">
+<figure><img src="icone-b.svg" alt="Ícone do app da direção 2"><figcaption><b>Fixo:</b> ícone do app da direção 2 (o "c" com o espeto).</figcaption></figure>
+<figure><img src="selo-b.svg" alt="Selo da direção 2"><figcaption><b>Fixo:</b> selo e símbolo da direção 2.</figcaption></figure>
+<figure><img src="logo-c.svg" alt="Logo da direção 3"><figcaption><b>Fixo:</b> a fonte do logo da direção 3 no lugar da cursiva.</figcaption></figure>
+</div>
+</section>
+
+<section class="band">
+<h2>Comparação</h2>
+<table>
+<thead><tr><th>Elemento</th><th><a href="https://www.behance.net/gallery/215457409/Carnova">Carnova</a></th><th><a href="https://www.behance.net/gallery/117904549/Quintal-da-Carne">Quintal da Carne</a></th><th>churrasquin vai fazer</th></tr></thead>
+<tbody>
+<tr><td data-l="Elemento">Logo principal</td><td data-l="Carnova">Emblema em faixa curva, com a borda de baixo ondulada, construída sobre três círculos. Nome em sans arredondada, "made in" embaixo e um boizinho no pé.</td><td data-l="Quintal">Empilhado e centralizado: "QUINTAL" em arco, "DA" pequeno, "CARNE" grande em letra de letreiro com sombra deslocada, frase embaixo.</td><td data-l="churrasquin">Wordmark na fonte da direção 3, com uma versão principal em <b>emblema</b> (faixa curva no espírito Carnova) e uma versão <b>empilhada</b> com frase "pra quem toca a brasa" (espírito Quintal). <span class="q">aprovar</span></td></tr>
+<tr><td data-l="Elemento">Família de assinaturas</td><td data-l="Carnova">Poucas: emblema + nome solto.</td><td data-l="Quintal">Muitas, todas do mesmo DNA: selo circular com monograma, losango, script "Quintal da Carne", "ESTD 2020", placa retangular, "Assado de tira".</td><td data-l="churrasquin">Seguir o Quintal: selo circular (já é o da direção 2), losango com a frase, script curto secundário, placa retangular com cortes ("picanha · fraldinha · vazio"), "desde 2026". <span class="q">aprovar</span></td></tr>
+<tr><td data-l="Elemento">Tipografia</td><td data-l="Carnova">Duas: sans arredondada robusta (Rubik) para tudo + pincel seco agressivo (Buchery) para frases de impacto.</td><td data-l="Quintal">Letreiro com serifa decorativa e sombra para o nome, script monoline para a assinatura, sans larga em caixa alta espaçada para frases.</td><td data-l="churrasquin">Fonte da direção 3 no logo; uma sans de apoio para textos; <b>uma</b> fonte expressiva para frases (pincel seco, como Carnova). Sem misturar mais que três. <span class="q">escolher: pincel ou script</span></td></tr>
+<tr><td data-l="Elemento">Cores</td><td data-l="Carnova">Bordô dominante, bege, ocre, marrom, grafite e verde musgo. Bordô cobre metade das peças.</td><td data-l="Quintal">Três quentes e foscas: vermelho tijolo, mostarda e verde garrafa, sobre papel creme.</td><td data-l="churrasquin">Manter cobalto e laranja-brasa da direção 2 como dominantes, sobre papel creme; avaliar uma terceira cor terrosa (mostarda ou kraft) para trazer o calor das duas referências. <span class="q">decidir a 3ª cor</span></td></tr>
+<tr><td data-l="Elemento">Ilustração</td><td data-l="Carnova">Gravura em ponta-seca de cabeça de boi, enorme, em tom sobre tom no fundo. Bezerros e boi inteiro em sacola e cartaz.</td><td data-l="Quintal">Desenho de linha à mão com humor: cachorro roubando linguiça, a casa, uma peça de carne; traço tremido, cor única.</td><td data-l="churrasquin">As duas linguagens: gravura grande do boi (fundo, sacola) e 2–3 desenhos de linha com humor brasileiro (cachorro de olho na grelha, tio virando a carne). Limite honesto: em código chega no espírito, não no traço de um ilustrador. <span class="q">aprovar o limite</span></td></tr>
+<tr><td data-l="Elemento">Textura</td><td data-l="Carnova">Respingos de sangue nas pranchas de tipografia; gravura dá a textura.</td><td data-l="Quintal">Impressão em papel, falha de tinta, papel manteiga, kraft, parede pintada.</td><td data-l="churrasquin">Papel creme com grão, falha de carimbo nas assinaturas, kraft nas embalagens. Sem respingo de sangue (o app ensina, não é açougue). <span class="q">aprovar</span></td></tr>
+<tr><td data-l="Elemento">Estampa</td><td data-l="Carnova">Logo repetido em papel kraft de embrulho.</td><td data-l="Quintal">Losango repetido em papel manteiga.</td><td data-l="churrasquin">Selo e losango repetidos em papel, fita e avental; a estampa de espetinho da direção 2 como segunda opção.</td></tr>
+<tr><td data-l="Elemento">Fotografia</td><td data-l="Carnova">Boi no pasto, açougueiro, cortes crus, gente usando a marca.</td><td data-l="Quintal">Carne na grelha, o pintor de letreiro trabalhando, a fachada.</td><td data-l="churrasquin">Brasa, mãos, turma no quintal e carne na grelha (fotos reais com crédito até haver ensaio próprio).</td></tr>
+<tr><td data-l="Elemento">Aplicações</td><td data-l="Carnova">Avental, sacola, caixa, papel de embrulho, cavalete de calçada, outdoor, camiseta, uniforme.</td><td data-l="Quintal">Cardápio, porta-copos, papel, fachada, parede pintada à mão.</td><td data-l="churrasquin">Avental, porta-copos, guia de cortes impresso (como cardápio), sacola kraft, adesivos, camiseta, parede pintada, e o app no celular.</td></tr>
+<tr><td data-l="Elemento">Apresentação</td><td data-l="Carnova">Abre com foto e emblema; construção, cores, tipografia em blocos; depois aplicações em foto.</td><td data-l="Quintal">Abre com papel e foto; prancha de assinaturas; aplicações; bastidores do letreiro pintado.</td><td data-l="churrasquin">Mesma ordem: capa com foto, prancha de assinaturas, construção, cores, tipografia, ilustração, aplicações, app. Pouco texto.</td></tr>
+</tbody></table>
+</section>
+
+<section class="band">
+<h2>O que preciso que você decida</h2>
+<ol>
+<li><b>Logo principal:</b> emblema em faixa (Carnova) ou empilhado com frase (Quintal)? Posso fazer os dois e você escolhe.</li>
+<li><b>Fonte expressiva:</b> pincel seco agressivo (Carnova) ou script de letreiro (Quintal)?</li>
+<li><b>Terceira cor:</b> só cobalto e brasa, ou incluir mostarda/kraft?</li>
+<li><b>Ilustração:</b> gravura, desenho de linha com humor, ou os dois?</li>
+</ol>
+<p class="lead">Análise feita a partir das imagens públicas dos projetos no Behance. Nenhum elemento deles será copiado: a lista diz o tipo de recurso, não a forma.</p>
+</section>
+</body></html>
