@@ -87,7 +87,7 @@ button { cursor: pointer; }
 .onb__track { display: flex; transition: transform 560ms var(--ease-brasa); min-height: 0; }
 .onb__p { flex: 0 0 100%; min-width: 0; padding: 1rem 1.5rem; overflow-y: auto; opacity: 0; transition: opacity 400ms; }
 .onb__p.is-on { opacity: 1; }
-.onb__s { margin: 0; font-size: 2.2rem; line-height: 1; transform: rotate(-5deg); transform-origin: left; }
+.onb__s { margin: 0; font-size: 2.2rem; line-height: 1; }
 .onb__t { margin: .35rem 0 .35rem; font-size: 2.25rem; font-weight: 900; line-height: 1.02; letter-spacing: -.02em; color: var(--cobalto); outline: none; }
 .onb__d { margin: 0 0 1.5rem; color: var(--tinta); }
 .onb__foot { display: flex; gap: .75rem; padding: 1rem 1.5rem 1.75rem; }
@@ -134,7 +134,7 @@ button { cursor: pointer; }
 .eyebrow { margin: 0 0 .25rem; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--brasa-ink); }
 .lead { margin: -.5rem 0 1rem; color: var(--tinta); }
 .nota { margin: .75rem 0 0; font-size: .85rem; color: var(--sal); }
-.hello__s { margin: .25rem 0 0; font-size: 1.9rem; line-height: 1; transform: rotate(-4deg); transform-origin: left; }
+.hello__s { margin: .25rem 0 0; font-size: 1.9rem; line-height: 1; }
 .sig { text-align: center; margin: 2rem 0 0; font-size: 2rem; opacity: .9; }
 
 /* ---------- componentes ---------- */
