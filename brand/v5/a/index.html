@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>churrasquin — Direção A · Gravura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1A1714;--ember:#E8431A;--paper:#F2EBDD;--paper2:#E6DCC7;--ink2:#4A433B;
+--disp:'Bricolage Grotesque',sans-serif;--sans:'Instrument Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+.hatch{background-image:repeating-linear-gradient(0deg,currentColor 0 1.6px,transparent 1.6px 6px)}
+.x-hatch{background-image:repeating-linear-gradient(45deg,currentColor 0 1.2px,transparent 1.2px 7px),repeating-linear-gradient(-45deg,currentColor 0 1.2px,transparent 1.2px 7px)}
+.disp{font-family:var(--disp);font-stretch:75%;font-weight:800;letter-spacing:-.02em;line-height:.88}
+.wrap{max-width:1360px;margin:0 auto;padding:0 40px}
+section{padding:96px 0;border-top:3px solid var(--ink)}
+.kick{font:600 13px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;display:flex;gap:16px;align-items:center;margin-bottom:28px}
+.kick b{background:var(--ink);color:var(--paper);padding:6px 9px}
+h2{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:clamp(48px,7vw,104px);line-height:.88;letter-spacing:-.02em;max-width:14ch}
+.lead{font-size:20px;max-width:58ch;margin-top:24px;color:var(--ink2)}
+/* hero */
+.hero{background:var(--ink);color:var(--paper);padding:28px 0 0;overflow:hidden;position:relative}
+.hero nav{display:flex;justify-content:space-between;font:600 13px var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.hero .big{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:end;padding:72px 0 0}
+.hero h1{font-size:clamp(72px,11vw,176px)}
+.hero h1 em{font-style:normal;color:var(--ember)}
+.hero p{font-size:20px;max-width:44ch;margin:28px 0 56px;color:#D9CFBD}
+.hero .boi{width:100%;display:block;margin-bottom:-6px}
+.band{height:56px;color:var(--ember);background-color:var(--ink)}
+/* concept */
+.cols{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:56px}
+.cols h3{font:700 22px/1.2 var(--sans);margin:16px 0 8px}
+.cols .n{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:64px;color:var(--ember);line-height:1}
+/* logo */
+.logogrid{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-top:56px}
+.tile{border:3px solid var(--ink);padding:40px;display:flex;align-items:center;justify-content:center;min-height:280px;position:relative}
+.tile small{position:absolute;left:16px;top:12px;font:600 12px var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.tile.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.tile.em{background:var(--ember);border-color:var(--ember)}
+.constr{position:relative}
+.constr svg{width:100%;height:auto}
+/* type */
+.type{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;margin-top:56px;align-items:start}
+.spec{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:200px;line-height:.8}
+.scale div{border-top:1.5px solid var(--ink);padding:14px 0;display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.scale span:not(.disp){font:600 12px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);white-space:nowrap}
+/* palette */
+.pal{display:grid;grid-template-columns:3fr 2fr 1.2fr;height:420px;margin-top:56px}
+.pal div{padding:28px;display:flex;flex-direction:column;justify-content:space-between}
+.pal b{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:56px;line-height:.9}
+.pal code{font:500 14px/1.6 ui-monospace,monospace}
+/* pattern */
+.patterns{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px;margin-top:56px}
+.patterns>div{height:320px;border:3px solid var(--ink)}
+/* icons */
+.icons{display:grid;grid-template-columns:repeat(8,1fr);gap:0;margin-top:56px;border:3px solid var(--ink)}
+.icons figure{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;border-right:1.5px solid var(--ink)}
+.icons figure:last-child{border:0}
+.icons svg{width:56px;height:56px}
+.icons figcaption{font:600 12px var(--sans);letter-spacing:.1em;text-transform:uppercase}
+/* phones */
+.screens{background:var(--ink);color:var(--paper);border-top:0}
+.screens .lead{color:#CFC5B3}
+.phones{display:flex;gap:40px;justify-content:center;margin-top:64px;flex-wrap:wrap}
+.phone{width:375px;height:780px;border-radius:52px;background:#000;padding:11px;box-shadow:0 0 0 1.5px #3a342e,0 40px 80px rgba(0,0,0,.5);flex:none}
+.scr{width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--paper);color:var(--ink);position:relative;display:flex;flex-direction:column;font-size:15px}
+.sb{height:48px;display:flex;justify-content:space-between;align-items:center;padding:0 28px 0 32px;font:600 15px var(--sans);flex:none}
+.cap{text-align:center;font:600 13px var(--sans);letter-spacing:.14em;text-transform:uppercase;margin-top:18px;color:#CFC5B3}
+.tabbar{flex:none;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);background:var(--paper);padding-bottom:20px}
+.tabbar a{min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:600 11px var(--sans);color:var(--ink);text-decoration:none;letter-spacing:.04em}
+.tabbar a svg{width:26px;height:26px}
+.tabbar a[aria-current]{background:var(--ink);color:var(--paper)}
+.body{flex:1;overflow:hidden;padding:4px 20px 0}
+.ttl{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:52px;line-height:.86;letter-spacing:-.02em}
+.btn{min-height:52px;border:0;border-radius:0;background:var(--ink);color:var(--paper);font:700 16px var(--sans);display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+.btn.em{background:var(--ember);color:var(--ink)}
+.step{display:flex;align-items:center;border:2px solid var(--ink)}
+.step button{width:48px;height:48px;border:0;background:var(--ink);color:var(--paper);font:700 22px var(--sans)}
+.step output{flex:1;text-align:center;font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:30px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.lbl{font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.chip{min-height:44px;padding:0 14px;border:2px solid var(--ink);display:inline-flex;align-items:center;font:600 14px var(--sans);background:transparent}
+.chip.on{background:var(--ink);color:var(--paper)}
+.buy{border-top:2px solid var(--ink)}
+.buy li{list-style:none;display:grid;grid-template-columns:1fr auto;padding:11px 0;border-bottom:1.5px solid var(--ink);align-items:baseline}
+.buy li b{font-family:var(--disp);font-stretch:75%;font-weight:800;font-size:24px}
+.buy small{display:block;color:var(--ink2);font-size:13px}
+ul{padding:0}
+/* desktop */
+.desk{margin-top:72px;border:1.5px solid #3a342e;border-radius:14px;overflow:hidden;background:var(--paper);color:var(--ink)}
+.chrome{height:40px;background:#2a2521;display:flex;align-items:center;gap:8px;padding:0 16px}
+.chrome i{width:12px;height:12px;border-radius:50%;background:#4a433b}
+.dgrid{display:grid;grid-template-columns:240px 1fr 380px;min-height:700px}
+.side{background:var(--ink);color:var(--paper);padding:28px 20px;display:flex;flex-direction:column;gap:6px}
+.side a{min-height:48px;display:flex;align-items:center;gap:12px;padding:0 14px;color:var(--paper);text-decoration:none;font:600 15px var(--sans)}
+.side a svg{width:24px;height:24px}
+.side a[aria-current]{background:var(--ember);color:var(--ink)}
+.map{padding:36px 40px;border-right:2px solid var(--ink)}
+.reg{cursor:pointer}
+.reg:hover path{fill:var(--paper2)}
+.ficha{padding:36px 32px}
+.meter{display:flex;gap:4px}.meter i{flex:1;height:10px;border:1.5px solid var(--ink)}.meter i.f{background:var(--ink)}
+footer{background:var(--ember);padding:56px 0;color:var(--ink)}
+@media (max-width:900px){.wrap{padding:0 20px}.hero .big,.logogrid,.type,.cols,.patterns{grid-template-columns:1fr}.pal{grid-template-columns:1fr;height:auto}.pal div{min-height:180px}.icons{grid-template-columns:repeat(4,1fr)}.icons figure:nth-child(4){border-right:0}.icons figure:nth-child(-n+4){border-bottom:1.5px solid var(--ink)}.spec{font-size:120px}.desk{overflow-x:auto}.dgrid{width:1100px}.phone{transform:scale(.92);margin:-30px 0}section{padding:64px 0}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<clipPath id="boiclip"><path d="M8 66 C6 56 12 46 20 40 L4 16 C16 16 27 28 31 35 C35 33 39 33 42 34 L40 6 C48 12 51 24 50 32 L52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L162 26 C174 26 182 32 184 42 C188 46 191 52 191 62 L191 86 L186 86 L186 64 C186 72 184 78 181 84 L178 120 L166 120 L162 92 C140 96 100 97 78 92 L70 120 L58 120 L56 90 C50 92 44 86 42 80 C38 74 32 72 26 72 C18 72 10 66 10 58Z"/></clipPath>
+<pattern id="hz" width="6" height="5" patternUnits="userSpaceOnUse"><path d="M0 2.5H6" stroke="#1A1714" stroke-width="2.2"/></pattern>
+<pattern id="hzf" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M0 2H4" stroke="#1A1714" stroke-width="1.1"/></pattern>
+<pattern id="xh" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 2.5H5M2.5 0V5" stroke="#1A1714" stroke-width="1"/></pattern>
+<symbol id="boi" viewBox="4 4 192 120"><g clip-path="url(#boiclip)"><rect width="200" height="130" fill="url(#hz)"/></g><path d="M8 66 C6 56 12 46 20 40 L4 16 C16 16 27 28 31 35 C35 33 39 33 42 34 L40 6 C48 12 51 24 50 32 L52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L162 26 C174 26 182 32 184 42 C188 46 191 52 191 62 L191 86 L186 86 L186 64 C186 72 184 78 181 84 L178 120 L166 120 L162 92 C140 96 100 97 78 92 L70 120 L58 120 L56 90 C50 92 44 86 42 80 C38 74 32 72 26 72 C18 72 10 66 10 58Z" fill="none" stroke="#1A1714" stroke-width="4" stroke-linejoin="round"/><path d="M142 26 L162 26 C174 26 182 32 184 42 L168 54 L144 50Z" fill="#E8431A"/><path d="M76 13 L80 92 M114 25 L112 96 M80 54 L144 50" fill="none" stroke="#F2EBDD" stroke-width="3" stroke-dasharray="5 3"/><path d="M142 26 L162 26 C174 26 182 32 184 42 L168 54 L144 50Z" fill="none" stroke="#1A1714" stroke-width="4" stroke-linejoin="round"/></symbol>
+<symbol id="boiN" viewBox="4 4 192 120"><g clip-path="url(#boiclip)" stroke="#F2EBDD" stroke-width="2.6"><path d="M0 12H200M0 17H200M0 22H200M0 27H200M0 32H200M0 37H200M0 42H200M0 47H200M0 52H200M0 57H200M0 62H200M0 67H200M0 72H200M0 77H200M0 82H200M0 87H200M0 92H200M0 97H200M0 102H200M0 107H200M0 112H200M0 117H200M0 122H200"/></g><path d="M8 66 C6 56 12 46 20 40 L4 16 C16 16 27 28 31 35 C35 33 39 33 42 34 L40 6 C48 12 51 24 50 32 L52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L162 26 C174 26 182 32 184 42 C188 46 191 52 191 62 L191 86 L186 86 L186 64 C186 72 184 78 181 84 L178 120 L166 120 L162 92 C140 96 100 97 78 92 L70 120 L58 120 L56 90 C50 92 44 86 42 80 C38 74 32 72 26 72 C18 72 10 66 10 58Z" fill="none" stroke="#F2EBDD" stroke-width="4" stroke-linejoin="round"/><path d="M142 26 L162 26 C174 26 182 32 184 42 L168 54 L144 50Z" fill="#E8431A"/><path d="M76 13 L80 92 M114 25 L112 96 M80 54 L144 50" fill="none" stroke="#1A1714" stroke-width="3" stroke-dasharray="5 3"/><path d="M142 26 L162 26 C174 26 182 32 184 42 L168 54 L144 50Z" fill="none" stroke="#F2EBDD" stroke-width="4" stroke-linejoin="round"/></symbol>
+<symbol id="word" viewBox="0 -1000 3837 1260"><path d="M210 12Q153 12 115.0 -9.0Q77 -30 54.5 -67.0Q32 -104 22.5 -153.0Q13 -202 13 -258Q13 -314 22.5 -364.5Q32 -415 54.0 -454.0Q76 -493 114.0 -516.0Q152 -539 208 -539Q274 -539 314.0 -507.5Q354 -476 368.0 -425.0Q382 -374 370 -314L230 -299Q235 -334 234.0 -361.5Q233 -389 226.0 -405.0Q219 -421 204 -421Q193 -421 186.0 -410.5Q179 -400 175.0 -380.5Q171 -361 169.5 -334.5Q168 -308 168 -276Q168 -216 172.5 -178.0Q177 -140 186.5 -122.0Q196 -104 210 -104Q228 -104 235.0 -126.5Q242 -149 242.0 -181.0Q242 -213 238 -241L375 -226Q384 -184 381.0 -142.0Q378 -100 360.0 -65.0Q342 -30 305.5 -9.0Q269 12 210 12Z M391 0V-304V-680H545V-592Q545 -568 542.5 -533.5Q540 -499 536.5 -461.5Q533 -424 529.0 -390.0Q525 -356 522 -333H531Q537 -412 552.5 -457.0Q568 -502 592.5 -521.0Q617 -540 650 -540Q709 -540 736.5 -486.0Q764 -432 764 -315V0H610V-288Q610 -345 603.0 -369.5Q596 -394 579 -394Q563 -394 556.0 -376.5Q549 -359 547.0 -327.0Q545 -295 545 -252V0Z M897 12Q837 12 809.5 -40.0Q782 -92 782 -204V-528H937V-238Q937 -183 943.0 -158.5Q949 -134 967 -134Q979 -134 985.5 -144.0Q992 -154 995.5 -172.0Q999 -190 999.5 -216.5Q1000 -243 1000 -276V-528H1154V-243V0H1022V-193H1014Q1014 -114 998.5 -69.5Q983 -25 956.5 -6.5Q930 12 897 12Z M1174 0V-297V-528H1314V-327H1322Q1322 -408 1337.0 -452.0Q1352 -496 1377.5 -513.0Q1403 -530 1433 -530Q1437 -530 1440.0 -530.0Q1443 -530 1447 -529L1441 -357Q1435 -359 1427.5 -360.0Q1420 -361 1412 -361Q1385 -361 1367.0 -348.5Q1349 -336 1340.0 -309.0Q1331 -282 1331 -236V0Z M1453 0V-297V-528H1593V-327H1601Q1601 -408 1616.0 -452.0Q1631 -496 1656.5 -513.0Q1682 -530 1712 -530Q1716 -530 1719.0 -530.0Q1722 -530 1726 -529L1720 -357Q1714 -359 1706.5 -360.0Q1699 -361 1691 -361Q1664 -361 1646.0 -348.5Q1628 -336 1619.0 -309.0Q1610 -282 1610 -236V0Z M1831 12Q1799 12 1774.5 -3.0Q1750 -18 1736.0 -46.0Q1722 -74 1722 -113Q1722 -158 1738.0 -188.0Q1754 -218 1779.0 -237.5Q1804 -257 1831.5 -268.5Q1859 -280 1881 -288Q1906 -297 1919.5 -307.0Q1933 -317 1938.0 -330.5Q1943 -344 1943 -364Q1943 -392 1935.0 -406.0Q1927 -420 1912 -420Q1898 -420 1890.0 -407.5Q1882 -395 1880.0 -369.5Q1878 -344 1882 -305L1732 -321Q1729 -374 1740.0 -415.0Q1751 -456 1774.5 -484.0Q1798 -512 1834.0 -526.0Q1870 -540 1918 -540Q1976 -540 2015.5 -516.5Q2055 -493 2075.0 -444.5Q2095 -396 2095 -319V-192Q2095 -160 2095.0 -128.0Q2095 -96 2095.0 -64.0Q2095 -32 2095 0H1961Q1961 -34 1961.0 -67.5Q1961 -101 1961 -135H1953Q1949 -87 1933.0 -54.0Q1917 -21 1891.0 -4.5Q1865 12 1831 12ZM1901 -112Q1911 -112 1918.5 -118.0Q1926 -124 1931.0 -135.0Q1936 -146 1938.5 -159.0Q1941 -172 1941 -185V-256L1962 -272Q1954 -260 1944.0 -251.5Q1934 -243 1923.5 -236.5Q1913 -230 1903.5 -223.0Q1894 -216 1887.0 -208.0Q1880 -200 1875.5 -188.0Q1871 -176 1871 -159Q1871 -132 1880.5 -122.0Q1890 -112 1901 -112Z M2292 12Q2232 12 2192.5 -5.5Q2153 -23 2132.5 -53.5Q2112 -84 2108.5 -122.0Q2105 -160 2118 -202L2253 -214Q2250 -184 2251.0 -155.5Q2252 -127 2261.5 -109.0Q2271 -91 2292 -91Q2306 -91 2313.5 -101.0Q2321 -111 2321 -133Q2321 -162 2308.0 -181.0Q2295 -200 2273.5 -214.0Q2252 -228 2226 -241Q2206 -252 2185.0 -264.5Q2164 -277 2146.5 -294.5Q2129 -312 2118.0 -336.5Q2107 -361 2107 -395Q2107 -440 2127.5 -472.5Q2148 -505 2187.5 -522.5Q2227 -540 2285 -540Q2341 -540 2382.5 -521.0Q2424 -502 2445.0 -460.5Q2466 -419 2459 -350L2327 -332Q2330 -361 2326.0 -383.5Q2322 -406 2312.0 -419.0Q2302 -432 2285 -432Q2270 -432 2262.5 -421.5Q2255 -411 2255 -395Q2255 -377 2265.0 -364.0Q2275 -351 2292.0 -341.0Q2309 -331 2330 -320Q2355 -307 2380.5 -291.0Q2406 -275 2427.0 -253.5Q2448 -232 2460.5 -203.5Q2473 -175 2473 -137Q2473 -96 2454.5 -62.0Q2436 -28 2396.5 -8.0Q2357 12 2292 12Z M2706 130V13Q2706 -12 2708.5 -40.5Q2711 -69 2716.0 -100.5Q2721 -132 2726 -165H2716Q2709 -113 2696.0 -73.5Q2683 -34 2662.0 -11.5Q2641 11 2609 11Q2573 11 2543.0 -18.0Q2513 -47 2495.0 -107.5Q2477 -168 2477 -263Q2477 -352 2493.5 -413.5Q2510 -475 2541.0 -507.0Q2572 -539 2614 -539Q2646 -539 2668.0 -520.0Q2690 -501 2702.5 -462.0Q2715 -423 2719 -361H2727V-528H2860V-276V130ZM2665 -122Q2673 -122 2679.5 -129.0Q2686 -136 2691.0 -149.5Q2696 -163 2699.0 -181.0Q2702 -199 2704.0 -222.0Q2706 -245 2706 -271V-293Q2706 -305 2703.5 -327.0Q2701 -349 2696.0 -371.0Q2691 -393 2683.0 -408.5Q2675 -424 2664 -424Q2653 -424 2646.5 -406.0Q2640 -388 2637.0 -354.0Q2634 -320 2634 -272Q2634 -220 2637.0 -186.5Q2640 -153 2647.0 -137.5Q2654 -122 2665 -122Z M2994 12Q2934 12 2906.5 -40.0Q2879 -92 2879 -204V-528H3034V-238Q3034 -183 3040.0 -158.5Q3046 -134 3064 -134Q3076 -134 3082.5 -144.0Q3089 -154 3092.5 -172.0Q3096 -190 3096.5 -216.5Q3097 -243 3097 -276V-528H3251V-243V0H3119V-193H3111Q3111 -114 3095.5 -69.5Q3080 -25 3053.5 -6.5Q3027 12 2994 12Z M3271 0V-528H3425V0Z M3445 0V-323V-528H3577V-343H3585Q3585 -416 3599.0 -459.0Q3613 -502 3639.0 -521.0Q3665 -540 3701 -540Q3763 -540 3791.0 -489.5Q3819 -439 3819 -330V0H3664V-288Q3664 -344 3658.5 -369.0Q3653 -394 3635 -394Q3617 -394 3609.5 -373.0Q3602 -352 3600.5 -318.0Q3599 -284 3599 -244V0Z"/><path d="M3348.0 -758 L3438.0 -668 L3348.0 -578 L3258.0 -668Z" fill="#E8431A"/></symbol>
+<!-- ícones: traço 2, hachura como preenchimento -->
+<symbol id="i-plan" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><circle cx="11" cy="11" r="5"/><circle cx="23" cy="13" r="4"/><path d="M2 28c1-6 5-9 9-9s8 3 9 9"/><path d="M19 21c1.5-1.5 3-2 4.5-2 3.5 0 6 3 6.5 7"/></g><path d="M5 27h12M6 24.5h10" stroke="currentColor" stroke-width="1.2"/></symbol>
+<symbol id="i-cortes" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 14c0-4 3-7 8-7h10c4 0 7 3 7 7v3c0 5-4 8-9 8H11c-4 0-7-3-7-7z"/><path d="M14 7v18" stroke-dasharray="2.5 2"/></g><path d="M17 11h10M17 14h11M17 17h11M17 20h10" stroke="currentColor" stroke-width="1.2"/></symbol>
+<symbol id="i-brasa" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M16 3c1 5 7 7 7 14a7 7 0 0 1-14 0c0-4 2-6 3-8 1 2 2 3 3 3 0-3-1-5 1-9z"/><path d="M4 29h24"/></g><path d="M13 19h6M12 22h8M13 25h6" stroke="currentColor" stroke-width="1.2"/></symbol>
+<symbol id="i-lista" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="5" y="4" width="22" height="25"/><path d="M9 11l2 2 4-4M9 19l2 2 4-4M18 11h5M18 19h5"/></g><path d="M8 25h16" stroke="currentColor" stroke-width="1.2"/></symbol>
+<symbol id="i-termo" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 19V6a3 3 0 0 1 6 0v13a6 6 0 1 1-6 0z"/><path d="M22 8h4M22 12h3M22 16h4"/></g><circle cx="16" cy="24" r="3" fill="currentColor"/></symbol>
+<symbol id="i-timer" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="16" cy="18" r="11"/><path d="M13 3h6M16 18V11"/></g><path d="M16 18 L24 12 A11 11 0 0 1 27 18Z" fill="currentColor" opacity=".9"/></symbol>
+<symbol id="i-espeto" viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M3 29 29 3"/><rect x="9" y="13" width="9" height="7" transform="rotate(-45 13.5 16.5)"/></g><path d="M18 8l6 6M20 6l6 6" stroke="currentColor" stroke-width="1.2"/></symbol>
+<symbol id="i-info" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 14v9" stroke="currentColor" stroke-width="2.6"/><path d="M13 9.5l3-3 3 3-3 3z" fill="#E8431A"/></symbol>
+</defs></svg>
+
+<header class="hero"><div class="wrap">
+<nav><span>churrasquin · identidade v5</span><span>Direção A — Gravura</span><span>Nov 2026</span></nav>
+<div class="big"><div>
+<h1 class="disp">Saber o corte.<br>Acertar <em>a brasa.</em></h1>
+<p>Uma identidade talhada como gravura de açougue antigo: o boi riscado em linhas paralelas, o corte que importa em brasa chapada. É o mapa que só o churrasquin tem, virando marca.</p>
+</div>
+<svg class="boi" viewBox="4 4 192 120" role="img" aria-label="Símbolo churrasquin: boi gravado com a picanha em destaque"><use href="#boiN"/></svg>
+</div></div><div class="band hatch" aria-hidden="true"></div></header>
+
+<main>
+<section><div class="wrap">
+<div class="kick"><b>01</b>Conceito</div>
+<h2 class="disp">Um mapa, riscado à mão.</h2>
+<p class="lead">O ativo único do app é o mapa de cortes. Em vez de ilustrá-lo de forma neutra, nós o gravamos: linhas paralelas formam o animal, linhas tracejadas o dividem, e uma única região em brasa diz "é este aqui". O mesmo gesto serve ao logo, ao ícone, ao padrão, aos ícones e à interface.</p>
+<div class="cols">
+<div><div class="n">01</div><h3>Linha, não gradiente</h3><p>Tudo é construído com hachura de 2 espessuras. Tom é densidade de linha, como na xilogravura.</p></div>
+<div><div class="n">02</div><h3>Uma brasa por tela</h3><p>O laranja-brasa marca só o que pede ação ou atenção: o corte escolhido, o timer, o botão principal.</p></div>
+<div><div class="n">03</div><h3>Campos chapados</h3><p>Tinta, papel, brasa. Grandes áreas sem textura de fundo; a gravura fica no desenho, não no papel.</p></div>
+</div></div></section>
+
+<section><div class="wrap">
+<div class="kick"><b>02</b>Logo e construção</div>
+<h2 class="disp">Boi de corte, marca de casa.</h2>
+<div class="logogrid">
+<div class="tile"><small>Assinatura principal</small><img src="logo.svg" alt="churrasquin" style="width:92%"></div>
+<div class="tile em"><small>Símbolo</small><img src="simbolo.svg" alt="" style="width:80%"></div>
+<div class="tile dark"><small style="color:#CFC5B3">Negativo</small><img src="logo-neg.svg" alt="churrasquin em negativo" style="width:92%"></div>
+<div class="tile dark" style="background:#2a2521"><small style="color:#CFC5B3">Ícone de app</small><img src="app-icon.svg" alt="" style="width:150px"><img src="app-icon.svg" alt="" style="width:64px;margin-left:24px"><img src="app-icon.svg" alt="" style="width:32px;margin-left:16px"></div>
+</div>
+<div class="tile constr" style="margin-top:24px;padding:24px"><small>Construção · grade de 5 u.</small>
+<svg viewBox="0 0 200 130" role="img" aria-label="Construção do símbolo: 23 linhas a cada 5 unidades, cortes tracejados, picanha em brasa">
+<g stroke="#1A1714" stroke-width=".25" opacity=".4"><path d="M0 0V130M20 0V130M40 0V130M60 0V130M80 0V130M100 0V130M120 0V130M140 0V130M160 0V130M180 0V130M200 0V130M0 10H200M0 30H200M0 50H200M0 70H200M0 90H200M0 110H200"/></g>
+<g transform="translate(4 2)"><use href="#boi" x="4" y="4" width="192" height="120"/></g>
+<g font-family="Instrument Sans" font-size="4.2" font-weight="600" fill="#1A1714"><text x="150" y="10">picanha = destaque</text><text x="62" y="8">cupim (giba zebuína)</text><text x="4" y="128">hachura 2,6 · passo 5 · contorno 4 · corte tracejado 5/3</text></g>
+</svg></div>
+<p class="lead">O lettering parte da Bricolage Grotesque Condensed ExtraBold com tracking −18 e o pingo do "i" redesenhado como uma brasa em losango — a mesma brasa que marca a picanha no símbolo. A giba (cupim) e os chifres em lira fazem o animal ler como boi brasileiro, não genérico.</p>
+</div></section>
+
+<section><div class="wrap">
+<div class="kick"><b>03</b>Tipografia</div>
+<div class="type"><div><div class="spec">Aa<span style="color:var(--ember)">◆</span></div><p class="lead" style="margin-top:12px"><b>Bricolage Grotesque</b>, largura 75, peso 800 — display. Contraste gráfico de cartaz e terminais com caráter. <br><b>Instrument Sans</b> 400–700 — texto e interface, ótima em 13–17 px.</p></div>
+<div class="scale">
+<div><span class="disp" style="font-size:64px">Na brasa</span><span>Display 64 / .88</span></div>
+<div><span class="disp" style="font-size:40px">Picanha · 1,2 kg</span><span>Título 40</span></div>
+<div><b style="font:700 20px var(--sans)">Para 12 pessoas, 4,8 kg de carne</b><span>Destaque 20</span></div>
+<div><p>Bifes grossos de três dedos, gordura para fora. Sal grosso só na hora.</p><span>Texto 16</span></div>
+<div><span class="lbl" style="color:var(--ink)">Ponto · mal passada a ao ponto</span><span>Rótulo 11 caixa-alta</span></div>
+</div></div></div></section>
+
+<section style="padding-bottom:0"><div class="wrap">
+<div class="kick"><b>04</b>Paleta</div>
+<h2 class="disp">Tinta, papel, brasa.</h2></div>
+<div class="pal">
+<div style="background:var(--ink);color:var(--paper)"><b>Tinta</b><code>#1A1714 · base de texto e campos<br>Papel sobre Tinta 15,2:1 AAA</code></div>
+<div style="background:var(--paper);color:var(--ink);border-top:3px solid var(--ink)"><b>Papel</b><code>#F2EBDD · fundo<br>Tinta sobre Papel 15,2:1 AAA</code></div>
+<div style="background:var(--ember);color:var(--ink)"><b>Brasa</b><code>#E8431A · só ação e destaque<br>Tinta sobre Brasa 5,4:1 AA<br>Nunca texto brasa sobre papel &lt;24px</code></div>
+</div></section>
+
+<section><div class="wrap">
+<div class="kick"><b>05</b>Padrão</div>
+<h2 class="disp">O rebanho vira textura.</h2>
+<div class="patterns">
+<div id="pat1" style="background:var(--ink)"></div>
+<div class="x-hatch" style="color:var(--ink);background-color:var(--paper)"></div>
+<div class="hatch" style="color:var(--ink);background-color:var(--ember)"></div>
+</div>
+<p class="lead">Padrão principal: o símbolo em marcha, com a região destacada variando (picanha, cupim, costela...). Secundários: hachura cruzada (tom escuro) e paralela (tom médio) para faixas, cartões e embalagens.</p>
+</div></section>
+
+<section><div class="wrap">
+<div class="kick"><b>06</b>Ícones</div>
+<h2 class="disp">Mesma goiva.</h2>
+<div class="icons">
+<figure><svg><use href="#i-plan"/></svg><figcaption>Planejar</figcaption></figure>
+<figure><svg><use href="#i-cortes"/></svg><figcaption>Cortes</figcaption></figure>
+<figure><svg><use href="#i-brasa"/></svg><figcaption>Na brasa</figcaption></figure>
+<figure><svg><use href="#i-lista"/></svg><figcaption>Lista</figcaption></figure>
+<figure><svg><use href="#i-termo"/></svg><figcaption>Ponto</figcaption></figure>
+<figure><svg><use href="#i-timer"/></svg><figcaption>Timer</figcaption></figure>
+<figure><svg><use href="#i-espeto"/></svg><figcaption>Espeto</figcaption></figure>
+<figure><svg><use href="#i-info"/></svg><figcaption>Saiba mais</figcaption></figure>
+</div>
+<p class="lead">Grade 32, traço 2,2, cantos vivos; o preenchimento é sempre hachura fina de 1,2 — nunca chapado, exceto a brasa.</p>
+</div></section>
+
+<section class="screens"><div class="wrap">
+<div class="kick"><b style="background:var(--ember);color:var(--ink)">07</b>Telas</div>
+<h2 class="disp" style="color:var(--paper)">No celular, do lado da grelha.</h2>
+<p class="lead">Alvos de 44–58 px, contraste AA em tudo, uma brasa por tela. Funciona com a mão engordurada.</p>
+<div class="phones">
+
+<!-- PLANEJAR -->
+<div><div class="phone"><div class="scr">
+<div class="sb"><span>18:42</span><span>●●● 5G ▮</span></div>
+<div class="body">
+<div class="row" style="margin-bottom:8px"><svg width="56" height="36" aria-hidden="true"><use href="#boi"/></svg><span class="lbl">Sábado, 30 nov</span></div>
+<h3 class="ttl" style="font-size:46px">Quanto comprar?</h3>
+<div style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+<div><div class="lbl" style="margin-bottom:6px">Adultos</div><div class="step"><button aria-label="Menos adultos">−</button><output>10</output><button aria-label="Mais adultos">+</button></div></div>
+<div><div class="lbl" style="margin-bottom:6px">Crianças</div><div class="step"><button aria-label="Menos crianças">−</button><output>4</output><button aria-label="Mais crianças">+</button></div></div>
+</div>
+<div style="display:flex;gap:6px;margin:12px 0 12px"><button class="chip on">Come bem</button><button class="chip">Almoço</button><button class="chip">Só carne</button></div>
+<div style="background:var(--ink);color:var(--paper);padding:16px 16px 14px;position:relative;overflow:hidden">
+<div class="lbl" style="color:#CFC5B3">Total de carne crua</div>
+<div class="row"><span class="disp" style="font-size:56px">5,6<small style="font-size:30px"> kg</small></span><span style="color:var(--ember);font:700 14px var(--sans);text-align:right">≈ R$ 410<br><small style="color:#CFC5B3;font-weight:500">estimativa</small></span></div>
+</div>
+<ul class="buy">
+<li><div>Picanha<small>2 peças de ~1,2 kg · rende 68%</small></div><b>2,4 kg</b></li>
+<li><div>Fraldinha<small>1 peça · fatiar contra a fibra</small></div><b>1,2 kg</b></li>
+<li><div>Linguiça toscana<small>entrada, enquanto a brasa pega</small></div><b>1,0 kg</b></li>
+</ul>
+</div>
+<div style="padding:12px 20px"><button class="btn em">Gerar lista de compras →</button></div>
+<nav class="tabbar" aria-label="Seções"><a href="#" aria-current="page"><svg><use href="#i-plan"/></svg>Planejar</a><a href="#"><svg><use href="#i-cortes"/></svg>Cortes</a><a href="#"><svg><use href="#i-brasa"/></svg>Na brasa</a><a href="#"><svg><use href="#i-lista"/></svg>Lista</a></nav>
+</div></div><p class="cap">Planejar</p></div>
+
+<!-- CORTES -->
+<div><div class="phone"><div class="scr">
+<div class="sb"><span>18:44</span><span>●●● 5G ▮</span></div>
+<div style="background:var(--ink);color:var(--paper);padding:6px 20px 0;flex:none">
+<div class="row"><button class="chip" style="color:var(--paper);border-color:#6b6259" aria-label="Voltar">← Cortes</button><span class="lbl" style="color:#CFC5B3">Boi · traseiro</span></div>
+<svg viewBox="4 4 192 120" style="width:100%;display:block;margin-top:6px" role="img" aria-label="Boi gravado com a picanha destacada na parte de cima do traseiro"><use href="#boiN"/>
+<circle cx="164" cy="38" r="9" fill="#F2EBDD"/><text x="164" y="42.5" text-anchor="middle" font-family="Instrument Sans" font-weight="700" font-size="12" fill="#1A1714">i</text></svg>
+</div>
+<div class="body" style="padding-top:14px">
+<div class="row"><h3 class="ttl" style="font-size:60px">Picanha</h3><span class="chip" style="background:var(--ember);border-color:var(--ember);font-size:12px;min-height:30px">NOBRE</span></div>
+<p style="color:var(--ink2);font-size:13px;margin-top:4px">AR Tapa de cuadril · UY Picaña · US Coulotte</p>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0">
+<div><div class="lbl">Maciez</div><div class="meter" style="margin-top:6px"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div></div>
+<div><div class="lbl">Gordura</div><div class="meter" style="margin-top:6px"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></div></div>
+<div><div class="lbl">Sabor</div><div class="meter" style="margin-top:6px"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></div></div>
+</div>
+<ul class="buy">
+<li><div><span class="lbl">Ponto</span><br>Mal passada a ao ponto</div><b>54°C</b></li>
+<li><div><span class="lbl">Tempo</span><br>Bifes 15–20 · peça 40–50 min</div><b>50 min</b></li>
+<li><div><span class="lbl">Espeto</span><br>1 palmo p/ selar, depois 1,5</div><b>20 cm</b></li>
+</ul>
+<p style="font-size:14px;margin-top:10px">Bifes de três dedos dobrados no espeto, gordura para fora. Sal grosso.</p>
+</div>
+<div style="padding:12px 20px;display:grid;grid-template-columns:1fr 1.4fr;gap:8px"><button class="btn" style="background:transparent;color:var(--ink);border:2px solid var(--ink)">+ Lista</button><button class="btn em">Pôr na brasa</button></div>
+<nav class="tabbar" aria-label="Seções"><a href="#"><svg><use href="#i-plan"/></svg>Planejar</a><a href="#" aria-current="page"><svg><use href="#i-cortes"/></svg>Cortes</a><a href="#"><svg><use href="#i-brasa"/></svg>Na brasa</a><a href="#"><svg><use href="#i-lista"/></svg>Lista</a></nav>
+</div></div><p class="cap">Cortes · ficha aberta</p></div>
+
+<!-- NA BRASA -->
+<div><div class="phone"><div class="scr" style="background:var(--ink);color:var(--paper)">
+<div class="sb"><span>19:21</span><span>●●● 5G ▮</span></div>
+<div class="body" style="color:var(--paper)">
+<div class="row"><span class="lbl" style="color:#CFC5B3">Na brasa · 3 peças</span><span class="lbl" style="color:#CFC5B3">Servir 20:10</span></div>
+<div style="background:var(--ember);color:var(--ink);margin:12px -20px 0;padding:18px 20px 16px;position:relative;overflow:hidden">
+<div class="row"><span style="font:700 15px var(--sans)">Picanha · virar agora</span><svg width="28" height="28" aria-hidden="true"><use href="#i-espeto"/></svg></div>
+<div class="disp" style="font-size:112px;line-height:.85;margin-top:6px;font-variant-numeric:tabular-nums">04:37</div>
+<div style="height:10px;border:2px solid var(--ink);margin-top:10px"><div style="width:64%;height:100%;background:var(--ink)"></div></div>
+<div class="row" style="margin-top:8px;font:600 13px var(--sans)"><span>Selar · 1 palmo</span><span>Interna 48°C → 54°C</span></div>
+</div>
+<div class="lbl" style="color:#CFC5B3;margin:18px 0 6px">Linha do tempo</div>
+<ol style="list-style:none;padding:0;position:relative;border-left:2px solid #6b6259;margin-left:8px">
+<li style="padding:0 0 14px 20px;position:relative;color:#A89E8E"><i style="position:absolute;left:-7px;top:4px;width:12px;height:12px;background:#6b6259"></i><b>18:50</b> Acender 3 kg de carvão <span style="float:right">✓</span></li>
+<li style="padding:0 0 14px 20px;position:relative;color:#A89E8E"><i style="position:absolute;left:-7px;top:4px;width:12px;height:12px;background:#6b6259"></i><b>19:10</b> Linguiça na grelha <span style="float:right">✓</span></li>
+<li style="padding:0 0 14px 20px;position:relative"><i style="position:absolute;left:-9px;top:2px;width:16px;height:16px;background:var(--ember);transform:rotate(45deg)"></i><b>19:15</b> Picanha · selar <span style="float:right;color:var(--ember)">agora</span></li>
+<li style="padding:0 0 14px 20px;position:relative"><i style="position:absolute;left:-7px;top:4px;width:12px;height:12px;border:2px solid var(--paper);background:var(--ink)"></i><b>19:35</b> Fraldinha · fogo médio-alto</li>
+<li style="padding:0 0 0 20px;position:relative"><i style="position:absolute;left:-7px;top:4px;width:12px;height:12px;border:2px solid var(--paper);background:var(--ink)"></i><b>20:05</b> Descansar 5 min e fatiar</li>
+</ol>
+</div>
+<div style="padding:12px 20px;display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn" style="background:var(--paper);color:var(--ink)">Pausar</button><button class="btn" style="background:transparent;border:2px solid var(--paper)">Medir ponto</button></div>
+<nav class="tabbar" aria-label="Seções"><a href="#"><svg><use href="#i-plan"/></svg>Planejar</a><a href="#"><svg><use href="#i-cortes"/></svg>Cortes</a><a href="#" aria-current="page"><svg><use href="#i-brasa"/></svg>Na brasa</a><a href="#"><svg><use href="#i-lista"/></svg>Lista</a></nav>
+</div></div><p class="cap">Na brasa · timer e linha do tempo</p></div>
+</div>
+
+<!-- DESKTOP -->
+<div class="desk"><div class="chrome"><i></i><i></i><i></i></div>
+<div class="dgrid">
+<aside class="side"><svg viewBox="-16 -24 480 120" style="width:196px;margin:0 0 28px 4px" aria-label="churrasquin"><use href="#boiN" x="-10" y="-14" width="140" height="92"/><use href="#word" x="150" y="-16" width="300" height="100" fill="#F2EBDD"/></svg>
+<a href="#"><svg><use href="#i-plan"/></svg>Planejar</a><a href="#" aria-current="page"><svg><use href="#i-cortes"/></svg>Cortes</a><a href="#"><svg><use href="#i-brasa"/></svg>Na brasa</a><a href="#"><svg><use href="#i-termo"/></svg>Ponto</a><a href="#"><svg><use href="#i-lista"/></svg>Lista</a></aside>
+<div class="map"><div class="row"><h3 class="ttl" style="font-size:72px">Mapa do boi</h3><div style="display:flex;gap:8px"><button class="chip on">Boi</button><button class="chip">Porco</button><button class="chip">Frango</button><button class="chip">Cordeiro</button></div></div>
+<p style="color:var(--ink2);margin:8px 0 20px">Toque numa região para abrir a ficha. Nomes do Brasil, Argentina, Uruguai e EUA.</p>
+<svg viewBox="4 4 192 120" style="width:100%" role="img" aria-label="Mapa de cortes do boi">
+<g clip-path="url(#boiclip)">
+<rect width="200" height="130" fill="url(#hzf)"/>
+<path d="M52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L80 34Z" fill="url(#xh)"/>
+<path d="M80 54 L112 52 L112 96 C100 97 90 95 80 92Z" fill="url(#hz)"/>
+<path d="M142 26 L162 26 C174 26 182 32 184 42 L168 54 L144 50Z" fill="#E8431A"/>
+</g>
+<path d="M8 66 C6 56 12 46 20 40 L4 16 C16 16 27 28 31 35 C35 33 39 33 42 34 L40 6 C48 12 51 24 50 32 L52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L162 26 C174 26 182 32 184 42 C188 46 191 52 191 62 L191 86 L186 86 L186 64 C186 72 184 78 181 84 L178 120 L166 120 L162 92 C140 96 100 97 78 92 L70 120 L58 120 L56 90 C50 92 44 86 42 80 C38 74 32 72 26 72 C18 72 10 66 10 58Z" fill="none" stroke="#1A1714" stroke-width="2.4" stroke-linejoin="round"/>
+<path d="M80 13 L80 92 M112 25 L112 96 M80 54 L144 50 L168 54 M80 34 L96 24 M142 26 L144 50 L150 94 M168 54 L162 92 M42 36 L52 31" fill="none" stroke="#1A1714" stroke-width="1.4" stroke-dasharray="3 2"/>
+<g font-family="Instrument Sans" font-weight="700" font-size="4.6" fill="#1A1714" paint-order="stroke" stroke="#F2EBDD" stroke-width="2.4">
+<text x="68" y="9">CUPIM</text><text x="98" y="42">CONTRAFILÉ</text><text x="88" y="76">COSTELA</text><text x="118" y="76">FRALDINHA</text><text x="150" y="70">ALCATRA</text><text x="50" y="60">ACÉM · PEITO</text></g>
+<g font-family="Instrument Sans" font-weight="700" font-size="4.6" fill="#1A1714"><text x="148" y="40">PICANHA</text></g>
+</svg></div>
+<div class="ficha"><span class="lbl">Ficha · traseiro</span>
+<h3 class="ttl" style="font-size:80px;margin-top:8px">Picanha</h3>
+<p style="color:var(--ink2);margin:6px 0 18px">Cobre a parte de cima da alcatra. Capa de gordura que derrete e rega a carne.</p>
+<ul class="buy">
+<li><div><span class="lbl">Peça</span><br>1 a 1,5 kg</div><b>R$ 70–110/kg</b></li>
+<li><div><span class="lbl">Rende</span><br>servido após a brasa</div><b>68%</b></li>
+<li><div><span class="lbl">Ponto</span><br>mal passada a ao ponto</div><b>54°C</b></li>
+<li><div><span class="lbl">Tempo</span><br>bifes / peça inteira</div><b>15–50 min</b></li>
+</ul>
+<div style="display:grid;gap:8px;margin-top:20px"><button class="btn em">Pôr na brasa</button><button class="btn" style="background:transparent;color:var(--ink);border:2px solid var(--ink)">Adicionar à lista</button></div>
+</div></div></div>
+</div></section>
+</main>
+<footer><div class="wrap row"><img src="logo.svg" alt="churrasquin" style="height:72px"><span style="font:600 13px var(--sans);letter-spacing:.14em;text-transform:uppercase">Direção A · Gravura · v5</span></div></footer>
+<script>
+// padrão: rebanho com cortes variando
+(function(){var el=document.getElementById('pat1');var cuts=['M52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L80 34Z','M142 26 L162 26 C174 26 182 32 184 42 L168 54 L144 50Z','M80 54 L112 52 L112 96 C100 97 90 95 80 92Z','M112 52 L144 50 L150 94 C138 96 124 96 112 96Z'];var s='<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" aria-hidden="true">';for(var r=0;r<4;r++)for(var c=0;c<8;c++){var x=c*130+(r%2?65:0)-40,y=r*84-10,k=cuts[(r+c)%4];s+='<g transform="translate('+x+' '+y+') scale(.55)"><g clip-path="url(#boiclip)" stroke="#F2EBDD" stroke-width="2.6">';for(var l=12;l<124;l+=5)s+='<path d="M0 '+l+'H200"/>';s+='</g><path d="'+k+'" fill="#E8431A" clip-path="url(#boiclip)"/><path d="M8 66 C6 56 12 46 20 40 L4 16 C16 16 27 28 31 35 C35 33 39 33 42 34 L40 6 C48 12 51 24 50 32 L52 31 C58 20 66 12 76 12 C86 12 90 20 96 24 L162 26 C174 26 182 32 184 42 C188 46 191 52 191 62 L191 86 L186 86 L186 64 C186 72 184 78 181 84 L178 120 L166 120 L162 92 C140 96 100 97 78 92 L70 120 L58 120 L56 90 C50 92 44 86 42 80 C38 74 32 72 26 72 C18 72 10 66 10 58Z" fill="none" stroke="#F2EBDD" stroke-width="4"/></g>'}el.innerHTML=s+'</svg>'})();
+</script>
+</body></html>
