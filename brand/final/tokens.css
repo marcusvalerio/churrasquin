@@ -1,0 +1,17 @@
+/* churrasquin — tokens finais (nomes conforme CONTRATO.md) */
+:root{
+  --c-carvao:#17120F;     /* fundo escuro / texto */
+  --c-carvao-2:#241D19;   /* superfície escura */
+  --c-brasa:#FF5F1F;      /* primária / ação / script / selo */
+  --c-brasa-2:#E24A0E;    /* hover */
+  --c-osso:#F3EADB;       /* papel creme: fundo claro / texto em escuro */
+  --c-sal:#6E625A;        /* texto suave */
+  --c-ervas:#1D2A9E;      /* acento (cobalto) */
+  --c-gordura:#FBF1DE;    /* creme claro (espeto no app icon) */
+  --c-carne:#C9962E;      /* mostarda (opcional) */
+  --font-display:"Archivo Black",system-ui,sans-serif;
+  --font-body:"Rubik",system-ui,sans-serif;
+  --r-sm:6px; --r-md:12px; --r-lg:24px;
+  --ease-brasa:cubic-bezier(.2,.8,.2,1);
+  --dur-1:120ms; --dur-2:240ms; --dur-3:480ms;
+}
