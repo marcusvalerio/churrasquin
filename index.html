@@ -19,10 +19,11 @@
 <header class="topbar">
   <div class="wrap topbar__in">
     <a class="brand" href="#planejar" data-go="planejar" aria-label="churrasquin, início"><img id="logo" src="brand/v4/logo-final.svg" alt="churrasquin" width="160" height="40" onerror="this.onerror=null;this.src='brand/v3/logo-horizontal.svg'"></a>
-    <nav class="tabs gancho" aria-label="Seções">
+    <nav class="tabs espeto" aria-label="Seções">
       <a class="tab" href="#planejar" data-view="planejar"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/turma.svg" alt=""><span class="tab__l">Planejar</span></a>
       <a class="tab" href="#cortes" data-view="cortes"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/boi.svg" alt=""><span class="tab__l">Cortes</span></a>
-      <a class="tab" href="#lista" data-view="lista"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/calculadora.svg" alt=""><span class="tab__l">Minha lista</span> <span class="tab__n" data-n="0" aria-hidden="true">0</span></a>
+      <a class="tab" href="#brasa" data-view="brasa"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/brasa.svg" alt=""><span class="tab__l">Na brasa</span></a>
+      <a class="tab" href="#lista" data-view="lista"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/calculadora.svg" alt=""><span class="tab__l">Lista</span> <span class="tab__n" data-n="0" aria-hidden="true">0</span></a>
     </nav>
   </div>
 </header>
@@ -31,12 +32,11 @@
   <!-- PLANEJAR -->
   <section class="view view--plan wrap" id="planejar" data-view="planejar" aria-labelledby="plan-t">
     <div class="plan">
-      <div class="plan__main comanda">
-        <header class="comanda__head">
-          <div class="comanda__meta" aria-hidden="true"><span>Comanda</span><b id="pedido-n">Nº 0000</b><span id="pedido-d"></span></div>
-          <p class="eyebrow">Pedido de balcão · 3 passos</p>
+      <div class="plan__main caderno">
+        <header class="caderno__head">
+          <p class="caderno__meta" aria-hidden="true"><span>Caderno do assador</span><span id="pedido-d"></span></p>
           <h1 id="plan-t" class="lettering">Quantos vêm pro churrasco?</h1>
-          <span class="stamp stamp--head" aria-hidden="true">Balcão<br>aberto</span>
+          <p class="caderno__lead">Turma, apetite e cortes. O caderno faz a conta de quanto comprar.</p>
         </header>
 
         <div class="step" aria-labelledby="s1-t">
@@ -73,8 +73,8 @@
       </div>
 
       <aside class="plan__side" aria-labelledby="s3-t">
-        <div class="result balanca" id="result">
-          <h2 class="result__k" id="s3-t"><span class="step__n">03</span><span class="lettering">Na balança</span></h2>
+        <div class="result" id="result">
+          <h2 class="result__k" id="s3-t"><span class="step__n">03</span><span class="lettering">Quanto comprar</span></h2>
           <div aria-live="polite" aria-atomic="true" id="result-live"></div>
           <button type="button" class="btn btn--primary" data-go="lista">Ver lista de compras</button>
         </div>
@@ -85,7 +85,7 @@
   <!-- CORTES -->
   <section class="view view--cortes wrap" id="cortes" data-view="cortes" aria-labelledby="cat-t" hidden>
     <header class="vhead vhead--row">
-      <div><p class="eyebrow">Vitrine do açougue</p><h1 id="cat-t" class="lettering">Cortes</h1></div>
+      <div><p class="eyebrow">Guia de campo do assador</p><h1 id="cat-t" class="lettering">Cortes</h1></div>
       <p class="count" id="count" aria-live="polite"></p>
     </header>
     <form class="filters" id="filters" role="search" onsubmit="return false">
@@ -110,10 +110,19 @@
     </div>
   </section>
 
+  <!-- NA BRASA -->
+  <section class="view view--brasa wrap" id="brasa" data-view="brasa" aria-labelledby="brasa-t" hidden>
+    <header class="vhead vhead--row">
+      <div><p class="eyebrow">Comando da grelha</p><h1 id="brasa-t" class="lettering">Na brasa</h1></div>
+      <label class="servir"><span>Servir às</span><input type="time" id="servir" value="13:00"></label>
+    </header>
+    <div class="brasa" id="brasa-body"></div>
+  </section>
+
   <!-- LISTA -->
   <section class="view view--lista wrap" id="lista" data-view="lista" aria-labelledby="lista-t" hidden>
     <header class="vhead vhead--row">
-      <div><p class="eyebrow">Embrulhado pra levar</p><h1 id="lista-t" class="lettering">Minha lista</h1></div>
+      <div><p class="eyebrow">Compras e checklist do dia</p><h1 id="lista-t" class="lettering">Lista</h1></div>
       <p class="count" id="lista-meta"></p>
     </header>
     <div class="lista" id="lista-body"></div>
@@ -122,9 +131,10 @@
 
 <div class="dock" id="dock">
   <button type="button" class="dock__sum" id="dock-sum" data-go="lista" aria-label="Ver lista de compras"></button>
-  <nav class="tabbar gancho" aria-label="Seções">
+  <nav class="tabbar espeto" aria-label="Seções">
     <a class="tab" href="#planejar" data-view="planejar"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/turma.svg" alt=""><span class="tab__l">Planejar</span></a>
     <a class="tab" href="#cortes" data-view="cortes"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/boi.svg" alt=""><span class="tab__l">Cortes</span></a>
+    <a class="tab" href="#brasa" data-view="brasa"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/brasa.svg" alt=""><span class="tab__l">Na brasa</span></a>
     <a class="tab" href="#lista" data-view="lista"><span class="tab__hook" aria-hidden="true"></span><img class="ico" src="brand/v3/icons/calculadora.svg" alt=""><span class="tab__l">Lista</span> <span class="tab__n" data-n="0" aria-hidden="true">0</span><span class="sr tab-n-sr"></span></a>
   </nav>
 </div>

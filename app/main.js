@@ -45,7 +45,6 @@
       if (s && Array.isArray(s.itens)) plan = Object.assign(plan, s);
     } catch (e) { /* sem storage: segue em memória */ }
     plan.itens = plan.itens.filter(function (it) { return corte(it.id); });
-    if (!plan.pedido) plan.pedido = 100 + Math.floor(Math.random() * 900);
     if (!apetites()[plan.apetite]) plan.apetite = Object.keys(apetites())[1] || Object.keys(apetites())[0];
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(plan)); } catch (e) {} }
@@ -110,8 +109,10 @@
   }
 
   /* ---------- planejar ---------- */
+  var thumbN = 0;
   function thumb(c) {
     var art = window.CUT_ART && window.CUT_ART[c.id];
+    if (art) { var sfx = '-t' + (++thumbN); art = art.replace(/id="([^"]+)"/g, 'id="$1' + sfx + '"').replace(/url\(#([^)]+)\)/g, 'url(#$1' + sfx + ')').replace(/href="#([^"]+)"/g, 'href="#$1' + sfx + '"'); }
     return '<span class="thumb" aria-hidden="true">' + (art || ico(c.animal, 'thumb__ph', 28)) + '</span>';
   }
   function renderPlan(r) {
@@ -122,7 +123,7 @@
     var picks = $('#picks');
     picks.innerHTML = r.linhas.map(function (l) {
       return '<li class="pick" data-id="' + esc(l.id) + '">' + thumb(l.c) +
-        '<span class="pick__n"><b>' + esc(l.c.nome) + '</b><small>' + (l.preco ? brl(l.preco) + '/kg' : ANIMAL_NOME[l.c.animal] || '') + (l.manual ? ' · ajustado' : '') + '</small></span>' +
+        '<span class="pick__n"><b>' + esc(l.c.nome) + '</b><small>' + esc(ANIMAL_NOME[l.c.animal] || '') + (tempoMin(l.c) ? ' · ' + durTxt(tempoMin(l.c)) + ' na brasa' : '') + (l.manual ? ' · ajustado' : '') + '</small></span>' +
         '<span class="pick__lead" aria-hidden="true"></span><span class="pick__kg">' + kgTxt(l.g) + '</span>' +
         '<button type="button" class="icon-btn" data-act="rm" aria-label="Tirar ' + esc(l.c.nome) + ' do plano"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></li>';
     }).join('');
@@ -131,23 +132,20 @@
 
     $('#sug').innerHTML = SUGESTOES.filter(function (id) { return corte(id) && !has(id); }).slice(0, 6).map(function (id) {
       var c = corte(id);
-      return '<button type="button" class="chip chip--add" data-id="' + id + '"><span class="chip__plus" aria-hidden="true">+</span>' + esc(c.nome) + (preco(c) ? ' <small>' + brl(preco(c)) + '/kg</small>' : '') + '</button>';
+      return '<button type="button" class="chip chip--add" data-id="' + id + '"><span class="chip__plus" aria-hidden="true">+</span>' + esc(c.nome) + '</button>';
     }).join('');
 
     var live = $('#result-live');
-    var kgN = r.linhas.length ? r.totalG / 1000 : (r.porcoes ? Math.round(r.alvo / 100) / 10 : 0);
-    var rkg = r.temPreco && r.totalG ? r.valor / (r.totalG / 1000) : null;
-    var num = function (v, d) { return v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }); };
-    var visor = '<div class="visor" role="group" aria-label="Visor da balança">' +
-      '<div class="visor__c visor__c--kg"><span class="visor__k">Peso kg</span><span class="visor__v">' + num(kgN, 1) + '</span></div>' +
-      '<div class="visor__c"><span class="visor__k">R$/kg méd.</span><span class="visor__v">' + (rkg ? num(rkg, 2) : '--,--') + '</span></div>' +
-      '<div class="visor__c visor__c--tot"><span class="visor__k">Total R$</span><span class="visor__v">' + (r.linhas.length && r.temPreco ? num(r.valor, 2) : '--,--') + '</span></div></div>';
-    if (!r.porcoes) live.innerHTML = visor + '<p class="result__sub">Comece pelo passo 01: quantos vêm?</p>';
-    else if (!r.linhas.length) live.innerHTML = visor + '<p class="result__sub"><b>' + kgTxt(Math.round(r.alvo / 100) * 100) + '</b> de carne para ' + pessoasTxt() + '. Agora escolha os cortes.</p>';
-    else live.innerHTML = visor +
-      '<p class="result__sub"><b>' + kgTxt(r.totalG) + '</b> para ' + pessoasTxt() + ', em ' + r.linhas.length + (r.linhas.length > 1 ? ' cortes' : ' corte') + (r.temPreco ? ' · ~' + brl(r.porPessoa) + '/pessoa' : '') + '</p>' +
-      (r.precoParcial ? '<p class="result__note">Alguns cortes ainda sem preço.</p>' : '') +
-      '<div class="etiqueta"><p class="etiqueta__h"><span>Etiqueta</span><span>' + r.linhas.length + ' itens</span></p><ul class="result__lines">' + r.linhas.map(function (l) { return '<li><span>' + esc(l.c.nome) + '</span><i aria-hidden="true"></i><b>' + kgTxt(l.g) + '</b></li>'; }).join('') + '</ul><span class="etiqueta__bar" aria-hidden="true"></span></div>';
+    var carvao = r.linhas.length ? Math.max(3, Math.ceil(r.totalG / 1000)) : 0;
+    var gp = r.porcoes ? Math.round((r.linhas.length ? r.totalG : r.alvo) / r.porcoes / 10) * 10 : 0;
+    var big = '<p class="conta"><span class="conta__v">' + (r.porcoes ? kgTxt(r.linhas.length ? r.totalG : Math.round(r.alvo / 100) * 100).replace(' kg', '') : '0') + '</span><span class="conta__u">kg de carne crua</span></p>';
+    var stats = r.porcoes ? '<dl class="conta__stats"><div><dt>Por pessoa</dt><dd>' + gp + ' g</dd></div><div><dt>Porções</dt><dd>' + String(r.porcoes).replace('.', ',') + '</dd></div><div><dt>Carvão</dt><dd>' + (carvao ? carvao + ' kg' : '—') + '</dd></div></dl>' : '';
+    if (!r.porcoes) live.innerHTML = big + '<p class="result__sub">Comece pelo passo 01: quantos vêm?</p>';
+    else if (!r.linhas.length) live.innerHTML = big + stats + '<p class="result__sub">para ' + pessoasTxt() + '. Agora escolha os cortes.</p>';
+    else live.innerHTML = big + stats +
+      '<p class="result__sub">para ' + pessoasTxt() + ', em ' + r.linhas.length + (r.linhas.length > 1 ? ' cortes' : ' corte') + '</p>' +
+      '<ul class="result__lines">' + r.linhas.map(function (l) { return '<li><span>' + esc(l.c.nome) + '</span><i aria-hidden="true"></i><b>' + kgTxt(l.g) + '</b></li>'; }).join('') + '</ul>' +
+      (r.temPreco ? '<p class="result__money">Estimativa de gasto: ~' + brl(r.valor) + (r.precoParcial ? ' (parcial)' : '') + '</p>' : '');
     $('#result .btn').hidden = !r.linhas.length;
   }
   function pessoasTxt() {
@@ -176,9 +174,10 @@
         '<p class="card__tag">' + esc(ANIMAL_NOME[c.animal] || '') + (CAT[c.categoria] ? ' · ' + CAT[c.categoria] : '') + '</p>' +
         '<h3>' + esc(c.nome) + '</h3>' +
         (alt ? '<p class="card__alt">' + alt + '</p>' : '') +
+        '<p class="card__fire">' + (tempoMin(c) ? '<span>' + ico('brasa', '', 16) + durTxt(tempoMin(c)) + '</span>' : '') + '<span>' + esc(zona(c).nome) + '</span></p>' +
         '<dl class="meters">' + meter('maciez', 'Maciez', c.maciez) + meter('gordura', 'Gordura', c.gordura) + meter('sabor', 'Sabor', c.sabor) + '</dl>' +
-        (p ? '<span class="pricetag' + (isEco(c) ? ' pricetag--eco' : '') + '"><span class="pricetag__k">' + (isEco(c) ? 'Oferta' : 'Kg') + '</span><b>' + brl(p) + '</b></span>' : '<span class="pricetag pricetag--na"><span class="pricetag__k">Kg</span><b>consulte</b></span>') +
-        '<span class="card__stamp" aria-hidden="true">Na lista</span>' +
+        
+        '<span class="card__stamp" aria-hidden="true">Anotado</span>' +
         '<div class="card__foot">' +
         '<button type="button" class="add' + (on ? ' is-on' : '') + '" data-act="add" aria-pressed="' + on + '" aria-label="' + (on ? 'Tirar ' : 'Levar ') + esc(c.nome) + (on ? ' da lista' : '') + '">' +
         (on ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><span>Na lista</span>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Levar</span>') +
@@ -225,8 +224,8 @@
     var groups = {}, order = [];
     list.forEach(function (c) { if (!groups[c.animal]) { groups[c.animal] = []; order.push(c.animal); } groups[c.animal].push(c); });
     grid.innerHTML = order.map(function (a) {
-      return '<li class="vitrine" data-animal="' + a + '"><h2 class="letreiro"><span class="letreiro__ico">' + ico(a, '', 28) + '</span><span class="letreiro__t">' + esc(ANIMAL_NOME[a] || a) + '</span><span class="letreiro__n">' + groups[a].length + (groups[a].length > 1 ? ' peças' : ' peça') + '</span></h2>' +
-        '<ul class="grid-row" aria-label="' + esc(ANIMAL_NOME[a] || a) + '">' + cards(groups[a]) + '</ul></li>';
+      return '<li class="vitrine" data-animal="' + a + '"><h2 class="prancha"><span class="prancha__n">Prancha ' + ['I', 'II', 'III', 'IV', 'V'][Math.max(0, ['boi', 'porco', 'cordeiro', 'frango'].indexOf(a))] + '</span><span class="prancha__ico">' + ico(a, '', 32) + '</span><span class="prancha__t lettering">' + esc(ANIMAL_NOME[a] || a) + '</span><span class="prancha__c">' + groups[a].length + (groups[a].length > 1 ? ' cortes' : ' corte') + '</span></h2>' +
+        '<ul class="grid-row guia" aria-label="' + esc(ANIMAL_NOME[a] || a) + '">' + cards(groups[a]) + '</ul></li>';
     }).join('');
     $('#empty').hidden = list.length > 0; grid.hidden = !list.length;
     $('#count').textContent = list.length === total ? total + ' cortes' : list.length + ' de ' + total;
@@ -242,52 +241,147 @@
     });
   }
 
+  /* ---------- ofício: tempos, zonas de fogo e ponto ----------
+   * Dados de apoio do assador (não são do catálogo; ficam aqui para não mexer em data/).
+   * ZONAS: altura da grelha em palmos (~20 cm) e o teste da mão (segundos que a mão aguenta a ~grelha).
+   * PONTOS: temperatura interna no centro da peça, medida com termômetro de espeto.
+   *   Retire 2–3 °C antes do alvo: a carne continua subindo no descanso (carry-over).
+   * SEGUROS: mínimos recomendados por segurança alimentar para aves, suínos e carne moída. */
+  var ZONAS = {
+    forte: { nome: 'Brasa forte', palmos: '1 palmo · ~20 cm', mao: '2–3 s', uso: 'Selar, cortes finos, coração, espetinho' },
+    media: { nome: 'Brasa média', palmos: '1,5 palmo · ~30 cm', mao: '4–5 s', uso: 'Peças médias, linguiça, frango com osso' },
+    branda: { nome: 'Fogo brando', palmos: '2–3 palmos · 40–60 cm', mao: '7–8 s', uso: 'Costela, cupim, peças inteiras' },
+    indireto: { nome: 'Indireto', palmos: 'lado sem brasa', mao: '10 s+', uso: 'Terminar sem queimar, segurar quente' }
+  };
+  var PONTOS = [
+    { id: 'selado', nome: 'Selado', sub: 'azul, só a casca', min: 45, max: 49, cor: '#7a1a12' },
+    { id: 'mal', nome: 'Mal passado', sub: 'centro vermelho', min: 50, max: 54, cor: '#b3261a' },
+    { id: 'ponto', nome: 'Ao ponto', sub: 'centro rosado', min: 57, max: 60, cor: '#d9573a' },
+    { id: 'ponto-bem', nome: 'Ao ponto p/ bem', sub: 'rosado leve', min: 63, max: 65, cor: '#b87a52' },
+    { id: 'bem', nome: 'Bem passado', sub: 'sem rosado', min: 70, max: 74, cor: '#6b5040' }
+  ];
+  var SEGUROS = [['Frango', '74 °C na coxa, perto do osso'], ['Porco (lombo, copa)', '63 °C + 3 min de descanso'], ['Linguiça / moída', '71 °C no centro'], ['Costela de boi (desmanchar)', '90–95 °C, colágeno derretido']];
+  function tempoMin(c) {
+    var m = String((c && c.tempo) || '').match(/(\d+)(?:\s*[-–a]\s*(\d+))?\s*(min|h)/);
+    if (!m) return 0;
+    var v = +(m[2] || m[1]); return m[3] === 'h' ? v * 60 : v;
+  }
+  function durTxt(min) { if (min < 60) return min + ' min'; var h = Math.floor(min / 60), r = min % 60; return h + ' h' + (r ? ' ' + r : ''); }
+  function zona(c) {
+    var b = norm(c.brasa || '');
+    var t = tempoMin(c);
+    if (/2 a 3 palmos|longe|fogo de chao/.test(b) || t >= 120) return Object.assign({ k: 'branda' }, ZONAS.branda);
+    if (/1,5 palmo|media/.test(b) || t >= 30) return Object.assign({ k: 'media' }, ZONAS.media);
+    return Object.assign({ k: 'forte' }, ZONAS.forte);
+  }
+  function descanso(c) { return c.animal === 'boi' || c.animal === 'cordeiro' ? (tempoMin(c) >= 120 ? 15 : 5) : 0; }
+  function hhmm(d) { return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+
+  /* ---------- na brasa ---------- */
+  var timers = {}; // id -> { end, total, virou }
+  function renderBrasa(r) {
+    var body = $('#brasa-body'); if (!body) return;
+    var sv = (plan.servir || '13:00').split(':'), T = new Date(); T.setHours(+sv[0] || 13, +sv[1] || 0, 0, 0);
+    $('#servir').value = plan.servir || '13:00';
+    var seq = r.linhas.map(function (l) {
+      var t = tempoMin(l.c) || 20, d = descanso(l.c), z = zona(l.c);
+      var sai = new Date(T - d * 60000), entra = new Date(sai - t * 60000);
+      return { l: l, t: t, d: d, z: z, entra: entra, sai: sai };
+    }).sort(function (a, b) { return a.entra - b.entra; });
+    var acender = seq.length ? new Date(seq[0].entra - 40 * 60000) : null;
+    var span = acender ? (T - acender) : 1;
+    var pos = function (d) { return Math.max(0, Math.min(100, (d - acender) / span * 100)); };
+    var carvao = r.linhas.length ? Math.max(3, Math.ceil(r.totalG / 1000)) : 0;
+    var longo = seq.filter(function (x) { return x.t >= 120; }).reduce(function (m, x) { return Math.max(m, x.t); }, 0);
+    var html = '';
+    if (!seq.length) {
+      html += '<div class="empty">' + ico('brasa', '', 48) + '<p class="empty__t">Nada na grelha ainda</p><p class="empty__d">Escolha os cortes no Planejar. Aqui sai a ordem de entrada na brasa, com timers e o ponto de cada um.</p><button type="button" class="btn btn--primary btn--auto" data-go="planejar">Planejar churrasco</button></div>';
+    } else {
+      html += '<section class="folha folha--linha" aria-labelledby="b-linha"><h2 class="folha__t" id="b-linha"><span class="step__n">01</span><span class="lettering">Linha do tempo</span></h2>' +
+        '<p class="folha__lead">De trás pra frente a partir das <b>' + hhmm(T) + '</b>. Cada corte entra na hora certa e sai junto com os outros.</p>' +
+        '<div class="crono" aria-hidden="true"><div class="crono__axis"><span style="left:0">' + hhmm(acender) + '</span><span style="left:100%">' + hhmm(T) + '</span></div>' +
+        seq.map(function (x) { return '<div class="crono__row"><span class="crono__n">' + esc(x.l.c.nome) + '</span><span class="crono__track"><span class="crono__bar crono__bar--' + x.z.k + '" style="left:' + pos(x.entra) + '%;width:' + Math.max(2, pos(x.sai) - pos(x.entra)) + '%"></span>' + (x.d ? '<span class="crono__rest" style="left:' + pos(x.sai) + '%;width:' + (100 - pos(x.sai)) + '%"></span>' : '') + '</span></div>'; }).join('') +
+        '<div class="crono__row crono__row--fire"><span class="crono__n">Acender</span><span class="crono__track"><span class="crono__fire" style="width:' + pos(seq[0].entra) + '%"></span></span></div></div>' +
+        '<ol class="ordem">' +
+        '<li class="ordem__i ordem__i--fogo"><time>' + hhmm(acender) + '</time><div><b>Acender o carvão</b><small>' + carvao + ' kg' + (longo ? ' + ~1 kg por hora extra de fogo' : '') + '. Brasa pronta quando cobrir de cinza branca (30–40 min).</small></div></li>' +
+        seq.map(function (x) {
+          var tm = timers[x.l.id];
+          return '<li class="ordem__i" data-id="' + esc(x.l.id) + '"><time>' + hhmm(x.entra) + '</time><div><b>' + esc(x.l.c.nome) + ' <span class="zona-tag zona-tag--' + x.z.k + '">' + esc(x.z.nome) + '</span></b>' +
+            '<small>' + kgTxt(x.l.g) + ' · ' + durTxt(x.t) + ' na grelha' + (x.d ? ' · descansa ' + x.d + ' min' : '') + ' · ' + esc(x.l.c.ponto || '') + '</small>' +
+            (x.l.c.brasa ? '<small class="ordem__dica">' + esc(x.l.c.brasa) + '</small>' : '') + '</div>' +
+            '<button type="button" class="timer' + (tm ? ' is-on' : '') + '" data-act="timer" data-min="' + x.t + '" aria-label="' + (tm ? 'Parar timer de ' : 'Iniciar timer de ') + esc(x.l.c.nome) + '"><span class="timer__dial" aria-hidden="true"></span><span class="timer__v" data-timer="' + esc(x.l.id) + '">' + (tm ? '' : durTxt(x.t)) + '</span></button></li>';
+        }).join('') +
+        '<li class="ordem__i ordem__i--servir"><time>' + hhmm(T) + '</time><div><b>Servir</b><small>Fatie contra a fibra, na tábua, com a faca bem afiada.</small></div></li></ol></section>';
+    }
+    html += '<section class="folha" aria-labelledby="b-ponto"><h2 class="folha__t" id="b-ponto"><span class="step__n">02</span><span class="lettering">Ponto pelo termômetro</span></h2>' +
+      '<div class="termo" role="list">' + PONTOS.map(function (p) { return '<div class="termo__p" role="listitem" style="--c:' + p.cor + '"><span class="termo__sw" aria-hidden="true"></span><b>' + p.nome + '</b><span class="termo__t">' + p.min + '–' + p.max + ' °C</span><small>' + p.sub + '</small></div>'; }).join('') + '</div>' +
+      '<p class="folha__nota">Tire a carne 2–3 °C antes do alvo: ela continua subindo no descanso.</p>' +
+      '<dl class="seguro">' + SEGUROS.map(function (x) { return '<div><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>'; }).join('') + '</dl></section>';
+    html += '<section class="folha" aria-labelledby="b-fogo"><h2 class="folha__t" id="b-fogo"><span class="step__n">03</span><span class="lettering">Zonas de fogo</span></h2>' +
+      '<div class="grelha" aria-hidden="true"><span class="grelha__z grelha__z--forte"></span><span class="grelha__z grelha__z--media"></span><span class="grelha__z grelha__z--indireto"></span></div>' +
+      '<ul class="zonas">' + Object.keys(ZONAS).map(function (k) { var z = ZONAS[k]; return '<li class="zona zona--' + k + '"><b>' + z.nome + '</b><span class="zona__h">' + z.palmos + '</span><span>Mão aguenta <b>' + z.mao + '</b></span><small>' + z.uso + '</small></li>'; }).join('') + '</ul>' +
+      '<p class="folha__nota">Monte a brasa em degrau: um lado alto e forte, outro baixo, e uma área sem brasa para o indireto.</p></section>';
+    body.innerHTML = html;
+    tickTimers();
+  }
+  var tickT;
+  function tickTimers() {
+    var now = Date.now(), any = false;
+    Object.keys(timers).forEach(function (id) {
+      var tm = timers[id], left = Math.max(0, Math.round((tm.end - now) / 1000)), c = corte(id);
+      any = true;
+      if (!tm.virou && left <= tm.total / 2) { tm.virou = true; alerta('Hora de virar: ' + c.nome); }
+      if (left <= 0) { delete timers[id]; alerta('Tirar da grelha: ' + c.nome); renderBrasa(last); return; }
+      var el = document.querySelector('[data-timer="' + id + '"]');
+      if (el) {
+        el.textContent = Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0');
+        var b = el.closest('.timer'); if (b) b.style.setProperty('--p', (1 - left / tm.total).toFixed(3));
+      }
+    });
+    clearTimeout(tickT); if (any) tickT = setTimeout(tickTimers, 1000);
+  }
+  function alerta(msg) { toast(msg); try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {} }
+
   /* ---------- lista ---------- */
+  var UTENSILIOS = [
+    { id: 'u-faca', nome: 'Faca afiada + chaira' }, { id: 'u-tabua', nome: 'Tábua grande' }, { id: 'u-espetos', nome: 'Espetos / grelha limpa' },
+    { id: 'u-pegador', nome: 'Pegador longo' }, { id: 'u-termo', nome: 'Termômetro de espeto' }, { id: 'u-acender', nome: 'Acendedor ou álcool gel' },
+    { id: 'u-luva', nome: 'Luva e pano' }
+  ];
   function renderLista(r) {
     var body = $('#lista-body');
     $('#lista-meta').textContent = r.linhas.length ? pessoasTxt() : '';
     if (!r.linhas.length) {
-      body.innerHTML = '<div class="empty">' + ico('brasa', '', 48) + '<p class="empty__t">Sua lista está vazia</p><p class="empty__d">Diga quantas pessoas vêm e escolha os cortes. A lista de compras sai pronta, com quilos e preço.</p><button type="button" class="btn btn--primary btn--auto" data-go="planejar">Planejar churrasco</button></div>';
+      body.innerHTML = '<div class="empty">' + ico('brasa', '', 48) + '<p class="empty__t">Sua lista está vazia</p><p class="empty__d">Diga quantas pessoas vêm e escolha os cortes. A lista de compras e o checklist do dia saem prontos.</p><button type="button" class="btn btn--primary btn--auto" data-go="planejar">Planejar churrasco</button></div>';
       return;
     }
     var txt = shareText(r);
-    var d = new Date(), dt = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    var num = function (v) { return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+    var chk = function (x, q) { var ok = !!plan.extrasOk[x.id]; return '<li><label class="check"><input type="checkbox" data-x="' + x.id + '"' + (ok ? ' checked' : '') + '><span class="check__box" aria-hidden="true"></span><span class="check__n">' + esc(x.nome) + '</span><span class="check__q">' + esc(q || '') + '</span></label></li>'; };
     body.innerHTML =
-      '<div class="lista__grid"><div class="lista__main"><article class="cupom" aria-labelledby="l-carne">' +
-      '<header class="cupom__head"><img src="brand/v4/wordmark-final.svg" alt="" class="cupom__logo" onerror="this.remove()"><p>Açougue da turma · balcão 01</p><p>Cupom de balança · não fiscal</p>' +
-      '<p class="cupom__row"><span>Pedido Nº ' + String(plan.pedido || 0).padStart(4, '0') + '</span><span>' + dt + '</span></p></header>' +
-      '<h2 class="cupom__sec" id="l-carne"><span>Carne</span><span>' + kgTxt(r.totalG) + '</span></h2>' +
-      '<p class="cupom__cols" aria-hidden="true"><span>Item</span><span>Kg × R$/kg</span><span>R$</span></p><ul class="lines">' +
-      r.linhas.map(function (l, i) {
-        return '<li class="line" data-id="' + esc(l.id) + '">' +
-          '<span class="line__i" aria-hidden="true">' + String(i + 1).padStart(3, '0') + '</span>' +
-          '<span class="line__n"><b>' + esc(l.c.nome) + '</b><small>' + kgTxt(l.g).replace(' kg', '') + ' kg × ' + (l.preco ? num(l.preco) : 's/ preço') + '</small>' +
+      '<div class="lista__grid"><div class="lista__main"><article class="folha folha--lista">' +
+      '<h2 class="folha__t" id="l-carne"><span class="step__n">01</span><span class="lettering">Carne</span><span class="folha__k">' + kgTxt(r.totalG) + '</span></h2><ul class="lines" aria-labelledby="l-carne">' +
+      r.linhas.map(function (l) {
+        return '<li class="line" data-id="' + esc(l.id) + '">' + thumb(l.c) +
+          '<span class="line__n"><b>' + esc(l.c.nome) + '</b><small>' + esc(ANIMAL_NOME[l.c.animal] || '') + (l.c.pesoPeca ? ' · peça ' + esc(l.c.pesoPeca) : '') + '</small>' +
           (l.manual ? '<button type="button" class="mini" data-act="auto">ajustado · voltar ao automático</button>' : '') + '</span>' +
-          '<span class="line__lead" aria-hidden="true"></span><span class="line__v">' + (l.valor != null ? num(l.valor) : '—') + '</span>' +
           '<span class="line__ctl"><span class="qty"><button type="button" class="qty__b" data-act="dec" aria-label="Menos 250 g de ' + esc(l.c.nome) + '">−</button><output aria-live="polite">' + kgTxt(l.g) + '</output><button type="button" class="qty__b" data-act="inc" aria-label="Mais 250 g de ' + esc(l.c.nome) + '">+</button></span>' +
           '<button type="button" class="icon-btn" data-act="rm" aria-label="Remover ' + esc(l.c.nome) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></span></li>';
       }).join('') + '</ul>' +
       '<button type="button" class="link-btn" data-go="cortes">+ Adicionar corte</button>' +
-      '<div class="cupom__tot"><p><span>Total da carne</span><b>' + (r.temPreco ? 'R$ ' + num(r.valor) : '—') + '</b></p>' +
-      '<p class="cupom__sub"><span>' + pessoasTxt() + '</span><span>' + (r.temPreco ? '~' + brl(r.porPessoa) + '/pessoa' : '') + '</span></p>' +
-      '<span class="stamp stamp--brasa" aria-hidden="true">Pronto<br>pra brasa</span></div>' +
-      (r.precoParcial ? '<p class="cupom__note">* Alguns cortes sem preço não entram no total.</p>' : '') +
-      '<p class="cupom__note">' + (!r.temPreco ? '* Preços estimados ainda não disponíveis.' : '* Preço médio de açougue; confira no seu.') + '</p>' +
-      '<section aria-labelledby="l-extra"><h2 class="cupom__sec" id="l-extra"><span>Acompanhamentos</span><span>' + r.extras.length + ' itens</span></h2><ul class="checks">' +
-      r.extras.map(function (x) {
-        var ok = !!plan.extrasOk[x.id];
-        return '<li><label class="check"><input type="checkbox" data-x="' + x.id + '"' + (ok ? ' checked' : '') + '><span class="check__box" aria-hidden="true"></span><span class="check__n">' + esc(x.nome) + '</span><span class="check__q">' + esc(x.qtd) + '</span></label></li>';
-      }).join('') + '</ul></section>' +
-      '<p class="cupom__bye" aria-hidden="true">*** obrigado, bom churrasco ***</p><span class="cupom__barcode" aria-hidden="true"></span>' +
+      '<h2 class="folha__t" id="l-extra"><span class="step__n">02</span><span class="lettering">Brasa e mesa</span></h2><ul class="checks" aria-labelledby="l-extra">' +
+      r.extras.map(function (x) { return chk(x, x.qtd); }).join('') + '</ul>' +
+      '<h2 class="folha__t" id="l-ut"><span class="step__n">03</span><span class="lettering">Bancada do assador</span></h2><ul class="checks checks--2" aria-labelledby="l-ut">' +
+      UTENSILIOS.map(function (x) { return chk(x); }).join('') + '</ul>' +
       '</article></div>' +
       '<aside class="lista__side"><div class="total">' +
-      '<p class="total__k">Mandar pra turma</p>' +
-      '<p class="total__v">' + (r.temPreco ? '~' + brl(r.valor) : kgTxt(r.totalG)) + '</p>' +
-      '<p class="total__s">' + kgTxt(r.totalG) + ' · ' + r.pessoas + ' pessoas</p>' +
-      '<a class="btn btn--wa selo" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(txt) + '" id="share-wa">' + waIco() + '<span>Enviar no WhatsApp</span></a>' +
+      '<p class="total__k">Pra levar</p>' +
+      '<p class="total__v">' + kgTxt(r.totalG) + '</p>' +
+      '<p class="total__s">' + pessoasTxt() + ' · ' + r.linhas.length + (r.linhas.length > 1 ? ' cortes' : ' corte') + '</p>' +
+      (r.temPreco ? '<p class="total__note">Estimativa de gasto com carne: ~' + brl(r.valor) + (r.precoParcial ? ' (alguns cortes sem preço)' : '') + '. Preço médio, varia por região.</p>' : '') +
+      '<a class="btn btn--wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(txt) + '" id="share-wa">' + waIco() + '<span>Enviar no WhatsApp</span></a>' +
       '<button type="button" class="btn btn--ghost" id="share-copy">Copiar lista</button>' +
       (navigator.share ? '<button type="button" class="btn btn--ghost" id="share-native">Compartilhar…</button>' : '') +
+      '<button type="button" class="btn btn--ghost" data-go="brasa">Ver ordem na brasa</button>' +
       '<button type="button" class="link-btn link-btn--danger" id="clear-list">Limpar lista</button>' +
       '</div></aside></div>';
   }
@@ -301,8 +395,8 @@
     var d = $('#dock-sum');
     if (!n) { d.innerHTML = '<span class="dock__t">' + plan.adultos + ' + ' + plan.criancas + ' pessoas · escolha os cortes</span>'; d.classList.add('is-empty'); d.setAttribute('aria-label', 'Nenhum corte na lista ainda'); return; }
     d.classList.remove('is-empty');
-    d.innerHTML = '<span class="dock__t"><b>' + kgTxt(r.totalG) + '</b><i aria-hidden="true">·</i>' + r.pessoas + ' pessoas' + (r.temPreco ? '<i aria-hidden="true">·</i><b>~' + brl(r.valor) + '</b>' : '') + '</span><span class="dock__go">Ver lista<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></span>';
-    d.setAttribute('aria-label', 'Ver lista: ' + kgTxt(r.totalG) + ' para ' + r.pessoas + ' pessoas' + (r.temPreco ? ', cerca de ' + brl(r.valor) : ''));
+    d.innerHTML = '<span class="dock__t"><b>' + kgTxt(r.totalG) + '</b><i aria-hidden="true">·</i>' + r.pessoas + ' pessoas' + '<i aria-hidden="true">·</i>' + r.linhas.length + (r.linhas.length > 1 ? ' cortes' : ' corte') + '</span><span class="dock__go">Ver lista<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></span>';
+    d.setAttribute('aria-label', 'Ver lista: ' + kgTxt(r.totalG) + ' para ' + r.pessoas + ' pessoas' + '');
   }
 
   var last;
@@ -311,7 +405,7 @@
     var prevG = last ? last.totalG + '|' + last.alvo : null;
     last = compute();
     renderPlan(last);
-    if (prevG !== null && prevG !== last.totalG + '|' + last.alvo) { var vz = $('#result .visor'); if (vz) vz.classList.add('roll'); } renderLista(last); renderDock(last); syncCardButtons();
+    if (prevG !== null && prevG !== last.totalG + '|' + last.alvo) { var vz = $('#result .conta'); if (vz) { vz.classList.remove('roll'); void vz.offsetWidth; vz.classList.add('roll'); } } renderLista(last); renderBrasa(last); renderDock(last); syncCardButtons();
     document.dispatchEvent(new CustomEvent('plan:change', { detail: { itens: plan.itens.slice() } }));
   }
 
@@ -326,7 +420,7 @@
   }
 
   /* ---------- navegação ---------- */
-  var VIEWS = ['planejar', 'cortes', 'lista'];
+  var VIEWS = ['planejar', 'cortes', 'brasa', 'lista'];
   function setView(v, focus) {
     if (VIEWS.indexOf(v) < 0) v = 'planejar';
     document.body.setAttribute('data-view', v);
@@ -441,6 +535,17 @@
     });
     $('#lista-body').addEventListener('change', function (e) { var x = e.target.dataset.x; if (x) { plan.extrasOk[x] = e.target.checked; save(); } });
 
+    // na brasa
+    $('#servir').addEventListener('change', function (e) { if (/^\d\d:\d\d$/.test(e.target.value)) { plan.servir = e.target.value; commit(); } });
+    $('#brasa-body').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act="timer"]'); if (!b) return;
+      var id = b.closest('[data-id]').dataset.id, c = corte(id);
+      if (timers[id]) { delete timers[id]; toast('Timer de ' + c.nome + ' parado'); }
+      else { var t = +b.dataset.min * 60; timers[id] = { end: Date.now() + t * 1000, total: t, virou: false }; toast('Timer de ' + c.nome + ': aviso para virar na metade'); }
+      renderBrasa(last);
+      var again = $('#brasa-body [data-id="' + id + '"] .timer'); if (again) again.focus();
+    });
+
     // navegação
     document.addEventListener('click', function (e) {
       var g = e.target.closest('[data-go]'); if (g) { e.preventDefault(); setView(g.dataset.go, true); return; }
@@ -455,7 +560,6 @@
       if (has(id)) return; add(id); toast(c.nome + ' entrou na lista');
     });
 
-    var pn = $('#pedido-n'); if (pn) pn.textContent = 'Nº ' + String(plan.pedido).padStart(4, '0');
     var pd = $('#pedido-d'); if (pd) pd.textContent = new Date().toLocaleDateString('pt-BR');
     renderGrid();
     commit();
