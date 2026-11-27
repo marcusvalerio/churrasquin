@@ -11,10 +11,19 @@
    "label": "Boi",
    "group": "conteudo",
    "tags": [
-    "carne bovina",
-    "vaca"
+    "bovino"
    ],
    "shapes": [
+    {
+     "tone": "body",
+     "paint": "fill",
+     "type": "rect",
+     "x": 6.5,
+     "y": 14.5,
+     "width": 11,
+     "height": 6.5,
+     "rx": 3.25
+    },
     {
      "tone": "line",
      "type": "path",
@@ -92,6 +101,15 @@
    ],
    "shapes": [
     {
+     "tone": "body",
+     "paint": "fill",
+     "type": "ellipse",
+     "cx": 12,
+     "cy": 15.4,
+     "rx": 3.4,
+     "ry": 2.4
+    },
+    {
      "tone": "line",
      "type": "path",
      "d": "M6.6 8.2 5.6 3.6l4.2 2.3"
@@ -155,11 +173,16 @@
    "label": "Frango",
    "group": "conteudo",
    "tags": [
-    "galinha",
-    "ave"
+    "galinha"
    ],
-   "note": "ave inteira de perfil: so a cabeca nao le (teste cego)",
+   "note": "ave inteira de perfil; crista serrilhada, bico curto fechado e barbela (evita leitura de pato)",
    "shapes": [
+    {
+     "tone": "body",
+     "paint": "fill",
+     "type": "path",
+     "d": "M7.4 9.6C5.9 10.8 5 12.6 5 14.6c0 2.9 2.7 4.6 6.6 4.6 4 0 6.6-2 7.1-5.3.3-1.8.4-3.6 1.4-5.5-2.4.3-4 1.4-5.2 3-1.5.7-3.8.4-5-1.6Z"
+    },
     {
      "tone": "line",
      "type": "circle",
@@ -170,12 +193,17 @@
     {
      "tone": "line",
      "type": "path",
-     "d": "M7.3 4.6c.1-1.1 1.4-1.6 2.2-.7.6-.6 1.8-.3 1.8.9"
+     "d": "M6.6 5.1l.5-1.3 1 .9.9-1.2.8 1.2 1.1-.7v1.4"
     },
     {
      "tone": "line",
      "type": "path",
-     "d": "M5.9 6.6 3.6 7.5l2.4.8"
+     "d": "M6 6.5 4.2 7.4l1.9.6"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.4 9.1c.1.9-.3 1.6-1 1.6"
     },
     {
      "tone": "line",
@@ -190,7 +218,7 @@
     {
      "tone": "line",
      "type": "circle",
-     "cx": 8.7,
+     "cx": 8.9,
      "cy": 6.9,
      "r": 0.75,
      "paint": "fill"
@@ -202,11 +230,15 @@
    "label": "Grelha",
    "group": "conteudo",
    "tags": [
-    "churrasqueira",
-    "grill"
+    "churrasqueira"
    ],
-   "note": "churrasqueira de bacia com grelha e pes",
    "shapes": [
+    {
+     "tone": "body",
+     "paint": "fill",
+     "type": "path",
+     "d": "M4.5 9a7.5 6.5 0 0 0 15 0Z"
+    },
     {
      "tone": "line",
      "type": "path",
@@ -234,10 +266,17 @@
    "label": "Termometro",
    "group": "conteudo",
    "tags": [
-    "temperatura",
-    "ponto"
+    "temperatura"
    ],
    "shapes": [
+    {
+     "tone": "body",
+     "paint": "fill",
+     "type": "circle",
+     "cx": 12,
+     "cy": 16.54,
+     "r": 3.2
+    },
     {
      "tone": "line",
      "type": "path",
@@ -260,19 +299,31 @@
    "label": "Fogo forte",
    "group": "conteudo",
    "tags": [
-    "brasa",
-    "calor alto"
+    "chama",
+    "brasa"
    ],
+   "note": "chama alta com 3 linguas assimetricas, base reta sobre carvao",
    "shapes": [
     {
-     "tone": "line",
+     "tone": "body",
+     "paint": "fill",
      "type": "path",
-     "d": "M12 3c1 3 5 4.8 5 9.6a5 5 0 0 1-10 0c0-2 1-3.4 2-4.5.4 1.3 1 2 1.8 2.3C10.6 8 11 5.3 12 3Z"
+     "d": "M10 17.5c-.6-2 .2-3.8 1.6-5 .1 1.3.7 2 1.4 2.4.3-1.6 1-2.6 2-3.2.4 2.4.4 4.3-.5 5.8Z"
     },
     {
      "tone": "line",
      "type": "path",
-     "d": "M6.2 11.6c-1.8 1.4-2.7 3-2.7 4.8a4 4 0 0 0 4 4h9a4 4 0 0 0 4-4c0-1.8-.9-3.4-2.7-4.8"
+     "d": "M7.2 17.5C6 15 6.4 12.5 8 10.5c.2 1.8 1 2.7 2 3.1C9.6 9.5 11 6 13 3c.2 3.5 2.5 5 3 8 .6-.6 1-1.4 1.2-2.5 1.6 2.7 1.2 6.5-.4 9Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5.5 21a2 2 0 0 1 4 0M10 21a2 2 0 0 1 4 0M14.5 21a2 2 0 0 1 4 0"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 21h16"
     }
    ]
   },
@@ -281,10 +332,15 @@
    "label": "Farofa",
    "group": "conteudo",
    "tags": [
-    "acompanhamento",
-    "tigela"
+    "acompanhamento"
    ],
    "shapes": [
+    {
+     "tone": "body",
+     "paint": "fill",
+     "type": "path",
+     "d": "M6.5 11.5C7.4 9.4 9.5 8 12 8s4.6 1.4 5.5 3.5Z"
+    },
     {
      "tone": "line",
      "type": "path",
@@ -323,22 +379,6 @@
      "cy": 5.4,
      "r": 0.8,
      "paint": "fill"
-    },
-    {
-     "tone": "line",
-     "type": "circle",
-     "cx": 11,
-     "cy": 11,
-     "r": 0.7,
-     "paint": "fill"
-    },
-    {
-     "tone": "line",
-     "type": "circle",
-     "cx": 13.6,
-     "cy": 10.3,
-     "r": 0.7,
-     "paint": "fill"
     }
    ]
   },
@@ -347,10 +387,15 @@
    "label": "Lista / sacola",
    "group": "navegacao",
    "tags": [
-    "compras",
-    "lista"
+    "compras"
    ],
    "shapes": [
+    {
+     "tone": "body",
+     "paint": "fill",
+     "type": "path",
+     "d": "M5 8h14l-1.3 11.2a2 2 0 0 1-2 1.8H8.3a2 2 0 0 1-2-1.8Z"
+    },
     {
      "tone": "line",
      "type": "path",
