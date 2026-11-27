@@ -589,7 +589,9 @@
     function add(n) { n.style.setProperty('--i', Math.min(i++, 8)); panel.appendChild(n); return n; }
     var hd = add(el('div', 'anm-hd'));
     var tw = el('div'); var h = el('h2', 'anm-title', String(c.nome || '').replace(/\s*\([^)]*\)/, '')); h.id = titleId; tw.appendChild(h);
-    tw.appendChild(el('p', 'anm-sub', ANIMAIS[c.animal].nome + ' · ' + (NOMES_REGIAO[c.regiao] || c.regiao || '')));
+    var an = ANIMAIS[c.animal].nome, rg = NOMES_REGIAO[c.regiao] || c.regiao || '';
+    an = an.charAt(0).toUpperCase() + an.slice(1);
+    tw.appendChild(el('p', 'anm-sub', an + (rg && rg.toLowerCase() !== String(c.nome).toLowerCase() ? ' · região ' + rg.toLowerCase() : '')));
     hd.appendChild(tw);
     if (c.precoKg) {
       var pr = el('div', 'anm-preco');

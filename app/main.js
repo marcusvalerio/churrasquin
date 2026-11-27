@@ -191,7 +191,7 @@
     var m = Math.round((d - Date.now()) / 60000); if (m <= 0) return 'agora';
     if (m < 60) return 'em ' + m + ' min'; var h = Math.floor(m / 60), r = m % 60;
     if (h >= 24) { var dd = Math.round(h / 24); return 'em ' + dd + (dd === 1 ? ' dia' : ' dias'); }
-    return 'em ' + h + ' h' + (r ? ' ' + r : '');
+    return 'em ' + h + ' h' + (r ? ' ' + r + ' min' : '');
   }
   function passouServir() { return plan.ativo && Date.now() >= servirDate().getTime(); }
 
@@ -412,8 +412,8 @@
     var picks = $('#picks'); if (!picks) return; var r = last;
     picks.innerHTML = r.linhas.length ? r.linhas.map(function (l) {
       return '<li class="row pick" data-id="' + esc(l.id) + '">' + art(l.c, 'thumb') +
-        '<span class="grow"><b class="t">' + esc(curto(l.c.nome)) + '</b><span class="s">' + esc(ANIMAL_NOME[l.c.animal] || '') + (tempoMin(l.c) ? ' · ' + durTxt(tempoMin(l.c)) : '') + (l.manual ? ' · ajustado' : '') + '</span></span>' +
-        '<span class="qty"><button type="button" data-act="dec" aria-label="Menos 250 g de ' + esc(curto(l.c.nome)) + '">−</button><output class="tnum">' + kgN(l.g) + '</output><button type="button" data-act="inc" aria-label="Mais 250 g de ' + esc(curto(l.c.nome)) + '">+</button></span>' +
+        '<span class="pick__n"><b class="t">' + esc(curto(l.c.nome)) + '</b><span class="s s--1">' + esc(ANIMAL_NOME[l.c.animal] || '') + (tempoMin(l.c) ? ' · ' + durTxt(tempoMin(l.c)) : '') + (l.manual ? ' · ajustado' : '') + '</span></span>' +
+        '<span class="qty"><span class="sr">Quantidade em quilos</span><button type="button" data-act="dec" aria-label="Menos 250 g de ' + esc(curto(l.c.nome)) + '">−</button><output class="tnum">' + kgTxt(l.g) + '</output><button type="button" data-act="inc" aria-label="Mais 250 g de ' + esc(curto(l.c.nome)) + '">+</button></span>' +
         '<button type="button" class="iconbtn iconbtn--flat" data-act="rm" aria-label="Tirar ' + esc(curto(l.c.nome)) + '">' + ic('x') + '</button></li>';
     }).join('') : '<li class="empty-row"><p class="s">Nenhum corte ainda. Escolha um estilo ou adicione abaixo.</p></li>';
     var sug = $('#sug'); if (sug) sug.innerHTML = SUGESTOES.filter(function (id) { return corte(id) && !has(id); }).slice(0, 8).map(function (id) {
@@ -484,12 +484,12 @@
     ids.sort(function (a, b) { return left(a) - left(b); }); return ids[0];
   }
   function left(id) { var t = timers[id]; return t.pausa != null ? t.pausa : Math.max(0, Math.round((t.end - Date.now()) / 1000)); }
-  function mmss(s) { return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+  function mmss(s) { var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = String(s % 60).padStart(2, '0'); return h ? h + ':' + String(m).padStart(2, '0') + ':' + x : String(m).padStart(2, '0') + ':' + x; }
   function renderBrasa() {
     var el = $('#v-brasa'), r = last, s = sequence(r), seq = s.seq, T = s.T, acender = s.acender;
     var live = Object.keys(timers).length > 0;
     var html = '<div class="pad"><header class="top"><div class="top__t"><p class="eyebrow tnum">Na brasa · ' + seq.length + (seq.length === 1 ? ' peça' : ' peças') + '</p><h1 class="h2">Linha do tempo</h1></div>' +
-      (live ? '<span class="chip heat chip--live"><i aria-hidden="true"></i>Ao vivo</span>' : listaBtn()) + '</header>';
+      '<div class="top__a">' + (live ? '<span class="chip heat chip--live"><i aria-hidden="true"></i>Ao vivo</span>' : '') + listaBtn() + '</div></header>';
     if (!seq.length) {
       html += '<div class="card empty"><span class="empty__ic">' + ic('grelha') + '</span><p class="h3">Nada na grelha ainda</p><p class="s">Escolha os cortes no Planejar. Aqui sai a ordem de entrada, com timers.</p><button type="button" class="btn btn-p btn-sm" data-go="planejar">Planejar</button></div>';
     } else {
@@ -499,7 +499,7 @@
         var tm = timers[a], c = corte(a), lf = left(a), half = lf > tm.total / 2 && !tm.virou, x = seq.filter(function (q) { return q.l.id === a; })[0];
         var C = 540.4, off = C * (1 - lf / tm.total);
         html += '<section class="card hot" style="--i:0" aria-label="Timer ativo"><div class="ring"><svg width="192" height="192" viewBox="0 0 192 192" aria-hidden="true"><circle cx="96" cy="96" r="86" class="ring__bg"/><circle cx="96" cy="96" r="86" class="ring__fg" id="ring-fg" style="stroke-dasharray:' + C + ';stroke-dashoffset:' + off.toFixed(1) + '"/></svg>' +
-          '<div class="ring__in"><p class="eyebrow" id="ring-k">' + (half ? 'Virar em' : 'Tirar em') + '</p><p class="display tnum" id="ring-v" role="timer" aria-live="off">' + mmss(half ? Math.max(0, lf - Math.round(tm.total / 2)) : lf) + '</p><p class="label">' + esc(curto(c.nome)) + (tm.virou ? ' · lado 2' : ' · lado 1') + '</p></div></div>' +
+          '<div class="ring__in"><p class="eyebrow" id="ring-k">' + (half ? 'Virar em' : 'Tirar em') + '</p><p class="display tnum' + (tm.total >= 3600 ? ' display--long' : '') + '" id="ring-v" role="timer" aria-live="off">' + mmss(half ? Math.max(0, lf - Math.round(tm.total / 2)) : lf) + '</p><p class="label">' + esc(curto(c.nome)) + (tm.virou ? ' · lado 2' : ' · lado 1') + '</p></div></div>' +
           '<div class="cells"><div class="cell"><span class="label">Zona</span><b>' + esc(x ? x.z.nome : '') + '</b></div><div class="cell"><span class="label">Tempo total</span><b class="tnum">' + durTxt(Math.round(tm.total / 60)) + '</b></div></div>' +
           '<div class="hot__act"><button type="button" class="btn btn-s btn--sq" data-pausa="' + esc(a) + '" aria-label="' + (tm.pausa != null ? 'Retomar' : 'Pausar') + ' timer">' + ic(tm.pausa != null ? 'play' : 'stop') + '</button>' +
           '<button type="button" class="btn btn-p grow" data-virei="' + esc(a) + '"' + (tm.virou ? ' data-tirar="1"' : '') + '>' + (tm.virou ? 'Tirei da grelha' : 'Virei') + '</button></div></section>';
@@ -508,7 +508,7 @@
         html += '<section class="card next" style="--i:0"><p class="eyebrow">' + (p.passou ? 'Churrasco' : 'Próximo passo · ' + esc(faltaTxt(p.t))) + '</p><p class="display tnum">' + hhmm(p.t) + '</p><p class="h3">' + esc(p.txt) + '</p>' +
           (p.passou ? '<button type="button" class="btn btn-p btn--full" data-fim="1">' + ic('x-camera') + 'Encerrar e guardar foto</button>' :
             p.id ? '<button type="button" class="btn btn-p btn--full" data-timer="' + esc(p.id) + '" data-min="' + p.min + '">' + ic('play') + 'Iniciar timer · ' + durTxt(p.min) + '</button>' :
-            '<button type="button" class="btn btn-s btn--full" data-timer="' + esc(seq[0].l.id) + '" data-min="' + seq[0].t + '">' + ic('play') + 'Já acendi: iniciar ' + esc(curto(seq[0].l.c.nome)) + '</button>') + '</section>';
+            '<button type="button" class="btn btn-s btn--full" data-timer="' + esc(seq[0].l.id) + '" data-min="' + seq[0].t + '">' + ic('play') + 'Iniciar ' + esc(curto(seq[0].l.c.nome).toLowerCase()) + '</button>') + '</section>';
       }
       var span = T - acender, pos = function (d) { return Math.max(0, Math.min(100, (d - acender) / span * 100)); };
       html += '<label class="field field--row" style="--i:1"><span class="label">' + ic('clock') + 'Servir às</span>' + horaSel('b-hora') + '</label>' +
@@ -529,11 +529,10 @@
     }
     html += '<h2 class="h3 sec__t">Ponto pelo termômetro</h2>' +
       '<section class="card termo"><div class="termo__top"><p class="display tnum"><span id="t-v">57</span><small> °C</small></p><div><p class="h3" id="t-p">Ao ponto</p><p class="s" id="t-s">centro rosado</p></div></div>' +
-      '<div class="termo__bar" aria-hidden="true"><i id="t-fill"></i></div>' +
-      '<label class="range"><span class="sr">Temperatura no centro da peça</span><input type="range" id="t-in" min="40" max="80" value="57" step="1"></label>' +
+      '<label class="range"><span class="termo__bar" aria-hidden="true"><i id="t-fill"></i></span><span class="sr">Temperatura no centro da peça</span><input type="range" id="t-in" min="40" max="80" value="57" step="1"></label>' +
       '<ul class="termo__list">' + PONTOS.map(function (p) { return '<li><b>' + p.nome + '</b><span class="tnum">' + p.min + '–' + p.max + ' °C</span></li>'; }).join('') + '</ul>' +
       '<p class="s nota">Tire 2–3 °C antes do alvo: a carne continua subindo no descanso.</p></section>' +
-      '<ul class="list seguro">' + SEGUROS.map(function (x) { return '<li class="row"><span class="grow t">' + x[0] + '</span><span class="s tnum">' + x[1] + '</span></li>'; }).join('') + '</ul>' +
+      '<ul class="list seguro">' + SEGUROS.map(function (x) { return '<li class="row"><span class="grow"><b class="t">' + x[0] + '</b><span class="s tnum">' + x[1] + '</span></span></li>'; }).join('') + '</ul>' +
       '<h2 class="h3 sec__t">Zonas de fogo</h2>' +
       '<ul class="list zonas">' + Object.keys(ZONAS).map(function (k) { var z = ZONAS[k]; return '<li class="row row--top"><span class="heat-m" aria-label="intensidade ' + z.n + ' de 4">' + [1, 2, 3, 4].map(function (j) { return '<i class="' + (j <= z.n ? 'on' : '') + '"></i>'; }).join('') + '</span><span class="grow"><b class="t">' + z.nome + '</b><span class="s tnum">' + z.palmos + ' · a mão aguenta ' + z.mao + '</span><span class="s s--3">' + z.uso + '</span></span></li>'; }).join('') + '</ul>' +
       '<p class="s nota">Monte a brasa em degrau: um lado alto e forte, outro baixo, e uma área sem brasa para o indireto.</p>' +
