@@ -69,14 +69,8 @@
   function tempo(r) { return typeof r.tempo === 'number' ? (r.tempo >= 60 ? Math.floor(r.tempo / 60) + ' h' + (r.tempo % 60 ? ' ' + r.tempo % 60 : '') : r.tempo + ' min') : (r.tempo || ''); }
   function dif(r) { return typeof r.dificuldade === 'number' ? DIF[r.dificuldade] || '' : (r.dificuldade || ''); }
   function cat1(c) { return CAT1[c] || c || ''; }
-  var CAT_ICO = {
-    farofa: '<path d="M4 13h16a8 8 0 0 1-16 0Z"/><path d="M8 10c1-2 3-2 4 0 1-2 3-2 4 0"/>',
-    molho: '<path d="M9 3h6M10 3v3l-3 4v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-9l-3-4V3"/><path d="M7 13h10"/>',
-    maionese: '<path d="M5 9h14l-1.5 10a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7Z"/><path d="M8 9c0-3 2-5 4-5s4 2 4 5"/>',
-    acompanhamento: '<path d="M3 15h18"/><path d="M5 15c0-4 3-7 7-7s7 3 7 7"/><path d="M12 5v3"/>',
-    tempero: '<path d="M9 8h6l1 12H8Z"/><path d="M10 8V5h4v3"/><circle cx="11" cy="13" r=".6"/><circle cx="13.5" cy="15" r=".6"/>'
-  };
-  function icon(c) { return '<svg class="rc-ico" viewBox="0 0 24 24" aria-hidden="true">' + (CAT_ICO[c] || CAT_ICO.acompanhamento) + '</svg>'; }
+  var CAT_ICO = { farofa: 1, molho: 1, maionese: 1, acompanhamento: 1, tempero: 1 };
+  function icon(c) { return '<svg class="rc-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-' + (CAT_ICO[c] ? c : 'acompanhamento') + '"/></svg>'; }
 
   function card(r, i, on) {
     return '<li class="rcard' + (on ? ' is-on' : '') + '" style="--i:' + i + '" data-cat="' + esc(r.categoria) + '">' +

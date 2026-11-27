@@ -522,3 +522,14 @@ button { cursor: pointer; }
 .anm-root .anm-panel { border-top: 1px solid var(--linha); box-shadow: 0 -4px 16px rgba(23, 18, 15, .06); }
 .anm-root .anm-bar .anm-fill { background: var(--carvao); }
 .anm-root .anm-nota { border-width: 1px; }
+
+/* ---------- ícones (icons/, duotone de linha) ----------
+ * A linha segue a cor do texto do componente; o tom de apoio vem de icons.css (--ic-body)
+ * e é ajustado aqui nas superfícies escuras/coloridas. */
+.i, .rc-ico, .tab svg, .top__btn svg, .sheet__x svg, .anm-ico { --ic-line: currentColor; }
+.rc-ico { --ic-line: var(--brasa-ink); }
+.anm-ico { flex: none; }
+.tabbar { --ic-body: #5E4837; }
+.tab.is-on { --ic-body: var(--creme); }
+.btn--brasa, .mix__ok, .gcard.is-on .gcard__add, .stepper__b:active { --ic-body: rgba(251, 241, 222, .6); }
+.btn--zap, .hero, .total, .crono, .chip[aria-pressed="true"], .hora[aria-checked="true"], .seg input:checked + span { --ic-body: rgba(251, 241, 222, .22); }

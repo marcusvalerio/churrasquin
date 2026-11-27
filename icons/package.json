@@ -1,0 +1,22 @@
+{
+  "name": "churrasquin-icons",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Icon library generated with generate-icons (churrasquin-duotone-line style).",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "src",
+    "svg",
+    "sprite.svg",
+    "icons.css",
+    "manifest.json"
+  ],
+  "exports": {
+    "./icons.css": "./icons.css",
+    "./sprite.svg": "./sprite.svg",
+    "./svg/*": "./svg/*",
+    "./manifest.json": "./manifest.json"
+  }
+}

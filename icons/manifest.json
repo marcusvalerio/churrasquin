@@ -1,0 +1,516 @@
+{
+  "name": "churrasquin-icons",
+  "style": "churrasquin-duotone-line",
+  "framework": "svg",
+  "grid": 24,
+  "icons": [
+    {
+      "name": "inicio",
+      "label": "Início",
+      "group": "navegacao",
+      "tags": [
+        "casa",
+        "home"
+      ],
+      "component": "InicioIcon"
+    },
+    {
+      "name": "planejar",
+      "label": "Planejar",
+      "group": "navegacao",
+      "tags": [
+        "plano",
+        "checklist"
+      ],
+      "component": "PlanejarIcon"
+    },
+    {
+      "name": "cortes",
+      "label": "Cortes",
+      "group": "navegacao",
+      "tags": [
+        "carne",
+        "bife"
+      ],
+      "component": "CortesIcon"
+    },
+    {
+      "name": "na-brasa",
+      "label": "Na brasa",
+      "group": "navegacao",
+      "tags": [
+        "fogo",
+        "grelha"
+      ],
+      "component": "NaBrasaIcon"
+    },
+    {
+      "name": "receitas",
+      "label": "Receitas",
+      "group": "navegacao",
+      "tags": [
+        "livro"
+      ],
+      "component": "ReceitasIcon"
+    },
+    {
+      "name": "lista-sacola",
+      "label": "Lista / sacola",
+      "group": "navegacao",
+      "tags": [
+        "compras"
+      ],
+      "component": "ListaSacolaIcon"
+    },
+    {
+      "name": "adicionar",
+      "label": "Adicionar",
+      "group": "acoes",
+      "tags": [
+        "mais"
+      ],
+      "component": "AdicionarIcon"
+    },
+    {
+      "name": "remover",
+      "label": "Remover",
+      "group": "acoes",
+      "tags": [
+        "lixo",
+        "apagar"
+      ],
+      "component": "RemoverIcon"
+    },
+    {
+      "name": "compartilhar",
+      "label": "Compartilhar",
+      "group": "acoes",
+      "tags": [
+        "enviar"
+      ],
+      "component": "CompartilharIcon"
+    },
+    {
+      "name": "copiar",
+      "label": "Copiar",
+      "group": "acoes",
+      "tags": [
+        "duplicar"
+      ],
+      "component": "CopiarIcon"
+    },
+    {
+      "name": "fechar",
+      "label": "Fechar",
+      "group": "acoes",
+      "tags": [
+        "x"
+      ],
+      "component": "FecharIcon"
+    },
+    {
+      "name": "avancar",
+      "label": "Avançar",
+      "group": "acoes",
+      "tags": [
+        "seta",
+        "proximo"
+      ],
+      "component": "AvancarIcon"
+    },
+    {
+      "name": "voltar",
+      "label": "Voltar",
+      "group": "acoes",
+      "tags": [
+        "seta"
+      ],
+      "component": "VoltarIcon"
+    },
+    {
+      "name": "info",
+      "label": "Informação",
+      "group": "acoes",
+      "tags": [
+        "ajuda"
+      ],
+      "component": "InfoIcon"
+    },
+    {
+      "name": "busca",
+      "label": "Busca",
+      "group": "acoes",
+      "tags": [
+        "procurar",
+        "lupa"
+      ],
+      "component": "BuscaIcon"
+    },
+    {
+      "name": "filtro",
+      "label": "Filtro",
+      "group": "acoes",
+      "tags": [
+        "funil"
+      ],
+      "component": "FiltroIcon"
+    },
+    {
+      "name": "play",
+      "label": "Iniciar",
+      "group": "acoes",
+      "tags": [
+        "play"
+      ],
+      "component": "PlayIcon"
+    },
+    {
+      "name": "pause",
+      "label": "Pausar",
+      "group": "acoes",
+      "tags": [
+        "pausa"
+      ],
+      "component": "PauseIcon"
+    },
+    {
+      "name": "check",
+      "label": "Confirmar",
+      "group": "acoes",
+      "tags": [
+        "ok",
+        "feito"
+      ],
+      "component": "CheckIcon"
+    },
+    {
+      "name": "editar",
+      "label": "Editar",
+      "group": "acoes",
+      "tags": [
+        "lapis"
+      ],
+      "component": "EditarIcon"
+    },
+    {
+      "name": "desfazer",
+      "label": "Desfazer",
+      "group": "acoes",
+      "tags": [
+        "voltar acao"
+      ],
+      "component": "DesfazerIcon"
+    },
+    {
+      "name": "boi",
+      "label": "Boi",
+      "group": "conteudo",
+      "tags": [
+        "bovino"
+      ],
+      "component": "BoiIcon"
+    },
+    {
+      "name": "porco",
+      "label": "Porco",
+      "group": "conteudo",
+      "tags": [
+        "suino"
+      ],
+      "component": "PorcoIcon"
+    },
+    {
+      "name": "cordeiro",
+      "label": "Cordeiro",
+      "group": "conteudo",
+      "tags": [
+        "ovelha",
+        "carneiro"
+      ],
+      "component": "CordeiroIcon"
+    },
+    {
+      "name": "frango",
+      "label": "Frango (coxa)",
+      "group": "conteudo",
+      "tags": [
+        "coxa",
+        "galinha",
+        "ave"
+      ],
+      "component": "FrangoIcon"
+    },
+    {
+      "name": "linguica",
+      "label": "Linguiça",
+      "group": "conteudo",
+      "tags": [
+        "embutido"
+      ],
+      "component": "LinguicaIcon"
+    },
+    {
+      "name": "carvao",
+      "label": "Carvão",
+      "group": "conteudo",
+      "tags": [
+        "brasa",
+        "combustivel"
+      ],
+      "component": "CarvaoIcon"
+    },
+    {
+      "name": "fogo-forte",
+      "label": "Fogo forte",
+      "group": "conteudo",
+      "tags": [
+        "chama alta"
+      ],
+      "component": "FogoForteIcon"
+    },
+    {
+      "name": "fogo-medio",
+      "label": "Fogo médio",
+      "group": "conteudo",
+      "tags": [
+        "chama media"
+      ],
+      "component": "FogoMedioIcon"
+    },
+    {
+      "name": "fogo-brando",
+      "label": "Fogo brando",
+      "group": "conteudo",
+      "tags": [
+        "chama baixa"
+      ],
+      "component": "FogoBrandoIcon"
+    },
+    {
+      "name": "fogo-indireto",
+      "label": "Fogo indireto",
+      "group": "conteudo",
+      "tags": [
+        "calor indireto"
+      ],
+      "component": "FogoIndiretoIcon"
+    },
+    {
+      "name": "termometro",
+      "label": "Termômetro",
+      "group": "conteudo",
+      "tags": [
+        "temperatura",
+        "ponto"
+      ],
+      "component": "TermometroIcon"
+    },
+    {
+      "name": "faca",
+      "label": "Faca",
+      "group": "conteudo",
+      "tags": [
+        "cortar"
+      ],
+      "component": "FacaIcon"
+    },
+    {
+      "name": "espeto",
+      "label": "Espeto",
+      "group": "conteudo",
+      "tags": [
+        "churrasco"
+      ],
+      "component": "EspetoIcon"
+    },
+    {
+      "name": "grelha",
+      "label": "Grelha",
+      "group": "conteudo",
+      "tags": [
+        "churrasqueira"
+      ],
+      "component": "GrelhaIcon"
+    },
+    {
+      "name": "turma",
+      "label": "Turma",
+      "group": "conteudo",
+      "tags": [
+        "pessoas",
+        "grupo"
+      ],
+      "component": "TurmaIcon"
+    },
+    {
+      "name": "adulto",
+      "label": "Adulto",
+      "group": "conteudo",
+      "tags": [
+        "pessoa"
+      ],
+      "component": "AdultoIcon"
+    },
+    {
+      "name": "crianca",
+      "label": "Criança",
+      "group": "conteudo",
+      "tags": [
+        "pessoa pequena"
+      ],
+      "component": "CriancaIcon"
+    },
+    {
+      "name": "relogio",
+      "label": "Relógio",
+      "group": "conteudo",
+      "tags": [
+        "hora"
+      ],
+      "component": "RelogioIcon"
+    },
+    {
+      "name": "timer",
+      "label": "Timer",
+      "group": "conteudo",
+      "tags": [
+        "cronometro"
+      ],
+      "component": "TimerIcon"
+    },
+    {
+      "name": "alerta",
+      "label": "Alerta",
+      "group": "conteudo",
+      "tags": [
+        "aviso"
+      ],
+      "component": "AlertaIcon"
+    },
+    {
+      "name": "maciez",
+      "label": "Maciez",
+      "group": "conteudo",
+      "tags": [
+        "macio",
+        "faca na carne"
+      ],
+      "component": "MaciezIcon"
+    },
+    {
+      "name": "gordura",
+      "label": "Gordura",
+      "group": "conteudo",
+      "tags": [
+        "gota",
+        "marmoreio"
+      ],
+      "component": "GorduraIcon"
+    },
+    {
+      "name": "sabor",
+      "label": "Sabor",
+      "group": "conteudo",
+      "tags": [
+        "aroma",
+        "gosto"
+      ],
+      "component": "SaborIcon"
+    },
+    {
+      "name": "farofa",
+      "label": "Farofa",
+      "group": "conteudo",
+      "tags": [
+        "acompanhamento"
+      ],
+      "component": "FarofaIcon"
+    },
+    {
+      "name": "molho",
+      "label": "Molho",
+      "group": "conteudo",
+      "tags": [
+        "garrafa",
+        "vinagrete"
+      ],
+      "component": "MolhoIcon"
+    },
+    {
+      "name": "maionese",
+      "label": "Maionese",
+      "group": "conteudo",
+      "tags": [
+        "pote"
+      ],
+      "component": "MaioneseIcon"
+    },
+    {
+      "name": "acompanhamento",
+      "label": "Acompanhamento",
+      "group": "conteudo",
+      "tags": [
+        "prato",
+        "travessa"
+      ],
+      "component": "AcompanhamentoIcon"
+    },
+    {
+      "name": "tempero",
+      "label": "Tempero",
+      "group": "conteudo",
+      "tags": [
+        "sal",
+        "saleiro"
+      ],
+      "component": "TemperoIcon"
+    },
+    {
+      "name": "bebida",
+      "label": "Bebida",
+      "group": "conteudo",
+      "tags": [
+        "cerveja",
+        "caneca"
+      ],
+      "component": "BebidaIcon"
+    },
+    {
+      "name": "bandeira-br",
+      "label": "Brasil",
+      "group": "bandeiras",
+      "tags": [
+        "pais"
+      ],
+      "component": "BandeiraBrIcon"
+    },
+    {
+      "name": "bandeira-ar",
+      "label": "Argentina",
+      "group": "bandeiras",
+      "tags": [
+        "pais"
+      ],
+      "component": "BandeiraArIcon"
+    },
+    {
+      "name": "bandeira-uy",
+      "label": "Uruguai",
+      "group": "bandeiras",
+      "tags": [
+        "pais"
+      ],
+      "component": "BandeiraUyIcon"
+    },
+    {
+      "name": "bandeira-us",
+      "label": "Estados Unidos",
+      "group": "bandeiras",
+      "tags": [
+        "pais",
+        "eua"
+      ],
+      "component": "BandeiraUsIcon"
+    }
+  ]
+}

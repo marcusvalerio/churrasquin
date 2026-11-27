@@ -1,0 +1,158 @@
+{
+ "name": "churrasquin-duotone-line",
+ "grid": 24,
+ "live": 20,
+ "paint": "stroke",
+ "prefix": "ic",
+ "stroke": {
+  "width": 1.8,
+  "linecap": "round",
+  "linejoin": "round"
+ },
+ "radius": {
+  "outer": 2.5,
+  "inner": 1.5
+ },
+ "tones": {
+  "line": {
+   "fallbackOpacity": 1
+  },
+  "body": {
+   "fallbackOpacity": 0.35
+  }
+ },
+ "palette": {
+  "light": {
+   "default": {
+    "line": {
+     "hex": "#3E352E",
+     "token": "--tinta"
+    },
+    "body": "#EDC89A"
+   },
+   "hover": {
+    "line": {
+     "hex": "#17120F",
+     "token": "--carvao"
+    },
+    "body": "#E4B57C"
+   },
+   "active": {
+    "line": {
+     "hex": "#B83A08",
+     "token": "--brasa-ink"
+    },
+    "body": "#FFB389"
+   },
+   "disabled": {
+    "line": "#B9ACA0",
+    "body": "#F1E6D3"
+   }
+  },
+  "dark": {
+   "default": {
+    "line": "#CFC4AD",
+    "body": "#5E4837"
+   },
+   "hover": {
+    "line": {
+     "hex": "#FBF1DE",
+     "token": "--creme"
+    },
+    "body": "#6E5642"
+   },
+   "active": {
+    "line": {
+     "hex": "#FF5F1F",
+     "token": "--brasa"
+    },
+    "body": "#8A3511"
+   },
+   "disabled": {
+    "line": "#6E625A",
+    "body": "#2E2520"
+   }
+  }
+ },
+ "sizes": [
+  16,
+  20,
+  24
+ ],
+ "darkMode": "class",
+ "darkSelector": [
+  ".dark",
+  "[data-theme=\"dark\"]"
+ ],
+ "context": {
+  "font": "Rubik, system-ui, sans-serif",
+  "radius": 16,
+  "brand": "#FF5F1F",
+  "onBrand": "#17120F",
+  "surface": "#FFF9EE",
+  "sidebar": "#FBF1DE",
+  "text": "#17120F",
+  "border": "#E0D2BA",
+  "surfaceDark": "#17120F",
+  "sidebarDark": "#241D19",
+  "textDark": "#FBF1DE",
+  "borderDark": "#3E352E"
+ },
+ "rationale": [
+  {
+   "decision": "duotone de linha: tom primario = linha 1.8 redonda; secundario = preenchimento de apoio",
+   "because": "cliente pediu dois tons; manter a linha 1.8 dos icones .i garante coerencia e a linha sozinha identifica o icone a 16px",
+   "source": "feedback cliente; app/styles.css:27"
+  },
+  {
+   "decision": "secundario mais presente (#EDC89A, ativo #FFB389, fallback 35%)",
+   "because": "cliente pediu que o tom de apoio apareca no tamanho de menu; linha primaria continua com contraste >7:1 no creme",
+   "source": "feedback cliente"
+  },
+  {
+   "decision": "primario --tinta (hover --carvao, ativo --brasa-ink); secundario creme-escuro #EAD3B2, ativo brasa suave #FFC3A3",
+   "because": "texto sobre creme; brasa-ink e a brasa com contraste para linha fina",
+   "source": "app/styles.css:4-7"
+  },
+  {
+   "decision": "escuro: linha #CFC4AD / corpo #4A3D33; ativo --brasa / #6B2A10",
+   "because": "tab bar carvao usa rotulos #CFC4AD",
+   "source": "app/styles.css:123"
+  },
+  {
+   "decision": "fogo: chama alta afilada, 3 linguas assimetricas, base reta sobre carvao",
+   "because": "chama arredondada em espiral foi lida como emoji de coco",
+   "source": "feedback cliente"
+  },
+  {
+   "decision": "grid 24, live 20",
+   "because": "current inline icons use viewBox 0 0 24 24",
+   "source": "app/main.js:48"
+  },
+  {
+   "decision": "radius 2.5 outer / 1.5 inner",
+   "because": "UI is rounded (--r-sm .5rem, --r-md 1rem, pill buttons); soft corners requested",
+   "source": "app/styles.css:13"
+  },
+  {
+   "decision": "cobalto not used as icon tone",
+   "because": "cobalto is focus/accent (focus ring, dashed notes); keep icons single-tone currentColor-friendly",
+   "source": "app/styles.css:25,95"
+  },
+  {
+   "decision": "flags as line icons, simplified",
+   "because": "flags at 24px outline: field rectangle + one key emblem (BR losango+circle, AR/UY stripes+sun, US stripes+canton); colors optional via separate filled variant if needed",
+   "source": "brand/v3/icons/pais-*.svg"
+  },
+  {
+   "decision": "WhatsApp excluded",
+   "because": "third-party mark: use official asset",
+   "source": "references/third-party-marks.md"
+  },
+  {
+   "decision": "frango = coxa com osso; boi/porco/cordeiro = cabecas",
+   "because": "galinha de perfil foi lida como pato no teste as cegas",
+   "source": "feedback cliente"
+  }
+ ]
+}

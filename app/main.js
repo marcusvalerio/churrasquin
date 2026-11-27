@@ -34,18 +34,10 @@
     lista: 'Lista: carne, carvão e ingredientes das receitas numa lista só, pronta para mandar no WhatsApp.'
   };
 
-  /* ---------- ícones de linha ---------- */
-  var I = {
-    plus: '<path d="M12 5v14M5 12h14"/>', check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>',
-    clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', fire: '<path d="M12 3c1 3.5 5 5.4 5 10a5 5 0 0 1-10 0c0-2.4 1.3-3.6 2.4-4.8C10.5 10.5 12 9 12 3Z"/>',
-    people: '<circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 19"/>',
-    scale: '<path d="M5 20h14l-2-11H7Z"/><circle cx="12" cy="6" r="2"/>', share: '<path d="M12 15V4M8 8l4-4 4 4"/><path d="M5 13v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6"/>',
-    copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
-    book: '<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3Z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>', bag: '<path d="M5 7h14l-1.4 11.2a2 2 0 0 1-2 1.8H8.4a2 2 0 0 1-2-1.8L5 7Z"/><path d="M9 7V6a3 3 0 0 1 6 0v1"/>',
-    arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>', search: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/>', info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/>',
-    play: '<path d="M8 5v14l11-7Z"/>', stop: '<rect x="7" y="7" width="10" height="10" rx="1.5"/>', thermo: '<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0Z"/><path d="M12 9v7"/>'
-  };
-  function ic(n, cls) { return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true">' + I[n] + '</svg>'; }
+  /* ---------- ícones: biblioteca icons/ (sprite injetado no index.html, ids ic-*) ---------- */
+  var I = { plus: 'adicionar', check: 'check', x: 'remover', clock: 'relogio', fire: 'fogo-forte', people: 'turma', share: 'compartilhar',
+    copy: 'copiar', book: 'receitas', bag: 'lista-sacola', arrow: 'avancar', search: 'busca', info: 'info', play: 'play', stop: 'pause', thermo: 'termometro' };
+  function ic(n, cls) { return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-' + (I[n] || n) + '"/></svg>'; }
   function dog(cls) { return '<svg class="dog ' + (cls || '') + '" viewBox="0 0 490 290" aria-hidden="true"><use href="#dog"/></svg>'; }
 
   /* ---------- util ---------- */

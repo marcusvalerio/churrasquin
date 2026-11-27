@@ -1,0 +1,1993 @@
+{
+ "package": {
+  "name": "churrasquin-icons",
+  "version": "0.1.0"
+ },
+ "framework": "svg",
+ "style": "./icon-style.json",
+ "icons": [
+  {
+   "name": "inicio",
+   "label": "Início",
+   "group": "navegacao",
+   "tags": [
+    "casa",
+    "home"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M5.5 10.2 12 4.6l6.5 5.6V19a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5.5 10.2 12 4.6l6.5 5.6V19a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.5 11.5 12 4.2l8.5 7.3"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M10 20.5v-4.5a2 2 0 0 1 4 0v4.5"
+    }
+   ]
+  },
+  {
+   "name": "planejar",
+   "label": "Planejar",
+   "group": "navegacao",
+   "tags": [
+    "plano",
+    "checklist"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 5,
+     "y": 4.5,
+     "width": 14,
+     "height": 16.5,
+     "rx": 2.5,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 5,
+     "y": 4.5,
+     "width": 14,
+     "height": 16.5,
+     "rx": 2.5
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 9,
+     "y": 3.9,
+     "width": 6,
+     "height": 2.6,
+     "rx": 1
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8.5 11l1.2 1.2 2.3-2.4M14 11h2M8.5 16l1.2 1.2 2.3-2.4M14 16h2"
+    }
+   ]
+  },
+  {
+   "name": "cortes",
+   "label": "Cortes",
+   "group": "navegacao",
+   "tags": [
+    "carne",
+    "bife"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 13c0-4.4 3.6-8 8.5-8C17 5 20 7.6 20 11c0 4-3.4 8-9 8-4.2 0-7-2.6-7-6Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 13c0-4.4 3.6-8 8.5-8C17 5 20 7.6 20 11c0 4-3.4 8-9 8-4.2 0-7-2.6-7-6Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7.5 13c0-2.8 2.2-4.6 5-4.6"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 14.5,
+     "cy": 12,
+     "r": 1.8
+    }
+   ]
+  },
+  {
+   "name": "na-brasa",
+   "label": "Na brasa",
+   "group": "navegacao",
+   "tags": [
+    "fogo",
+    "grelha"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M12 3c.3 2.4 2.2 3.6 3.2 5.6.6-.6.9-1.3 1-2.2 1.6 2 2 4.5 1.3 6.6H6.5c-.9-2.6 0-5.3 2-7 0 1.2.4 2 1 2.6C9.6 6 10.6 4.4 12 3Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 3c.3 2.4 2.2 3.6 3.2 5.6.6-.6.9-1.3 1-2.2 1.6 2 2 4.5 1.3 6.6H6.5c-.9-2.6 0-5.3 2-7 0 1.2.4 2 1 2.6C9.6 6 10.6 4.4 12 3Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.8 16.5h16.4M7.5 16.5V20M12 16.5V20M16.5 16.5V20"
+    }
+   ]
+  },
+  {
+   "name": "receitas",
+   "label": "Receitas",
+   "group": "navegacao",
+   "tags": [
+    "livro"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M12 6.5C10.3 5.2 7.8 4.8 4 5v13c3.8-.2 6.3.2 8 1.5 1.7-1.3 4.2-1.7 8-1.5V5c-3.8-.2-6.3.2-8 1.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 6.5C10.3 5.2 7.8 4.8 4 5v13c3.8-.2 6.3.2 8 1.5 1.7-1.3 4.2-1.7 8-1.5V5c-3.8-.2-6.3.2-8 1.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 6.5v13"
+    }
+   ]
+  },
+  {
+   "name": "lista-sacola",
+   "label": "Lista / sacola",
+   "group": "navegacao",
+   "tags": [
+    "compras"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M5 8h14l-1.3 11.2a2 2 0 0 1-2 1.8H8.3a2 2 0 0 1-2-1.8Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5 8h14l-1.3 11.2a2 2 0 0 1-2 1.8H8.3a2 2 0 0 1-2-1.8Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9 8V6.5a3 3 0 0 1 6 0V8"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.5 12.5h5M9.5 16h3"
+    }
+   ]
+  },
+  {
+   "name": "adicionar",
+   "label": "Adicionar",
+   "group": "acoes",
+   "tags": [
+    "mais"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 5v14M5 12h14"
+    }
+   ]
+  },
+  {
+   "name": "remover",
+   "label": "Remover",
+   "group": "acoes",
+   "tags": [
+    "lixo",
+    "apagar"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M6.5 8h11l-.8 11.2a2 2 0 0 1-2 1.8H9.3a2 2 0 0 1-2-1.8Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 8h11l-.8 11.2a2 2 0 0 1-2 1.8H9.3a2 2 0 0 1-2-1.8Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4.5 8h15"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.5 8V5.5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1V8"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M10.5 11.5V17M13.5 11.5V17"
+    }
+   ]
+  },
+  {
+   "name": "compartilhar",
+   "label": "Compartilhar",
+   "group": "acoes",
+   "tags": [
+    "enviar"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 5,
+     "y": 12,
+     "width": 14,
+     "height": 8.5,
+     "rx": 1.5,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8 12H6.5A1.5 1.5 0 0 0 5 13.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-5.5a1.5 1.5 0 0 0-1.5-1.5H16"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 15V3.8M8 7.5l4-3.7 4 3.7"
+    }
+   ]
+  },
+  {
+   "name": "copiar",
+   "label": "Copiar",
+   "group": "acoes",
+   "tags": [
+    "duplicar"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M15.5 8V5.5A1.5 1.5 0 0 0 14 4H5.5A1.5 1.5 0 0 0 4 5.5V14a1.5 1.5 0 0 0 1.5 1.5H8"
+    },
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 8,
+     "y": 8,
+     "width": 12,
+     "height": 12,
+     "rx": 2,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 8,
+     "y": 8,
+     "width": 12,
+     "height": 12,
+     "rx": 2
+    }
+   ]
+  },
+  {
+   "name": "fechar",
+   "label": "Fechar",
+   "group": "acoes",
+   "tags": [
+    "x"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 6.5l11 11M17.5 6.5l-11 11"
+    }
+   ]
+  },
+  {
+   "name": "avancar",
+   "label": "Avançar",
+   "group": "acoes",
+   "tags": [
+    "seta",
+    "proximo"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5 12h14M13 6l6 6-6 6"
+    }
+   ]
+  },
+  {
+   "name": "voltar",
+   "label": "Voltar",
+   "group": "acoes",
+   "tags": [
+    "seta"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M19 12H5M11 6l-6 6 6 6"
+    }
+   ]
+  },
+  {
+   "name": "info",
+   "label": "Informação",
+   "group": "acoes",
+   "tags": [
+    "ajuda"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 12,
+     "cy": 12,
+     "r": 8.5,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 12,
+     "r": 8.5
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 11v5.5"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 8,
+     "r": 0.95,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "busca",
+   "label": "Busca",
+   "group": "acoes",
+   "tags": [
+    "procurar",
+    "lupa"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 10.5,
+     "cy": 10.5,
+     "r": 6,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 10.5,
+     "cy": 10.5,
+     "r": 6
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M15 15l5 5"
+    }
+   ]
+  },
+  {
+   "name": "filtro",
+   "label": "Filtro",
+   "group": "acoes",
+   "tags": [
+    "funil"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 5h16l-6 7.5V19l-4 1.5v-8Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 5h16l-6 7.5V19l-4 1.5v-8Z"
+    }
+   ]
+  },
+  {
+   "name": "play",
+   "label": "Iniciar",
+   "group": "acoes",
+   "tags": [
+    "play"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5Z"
+    }
+   ]
+  },
+  {
+   "name": "pause",
+   "label": "Pausar",
+   "group": "acoes",
+   "tags": [
+    "pausa"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 6.5,
+     "y": 5,
+     "width": 4,
+     "height": 14,
+     "rx": 1.5,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 6.5,
+     "y": 5,
+     "width": 4,
+     "height": 14,
+     "rx": 1.5
+    },
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 13.5,
+     "y": 5,
+     "width": 4,
+     "height": 14,
+     "rx": 1.5,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 13.5,
+     "y": 5,
+     "width": 4,
+     "height": 14,
+     "rx": 1.5
+    }
+   ]
+  },
+  {
+   "name": "check",
+   "label": "Confirmar",
+   "group": "acoes",
+   "tags": [
+    "ok",
+    "feito"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5 12.5l4.5 4.5L19 7.5"
+    }
+   ]
+  },
+  {
+   "name": "editar",
+   "label": "Editar",
+   "group": "acoes",
+   "tags": [
+    "lapis"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 0l.5.5a2.1 2.1 0 0 1 0 3L8.5 19Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 0l.5.5a2.1 2.1 0 0 1 0 3L8.5 19Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M13.5 7l3.5 3.5"
+    }
+   ]
+  },
+  {
+   "name": "desfazer",
+   "label": "Desfazer",
+   "group": "acoes",
+   "tags": [
+    "voltar acao"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9 5 4.5 9.5 9 14"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4.5 9.5H14a5.5 5.5 0 0 1 0 11h-3"
+    }
+   ]
+  },
+  {
+   "name": "boi",
+   "label": "Boi",
+   "group": "conteudo",
+   "tags": [
+    "bovino"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 6.5,
+     "y": 14.5,
+     "width": 11,
+     "height": 6.5,
+     "rx": 3.25,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 15V8.5A1.5 1.5 0 0 1 8 7h8a1.5 1.5 0 0 1 1.5 1.5V15"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8 7C5.5 7 3.5 5.6 3.5 3.5"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M16 7c2.5 0 4.5-1.4 4.5-3.5"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 9.8 3.5 10.3c.8 1.4 1.8 1.9 3 1.9"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M17.5 9.8l3 .5c-.8 1.4-1.8 1.9-3 1.9"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 6.5,
+     "y": 14.5,
+     "width": 11,
+     "height": 6.5,
+     "rx": 3.25
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 9.6,
+     "cy": 11.2,
+     "r": 0.95,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 14.4,
+     "cy": 11.2,
+     "r": 0.95,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 10,
+     "cy": 17.8,
+     "r": 0.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 14,
+     "cy": 17.8,
+     "r": 0.8,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "porco",
+   "label": "Porco",
+   "group": "conteudo",
+   "tags": [
+    "suino"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "ellipse",
+     "cx": 12,
+     "cy": 15.4,
+     "rx": 3.4,
+     "ry": 2.4,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.6 8.2 5.6 3.6l4.2 2.3"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M17.4 8.2l1-4.6-4.2 2.3"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 13,
+     "r": 7.6
+    },
+    {
+     "tone": "line",
+     "type": "ellipse",
+     "cx": 12,
+     "cy": 15.4,
+     "rx": 3.4,
+     "ry": 2.4
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 9,
+     "cy": 10.8,
+     "r": 0.95,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 15,
+     "cy": 10.8,
+     "r": 0.95,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 10.9,
+     "cy": 15.4,
+     "r": 0.7,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 13.1,
+     "cy": 15.4,
+     "r": 0.7,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "cordeiro",
+   "label": "Cordeiro",
+   "group": "conteudo",
+   "tags": [
+    "ovelha",
+    "carneiro"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M6.5 16.5a2.5 2.5 0 0 1-1.7-4.3 2.6 2.6 0 0 1 2.4-4.1 3 3 0 0 1 5.3-.7 2.7 2.7 0 0 1 3.7 2.4V14a2.5 2.5 0 0 1-2.5 2.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 16.5a2.5 2.5 0 0 1-1.7-4.3 2.6 2.6 0 0 1 2.4-4.1 3 3 0 0 1 5.3-.7 2.7 2.7 0 0 1 3.7 2.4V14a2.5 2.5 0 0 1-2.5 2.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7.5 16.5V20M12.5 16.5V20"
+    },
+    {
+     "tone": "body",
+     "type": "ellipse",
+     "cx": 17.6,
+     "cy": 11,
+     "rx": 2.4,
+     "ry": 3.1,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "ellipse",
+     "cx": 17.6,
+     "cy": 11,
+     "rx": 2.4,
+     "ry": 3.1
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M16.2 8.6 14.6 7.6"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 18.2,
+     "cy": 10.4,
+     "r": 0.75,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "frango",
+   "label": "Frango (coxa)",
+   "group": "conteudo",
+   "tags": [
+    "coxa",
+    "galinha",
+    "ave"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M14.5 12.8c-1.9 1.9-5 2.2-7.4.6C4.6 11.8 4.2 8.2 6.2 6 8.4 3.8 12 4 13.9 6.3c1.7 2 1.8 4.6.6 6.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M14.5 12.8c-1.9 1.9-5 2.2-7.4.6C4.6 11.8 4.2 8.2 6.2 6 8.4 3.8 12 4 13.9 6.3c1.7 2 1.8 4.6.6 6.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M14.2 12.6l3.2 3.2"
+    },
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 18.6,
+     "cy": 16,
+     "r": 1.4,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 18.6,
+     "cy": 16,
+     "r": 1.4
+    },
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 16.6,
+     "cy": 18,
+     "r": 1.4,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 16.6,
+     "cy": 18,
+     "r": 1.4
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7.5 7.5c.8-.8 1.8-1.1 2.8-1"
+    }
+   ],
+   "note": "coxa de frango (metafora universal; galinha de perfil foi lida como pato)"
+  },
+  {
+   "name": "linguica",
+   "label": "Linguiça",
+   "group": "conteudo",
+   "tags": [
+    "embutido"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M5 8.5c0 6 4.5 10.5 10.5 10.5a2.25 2.25 0 0 0 0-4.5C12 14.5 9.5 12 9.5 8.5a2.25 2.25 0 0 0-4.5 0Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5 8.5c0 6 4.5 10.5 10.5 10.5a2.25 2.25 0 0 0 0-4.5C12 14.5 9.5 12 9.5 8.5a2.25 2.25 0 0 0-4.5 0Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7.25 6.2 6.9 4M17.8 16.75l2.2.4"
+    }
+   ]
+  },
+  {
+   "name": "carvao",
+   "label": "Carvão",
+   "group": "conteudo",
+   "tags": [
+    "brasa",
+    "combustivel"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 20.5 5 15l4-2 3.5 3-1 4.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 20.5 5 15l4-2 3.5 3-1 4.5Z"
+    },
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M12.5 20.5l1-6 4-2.5 3 3.5-.5 5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12.5 20.5l1-6 4-2.5 3 3.5-.5 5Z"
+    },
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M8 11l1.5-4.5 4-1.5 3 3-1.5 4Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8 11l1.5-4.5 4-1.5 3 3-1.5 4Z"
+    }
+   ]
+  },
+  {
+   "name": "fogo-forte",
+   "label": "Fogo forte",
+   "group": "conteudo",
+   "tags": [
+    "chama alta"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M7.2 17.5C6 15 6.4 12.5 8 10.5c.2 1.8 1 2.7 2 3.1C9.6 9.5 11 6 13 3c.2 3.5 2.5 5 3 8 .6-.6 1-1.4 1.2-2.5 1.6 2.7 1.2 6.5-.4 9Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7.2 17.5C6 15 6.4 12.5 8 10.5c.2 1.8 1 2.7 2 3.1C9.6 9.5 11 6 13 3c.2 3.5 2.5 5 3 8 .6-.6 1-1.4 1.2-2.5 1.6 2.7 1.2 6.5-.4 9Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5.5 21a2 2 0 0 1 4 0M10 21a2 2 0 0 1 4 0M14.5 21a2 2 0 0 1 4 0"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 21h16"
+    }
+   ]
+  },
+  {
+   "name": "fogo-medio",
+   "label": "Fogo médio",
+   "group": "conteudo",
+   "tags": [
+    "chama media"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M8.2 17.5C6.9 15.4 7.2 12.7 9 11c.2 1.4.8 2.2 1.6 2.6.2-2.9 1.4-5.2 3.4-6.6.1 2.6 1.5 4.2 2.2 6.1.7 1.9.4 3.3-.4 4.4Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8.2 17.5C6.9 15.4 7.2 12.7 9 11c.2 1.4.8 2.2 1.6 2.6.2-2.9 1.4-5.2 3.4-6.6.1 2.6 1.5 4.2 2.2 6.1.7 1.9.4 3.3-.4 4.4Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5.5 21a2 2 0 0 1 4 0M10 21a2 2 0 0 1 4 0M14.5 21a2 2 0 0 1 4 0"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 21h16"
+    }
+   ]
+  },
+  {
+   "name": "fogo-brando",
+   "label": "Fogo brando",
+   "group": "conteudo",
+   "tags": [
+    "chama baixa"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M9.2 17.5c-.9-1.7-.5-3.5 1-4.8.3 1 .8 1.5 1.3 1.7.2-1.6 1-2.8 2.3-3.4.2 1.9 1.4 2.9 1.6 4.4.1 .8-.1 1.5-.5 2.1Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.2 17.5c-.9-1.7-.5-3.5 1-4.8.3 1 .8 1.5 1.3 1.7.2-1.6 1-2.8 2.3-3.4.2 1.9 1.4 2.9 1.6 4.4.1 .8-.1 1.5-.5 2.1Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5.5 21a2 2 0 0 1 4 0M10 21a2 2 0 0 1 4 0M14.5 21a2 2 0 0 1 4 0"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 21h16"
+    }
+   ]
+  },
+  {
+   "name": "fogo-indireto",
+   "label": "Fogo indireto",
+   "group": "conteudo",
+   "tags": [
+    "calor indireto"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.8 13h16.4"
+    },
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 13,
+     "y": 9,
+     "width": 6.5,
+     "height": 4,
+     "rx": 1.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 13,
+     "y": 9,
+     "width": 6.5,
+     "height": 4,
+     "rx": 1.8
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4.5 20.5a2 2 0 0 1 4 0M8.5 20.5a2 2 0 0 1 4 0M4 20.5h9"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 10C7 6.5 9 4.8 12.5 4.8"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M11 3.4l1.5 1.4L11 6.2"
+    }
+   ]
+  },
+  {
+   "name": "termometro",
+   "label": "Termômetro",
+   "group": "conteudo",
+   "tags": [
+    "temperatura",
+    "ponto"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 12,
+     "cy": 16.54,
+     "r": 3.2,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.8 13.2V6a2.2 2.2 0 0 1 4.4 0v7.2a4 4 0 1 1-4.4 0Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 9v7.5"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M17.5 6h2M17.5 9.5h2"
+    }
+   ]
+  },
+  {
+   "name": "faca",
+   "label": "Faca",
+   "group": "conteudo",
+   "tags": [
+    "cortar"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M14 10 3.8 20.2C9 19.5 14 16.5 16.5 12.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M14 10 3.8 20.2C9 19.5 14 16.5 16.5 12.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M14 10l3.6-3.6a1.8 1.8 0 0 1 2.5 2.5l-3.6 3.6"
+    }
+   ]
+  },
+  {
+   "name": "espeto",
+   "label": "Espeto",
+   "group": "conteudo",
+   "tags": [
+    "churrasco"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.8 12h13.2M18.5 10.8l1.5 1.2-1.5 1.2"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 5.3,
+     "cy": 12,
+     "r": 1.5
+    },
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 7.5,
+     "y": 8,
+     "width": 4,
+     "height": 8,
+     "rx": 1.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 7.5,
+     "y": 8,
+     "width": 4,
+     "height": 8,
+     "rx": 1.8
+    },
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 13,
+     "y": 8,
+     "width": 4,
+     "height": 8,
+     "rx": 1.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 13,
+     "y": 8,
+     "width": 4,
+     "height": 8,
+     "rx": 1.8
+    }
+   ]
+  },
+  {
+   "name": "grelha",
+   "label": "Grelha",
+   "group": "conteudo",
+   "tags": [
+    "churrasqueira"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4.5 9a7.5 6.5 0 0 0 15 0Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.5 9h17"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7 9V6M10.3 9V6M13.7 9V6M17 9V6"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4.5 9a7.5 6.5 0 0 0 15 0"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8.5 14.8 7 21M15.5 14.8 17 21"
+    }
+   ]
+  },
+  {
+   "name": "turma",
+   "label": "Turma",
+   "group": "conteudo",
+   "tags": [
+    "pessoas",
+    "grupo"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M6.5 19.5a5.5 5.5 0 0 1 11 0Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 12,
+     "cy": 8,
+     "r": 2.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 8,
+     "r": 2.8
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 19.5a5.5 5.5 0 0 1 11 0"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 6,
+     "cy": 10.5,
+     "r": 2
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 18,
+     "cy": 10.5,
+     "r": 2
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.5 18.5a3.5 3.5 0 0 1 3-3.4M20.5 18.5a3.5 3.5 0 0 0-3-3.4"
+    }
+   ]
+  },
+  {
+   "name": "adulto",
+   "label": "Adulto",
+   "group": "conteudo",
+   "tags": [
+    "pessoa"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 12,
+     "cy": 7,
+     "r": 3,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 7,
+     "r": 3
+    },
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M6 20.5v-2a6 6 0 0 1 12 0v2Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6 20.5v-2a6 6 0 0 1 12 0v2Z"
+    }
+   ]
+  },
+  {
+   "name": "crianca",
+   "label": "Criança",
+   "group": "conteudo",
+   "tags": [
+    "pessoa pequena"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 12,
+     "cy": 11,
+     "r": 2.4,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 11,
+     "r": 2.4
+    },
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M8.5 20.5v-1.3a3.5 3.5 0 0 1 7 0v1.3Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8.5 20.5v-1.3a3.5 3.5 0 0 1 7 0v1.3Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M11 8.4c.2-1.3 1.2-2 2.2-1.6"
+    }
+   ]
+  },
+  {
+   "name": "relogio",
+   "label": "Relógio",
+   "group": "conteudo",
+   "tags": [
+    "hora"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 12,
+     "cy": 12,
+     "r": 8.5,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 12,
+     "r": 8.5
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 7.5V12l3 2"
+    }
+   ]
+  },
+  {
+   "name": "timer",
+   "label": "Timer",
+   "group": "conteudo",
+   "tags": [
+    "cronometro"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 12,
+     "cy": 13.5,
+     "r": 7,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 13.5,
+     "r": 7
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M10 3.8h4M12 3.8v2.7M17.6 7.4l1.2-1.2"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 10v3.5l2 1"
+    }
+   ]
+  },
+  {
+   "name": "alerta",
+   "label": "Alerta",
+   "group": "conteudo",
+   "tags": [
+    "aviso"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M10.3 5a2 2 0 0 1 3.4 0l6.6 11.5a2 2 0 0 1-1.7 3H5.4a2 2 0 0 1-1.7-3Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M10.3 5a2 2 0 0 1 3.4 0l6.6 11.5a2 2 0 0 1-1.7 3H5.4a2 2 0 0 1-1.7-3Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 9.5v4.5"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 16.8,
+     "r": 0.95,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "maciez",
+   "label": "Maciez",
+   "group": "conteudo",
+   "tags": [
+    "macio",
+    "faca na carne"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 15.5c0-3.4 3.2-5.5 8-5.5s8 2.1 8 5c0 3-3.3 5.2-8.5 5.2C6.8 20.2 4 18.6 4 15.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 15.5c0-3.4 3.2-5.5 8-5.5s8 2.1 8 5c0 3-3.3 5.2-8.5 5.2C6.8 20.2 4 18.6 4 15.5Z"
+    },
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M15 7.5 8.5 14c3-.3 6.4-2.2 8-4.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M15 7.5 8.5 14c3-.3 6.4-2.2 8-4.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M15 7.5l2.6-2.6a1.3 1.3 0 0 1 1.8 1.8l-2.6 2.6"
+    }
+   ]
+  },
+  {
+   "name": "gordura",
+   "label": "Gordura",
+   "group": "conteudo",
+   "tags": [
+    "gota",
+    "marmoreio"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M12 3.5c3 3.7 6 7 6 10.5a6 6 0 0 1-12 0c0-3.5 3-6.8 6-10.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 3.5c3 3.7 6 7 6 10.5a6 6 0 0 1-12 0c0-3.5 3-6.8 6-10.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.3 14.5a2.8 2.8 0 0 0 2.2 2.8"
+    }
+   ]
+  },
+  {
+   "name": "sabor",
+   "label": "Sabor",
+   "group": "conteudo",
+   "tags": [
+    "aroma",
+    "gosto"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 15.5c0-3.4 3.2-5.5 8-5.5s8 2.1 8 5c0 3-3.3 5.2-8.5 5.2C6.8 20.2 4 18.6 4 15.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 15.5c0-3.4 3.2-5.5 8-5.5s8 2.1 8 5c0 3-3.3 5.2-8.5 5.2C6.8 20.2 4 18.6 4 15.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8.5 7.8c-1-1 1-2.2 0-3.8M12 7.8c-1-1 1-2.2 0-3.8M15.5 7.8c-1-1 1-2.2 0-3.8"
+    }
+   ]
+  },
+  {
+   "name": "farofa",
+   "label": "Farofa",
+   "group": "conteudo",
+   "tags": [
+    "acompanhamento"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M6.5 11.5C7.4 9.4 9.5 8 12 8s4.6 1.4 5.5 3.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.5 11.5h17c0 4.4-3.6 7.5-8.5 7.5s-8.5-3.1-8.5-7.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9 21h6"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 11.5C7.4 9.4 9.5 8 12 8s4.6 1.4 5.5 3.5"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 8.5,
+     "cy": 5.2,
+     "r": 0.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 4,
+     "r": 0.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 15.5,
+     "cy": 5.4,
+     "r": 0.8,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "molho",
+   "label": "Molho",
+   "group": "conteudo",
+   "tags": [
+    "garrafa",
+    "vinagrete"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M9.5 8h5l1.5 3v8a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 8 19v-8Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.5 8h5l1.5 3v8a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 8 19v-8Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M10.5 8V4.5h3V8"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8 13.5h8"
+    }
+   ]
+  },
+  {
+   "name": "maionese",
+   "label": "Maionese",
+   "group": "conteudo",
+   "tags": [
+    "pote"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 7.5,
+     "y": 4,
+     "width": 9,
+     "height": 3,
+     "rx": 1
+    },
+    {
+     "tone": "body",
+     "type": "rect",
+     "x": 6,
+     "y": 8.5,
+     "width": 12,
+     "height": 12,
+     "rx": 2.5,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 6,
+     "y": 8.5,
+     "width": 12,
+     "height": 12,
+     "rx": 2.5
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.2 15.5c0-2 1.3-3.3 2.8-3.3s2.8 1.3 2.8 3.3M9.2 15.5h5.6"
+    }
+   ]
+  },
+  {
+   "name": "acompanhamento",
+   "label": "Acompanhamento",
+   "group": "conteudo",
+   "tags": [
+    "prato",
+    "travessa"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M5 16a7 7 0 0 1 14 0Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5 16a7 7 0 0 1 14 0Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.5 18.5h17"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 7,
+     "r": 1.3
+    }
+   ]
+  },
+  {
+   "name": "tempero",
+   "label": "Tempero",
+   "group": "conteudo",
+   "tags": [
+    "sal",
+    "saleiro"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M7 11h8l.9 8.4a1.5 1.5 0 0 1-1.5 1.6H7.6a1.5 1.5 0 0 1-1.5-1.6Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7 11h8l.9 8.4a1.5 1.5 0 0 1-1.5 1.6H7.6a1.5 1.5 0 0 1-1.5-1.6Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8 11V8a3 3 0 0 1 6 0v3"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 17.5,
+     "cy": 4.5,
+     "r": 0.75,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 19.5,
+     "cy": 7,
+     "r": 0.75,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 17.2,
+     "cy": 7.8,
+     "r": 0.75,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "bebida",
+   "label": "Bebida",
+   "group": "conteudo",
+   "tags": [
+    "cerveja",
+    "caneca"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M5 8h10v11a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 19Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5 8h10v11a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 19Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M15 10.5h2.5a2 2 0 0 1 2 2v2.5a2 2 0 0 1-2 2H15"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5 8c0-2 1.4-3.2 3-3.2.8-.9 2.4-1.1 3.4-.3 1.6-.5 3.6.5 3.6 3.5"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8.5 11.5v5.5M11.5 11.5v5.5"
+    }
+   ]
+  },
+  {
+   "name": "bandeira-br",
+   "label": "Brasil",
+   "group": "bandeiras",
+   "tags": [
+    "pais"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 4,
+     "y": 6,
+     "width": 16,
+     "height": 12,
+     "rx": 2.5
+    },
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M12 8 18 12l-6 4-6-4Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 8 18 12l-6 4-6-4Z"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 12,
+     "r": 2
+    }
+   ],
+   "note": "bandeira simplificada em linha: campo + emblema-chave; uso decorativo ao lado do nome do pais"
+  },
+  {
+   "name": "bandeira-ar",
+   "label": "Argentina",
+   "group": "bandeiras",
+   "tags": [
+    "pais"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 10V8.5A2.5 2.5 0 0 1 6.5 6h11A2.5 2.5 0 0 1 20 8.5V10Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 14v1.5A2.5 2.5 0 0 0 6.5 18h11a2.5 2.5 0 0 0 2.5-2.5V14Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 4,
+     "y": 6,
+     "width": 16,
+     "height": 12,
+     "rx": 2.5
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4 10h16M4 14h16"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 12,
+     "r": 1.1,
+     "paint": "fill"
+    }
+   ],
+   "note": "bandeira simplificada em linha: campo + emblema-chave; uso decorativo ao lado do nome do pais"
+  },
+  {
+   "name": "bandeira-uy",
+   "label": "Uruguai",
+   "group": "bandeiras",
+   "tags": [
+    "pais"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 4,
+     "y": 6,
+     "width": 16,
+     "height": 12,
+     "rx": 2.5
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M11.5 6v6.5H4M11.5 9.2H20M4 15.5h16"
+    },
+    {
+     "tone": "body",
+     "type": "circle",
+     "cx": 7.7,
+     "cy": 9.2,
+     "r": 1.4,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 7.7,
+     "cy": 9.2,
+     "r": 1.4
+    }
+   ],
+   "note": "bandeira simplificada em linha: campo + emblema-chave; uso decorativo ao lado do nome do pais"
+  },
+  {
+   "name": "bandeira-us",
+   "label": "Estados Unidos",
+   "group": "bandeiras",
+   "tags": [
+    "pais",
+    "eua"
+   ],
+   "shapes": [
+    {
+     "tone": "body",
+     "type": "path",
+     "d": "M4 12.5V8.5A2.5 2.5 0 0 1 6.5 6h5v6.5Z",
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 4,
+     "y": 6,
+     "width": 16,
+     "height": 12,
+     "rx": 2.5
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M11.5 6v6.5H4M11.5 9.2H20M4 15.5h16"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 6.6,
+     "cy": 8.4,
+     "r": 0.6,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 9,
+     "cy": 8.4,
+     "r": 0.6,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 7.8,
+     "cy": 10.4,
+     "r": 0.6,
+     "paint": "fill"
+    }
+   ],
+   "note": "bandeira simplificada em linha: campo + emblema-chave; uso decorativo ao lado do nome do pais"
+  }
+ ]
+}
