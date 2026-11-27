@@ -433,6 +433,7 @@
     seen[base] = 1;
     ((c.mercado && c.mercado.rotulos) || []).concat(['ar', 'uy', 'us'].map(function (k) { return (c.nomes || {})[k]; })).forEach(function (n) {
       if (!n || out.length >= 3) return;
+      n = String(n).replace(/\s*\([^)]*\)/g, '').trim();
       var k = norm(n);
       if (seen[k] || k.indexOf(base) >= 0) return;
       seen[k] = 1; out.push(n);
