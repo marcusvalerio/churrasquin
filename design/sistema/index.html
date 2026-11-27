@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>churrasquin — sistema · fase 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--text);font:var(--t-body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--max-d);margin:0 auto;padding:0 var(--margin-d)}
+@media(max-width:700px){.wrap{padding:0 var(--margin-m)}}
+section{padding:var(--s-24) 0;border-top:1px solid var(--n-200)}
+.eyebrow{font:var(--t-micro);letter-spacing:var(--track-micro);text-transform:uppercase;color:var(--text-3);margin-bottom:var(--s-4)}
+h1{font:600 72px/72px var(--font);letter-spacing:-.035em}
+h2{font:var(--t-h1);letter-spacing:var(--track-tight);margin-bottom:var(--s-8)}
+h3{font:var(--t-h3)}
+p.lead{font:400 20px/28px var(--font);color:var(--text-2);max-width:640px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gutter-d)}
+.c4{grid-column:span 4}.c6{grid-column:span 6}.c3{grid-column:span 3}.c8{grid-column:span 8}.c12{grid-column:span 12}
+@media(max-width:900px){.grid{grid-template-columns:repeat(4,1fr);gap:var(--gutter-m)}.c4,.c6,.c8,.c12{grid-column:span 4}.c3{grid-column:span 2}h1{font-size:44px;line-height:48px}}
+.panel{background:var(--surface);border-radius:var(--r-l);padding:var(--s-8);box-shadow:var(--e-1)}
+.muted{color:var(--text-2)}.small{font:var(--t-body-s)}
+.label{font:var(--t-label);color:var(--text-2)}
+/* ---------- marca: forma + granulado ---------- */
+.brandart{background:var(--brand);border-radius:var(--r-xl);position:relative}
+.brandart svg.shapes{position:absolute;inset:0;width:100%;height:100%}
+/* ---------- componentes ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);height:56px;padding:0 var(--s-6);border-radius:var(--r-pill);font:600 16px/24px var(--font);border:0;cursor:pointer;transition:transform var(--d-1) var(--ease),background var(--d-1)}
+.btn-p{background:var(--n-900);color:#fff}.btn-p:hover{background:var(--n-700)}.btn-p.press{transform:scale(.97)}
+.btn-s{background:var(--n-100);color:var(--text)}.btn-s:hover{background:var(--n-200)}
+.btn-b{background:var(--brand);color:var(--brand-ink)}
+.btn[disabled]{background:var(--n-100);color:var(--n-300)}
+.btn-sm{height:40px;padding:0 var(--s-4);font-size:14px}
+.chip{display:inline-flex;align-items:center;gap:var(--s-1);height:32px;padding:0 var(--s-3);border-radius:var(--r-pill);font:var(--t-label);background:var(--surface);color:var(--text);box-shadow:inset 0 0 0 1px var(--n-200)}
+.chip.on{background:var(--n-900);color:#fff;box-shadow:none}
+.chip.heat{background:var(--heat-soft);color:#A8350B;box-shadow:none}
+.chip.brand{background:var(--brand-soft);color:var(--brand-ink);box-shadow:none}
+.stepper{display:inline-flex;align-items:center;height:48px;border-radius:var(--r-pill);background:var(--n-100);padding:var(--s-1)}
+.stepper button{width:40px;height:40px;border-radius:50%;border:0;background:var(--surface);font:500 20px/1 var(--font);box-shadow:var(--e-1)}
+.stepper button[disabled]{background:transparent;color:var(--n-300);box-shadow:none}
+.stepper span{min-width:56px;text-align:center;font:600 18px/24px var(--font);font-variant-numeric:tabular-nums}
+.field{display:flex;flex-direction:column;gap:var(--s-2)}
+.field input{height:56px;border-radius:var(--r-s);border:0;background:var(--n-50);box-shadow:inset 0 0 0 1px var(--n-200);padding:0 var(--s-4);font:var(--t-body);color:var(--text)}
+.field input.focus{box-shadow:inset 0 0 0 2px var(--n-900);background:#fff}
+.field input.err{box-shadow:inset 0 0 0 2px var(--err)}
+.field .hint{font:var(--t-body-s);color:var(--text-3)}.field .hint.e{color:var(--err)}
+.list{background:var(--surface);border-radius:var(--r-m);overflow:hidden}
+.row{display:flex;align-items:center;gap:var(--s-3);min-height:64px;padding:var(--s-3) var(--s-4)}
+.row+.row{border-top:1px solid var(--line)}
+.row .grow{flex:1;min-width:0}.row .t{font:500 16px/24px var(--font)}.row .s{font:var(--t-body-s);color:var(--text-2)}
+.row .val{font:500 16px/24px var(--font);font-variant-numeric:tabular-nums}
+.ico{width:40px;height:40px;border-radius:var(--r-s);background:var(--n-50);display:grid;place-items:center;flex:none}
+.ico svg{width:20px;height:20px}
+.check{width:24px;height:24px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--n-300);flex:none}
+.check.on{background:var(--n-900);box-shadow:none;display:grid;place-items:center}
+.bar{height:6px;border-radius:3px;background:var(--n-100);overflow:hidden}.bar i{display:block;height:100%;border-radius:3px;background:var(--n-900)}
+.bar.heat i{background:var(--heat)}.bar.brand i{background:var(--brand)}
+.toast{display:flex;align-items:center;gap:var(--s-3);background:var(--n-900);color:#fff;border-radius:var(--r-m);padding:var(--s-3) var(--s-3) var(--s-3) var(--s-4);box-shadow:var(--e-3);font:var(--t-body-s)}
+.toast b{font-weight:500;flex:1}.toast a{color:var(--brand);font-weight:600;padding:var(--s-2)}
+.tabbar{display:flex;gap:var(--s-1);padding:var(--s-1);background:rgba(255,255,255,.88);backdrop-filter:blur(20px);border-radius:var(--r-pill);box-shadow:var(--e-2),inset 0 0 0 1px rgba(20,20,19,.04)}
+.tab{flex:1;height:56px;border-radius:var(--r-pill);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:var(--t-micro);color:var(--text-3)}
+.tab svg{width:22px;height:22px}
+.tab.on{background:var(--n-900);color:#fff}
+.sheet{background:var(--surface);border-radius:var(--r-xl) var(--r-xl) 0 0;padding:var(--s-2) var(--s-6) var(--s-8);box-shadow:var(--e-3)}
+.sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--n-200);margin:0 auto var(--s-6)}
+.card{background:var(--surface);border-radius:var(--r-l);padding:var(--s-5);box-shadow:var(--e-1)}
+/* specimen */
+.sw{border-radius:var(--r-m);height:112px;padding:var(--s-4);display:flex;flex-direction:column;justify-content:flex-end;font:var(--t-label)}
+.sw small{font:var(--t-micro);opacity:.7}
+.sp-row{display:flex;align-items:baseline;gap:var(--s-6);padding:var(--s-4) 0;border-bottom:1px solid var(--line)}
+.sp-row .label{width:120px;flex:none}
+.space-bar{display:flex;align-items:center;gap:var(--s-4);height:32px}
+.space-bar i{display:block;height:16px;background:var(--brand);border-radius:2px}
+.principle{display:grid;grid-template-columns:48px 1fr;gap:var(--s-4);padding:var(--s-5) 0;border-bottom:1px solid var(--line);font:400 20px/28px var(--font)}
+.principle span{font:var(--t-label);color:var(--text-3);padding-top:6px;font-variant-numeric:tabular-nums}
+.stack{display:flex;flex-direction:column;gap:var(--s-4)}
+.hstack{display:flex;flex-wrap:wrap;gap:var(--s-3);align-items:center}
+.state{font:var(--t-micro);color:var(--text-3);letter-spacing:var(--track-micro);text-transform:uppercase;margin-top:var(--s-2)}
+/* ---------- telefones ---------- */
+.phones{display:flex;gap:var(--s-8);justify-content:center;flex-wrap:wrap}
+.phone{width:390px;height:844px;border-radius:48px;background:var(--bg);position:relative;overflow:hidden;box-shadow:0 0 0 10px #111,0 0 0 11px #333,var(--e-3);flex:none}
+@media(max-width:430px){.phone{width:100%;box-shadow:var(--e-2);border-radius:var(--r-xl)}}
+.status{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 28px 0 32px;font:600 15px/1 var(--font);position:relative;z-index:3}
+.scr{padding:0 var(--margin-m)}
+.phone .tabbar{position:absolute;left:var(--margin-m);right:var(--margin-m);bottom:28px;z-index:5}
+.scroll{position:absolute;inset:0;overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:center;height:56px}
+.iconbtn{width:44px;height:44px;border-radius:50%;background:var(--surface);display:grid;place-items:center;box-shadow:var(--e-1);border:0}
+.iconbtn svg{width:20px;height:20px}
+.photo{background:radial-gradient(120% 90% at 50% 40%,#FAFAF8 0%,#E9E8E4 70%,#DDDCD7 100%);display:grid;place-items:center;overflow:hidden;position:relative}
+.photo img{width:100%;height:100%;object-fit:cover}
+.flag{width:20px;height:14px;border-radius:3px;flex:none;box-shadow:0 0 0 .5px rgba(0,0,0,.12)}
+.ring{position:relative;display:grid;place-items:center}
+.ring svg{transform:rotate(-90deg)}
+.ring .in{position:absolute;text-align:center}
+.meter{display:flex;gap:var(--s-1)}.meter i{width:100%;height:6px;border-radius:3px;background:var(--n-100)}.meter i.on{background:var(--n-900)}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-3)}
+.kv>div{display:flex;flex-direction:column;gap:var(--s-2)}
+.kv b{font:600 20px/24px var(--font);font-variant-numeric:tabular-nums;letter-spacing:var(--track-tight)}
+footer{padding:var(--s-12) 0 var(--s-16);color:var(--text-3);font:var(--t-body-s)}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <linearGradient id="gk" x1="0" y1="1" x2=".6" y2="0"><stop offset="0" stop-color="#00E28E"/><stop offset=".45" stop-color="#000" stop-opacity=".0"/></linearGradient>
+ <symbol id="arches" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+  <path d="M-60 420C-60 220 20 120 120 120S300 220 300 420Z" fill="#0A0A09"/>
+  <path d="M60 420C60 160 150 60 260 60S460 160 460 420Z" fill="#0A0A09" opacity="1" transform="translate(40 0)"/>
+  <path d="M-60 420C-60 220 20 120 120 120S300 220 300 420Z" fill="url(#gk)" opacity=".55"/>
+  <path d="M100 420C100 160 190 60 300 60S500 160 500 420Z" fill="url(#gk)" opacity=".4"/>
+ </symbol>
+ <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z" fill="currentColor"/></symbol>
+ <symbol id="i-plan" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M8 9h8M8 13h8M8 17h5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></symbol>
+ <symbol id="i-cut" viewBox="0 0 24 24"><path d="M5 14c0-5 4-9 10-9 3 0 5 2 5 5 0 6-6 9-11 9-2.5 0-4-2-4-5z" fill="none" stroke="currentColor" stroke-width="1.75"/><circle cx="14" cy="10" r="2" fill="currentColor"/></symbol>
+ <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 3c1 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-4 2-7 2 1 3 3 3 5 1-1 1.5-5 1-9z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></symbol>
+ <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/><circle cx="4.5" cy="6" r="1.25" fill="currentColor"/><circle cx="4.5" cy="12" r="1.25" fill="currentColor"/><circle cx="4.5" cy="18" r="1.25" fill="currentColor"/></symbol>
+ <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+ <symbol id="i-therm" viewBox="0 0 24 24"><path d="M10 4a2 2 0 0 1 4 0v10a4 4 0 1 1-4 0z" fill="none" stroke="currentColor" stroke-width="1.75"/><circle cx="12" cy="17" r="1.75" fill="currentColor"/></symbol>
+ <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20h4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+ <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.25" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5M16 5a3 3 0 0 1 0 6M18 14c2 .6 3 2.4 3 5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></symbol>
+ <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></symbol>
+ <symbol id="f-BR" viewBox="0 0 20 14"><rect width="20" height="14" fill="#009B3A"/><path d="M10 1.5 18.5 7 10 12.5 1.5 7z" fill="#FEDF00"/><circle cx="10" cy="7" r="3.2" fill="#002776"/></symbol>
+ <symbol id="f-AR" viewBox="0 0 20 14"><rect width="20" height="14" fill="#74ACDF"/><rect y="4.67" width="20" height="4.67" fill="#fff"/><circle cx="10" cy="7" r="1.4" fill="#F6B40E"/></symbol>
+ <symbol id="f-UY" viewBox="0 0 20 14"><rect width="20" height="14" fill="#fff"/><g fill="#0038A8"><rect y="1.56" width="20" height="1.56"/><rect y="4.67" width="20" height="1.56"/><rect y="7.78" width="20" height="1.56"/><rect y="10.9" width="20" height="1.56"/></g><rect width="8" height="7.78" fill="#fff"/><circle cx="4" cy="3.9" r="1.8" fill="#FCD116"/></symbol>
+ <symbol id="f-US" viewBox="0 0 20 14"><rect width="20" height="14" fill="#fff"/><g fill="#B22234"><rect width="20" height="1.08"/><rect y="2.15" width="20" height="1.08"/><rect y="4.3" width="20" height="1.08"/><rect y="6.46" width="20" height="1.08"/><rect y="8.6" width="20" height="1.08"/><rect y="10.77" width="20" height="1.08"/><rect y="12.92" width="20" height="1.08"/></g><rect width="8.5" height="7.54" fill="#3C3B6E"/></symbol>
+</defs></svg>
+
+<!-- ABERTURA -->
+<header class="wrap" style="padding-top:var(--s-6);padding-bottom:var(--s-16)">
+ <div class="brandart grain" style="height:560px;overflow:hidden">
+  <svg class="shapes"><use href="#arches"/></svg>
+  <div style="position:absolute;left:var(--s-10);top:var(--s-10);right:var(--s-10);z-index:2;display:flex;justify-content:space-between;align-items:center">
+   <span style="font:600 20px/24px var(--font);letter-spacing:-.02em;color:var(--n-1000)">churrasquin</span>
+   <span class="label" style="color:var(--brand-ink)">Sistema · Fase 1 · nov 2026</span>
+  </div>
+ </div>
+ <div class="grid" style="margin-top:var(--s-12)">
+  <div class="c8"><h1>Precisão para quem cuida do fogo.</h1></div>
+  <div class="c4" style="align-self:end"><p class="lead" style="font-size:18px;line-height:28px">Fundação visual do churrasquin: grid de 4 pt, tokens, componentes e três telas de prova, montadas com os dados reais dos cortes.</p></div>
+ </div>
+</header>
+
+<main>
+<section class="wrap"><div class="eyebrow">01 · Princípios</div>
+ <div class="grid"><div class="c4"><h2>Cinco regras que decidem tudo o que vem depois.</h2></div>
+ <div class="c8">
+  <div class="principle"><span>01</span><div>Instrumento, não brinquedo. Cada tela responde a uma pergunta da churrasqueira: quanto, qual, quando, qual ponto.</div></div>
+  <div class="principle"><span>02</span><div>Neutro por padrão. A cor de marca aparece pouco e sempre com intenção; laranja só quando há calor real.</div></div>
+  <div class="principle"><span>03</span><div>Número é protagonista. Peso, tempo e temperatura em algarismos tabulares grandes, nunca escondidos.</div></div>
+  <div class="principle"><span>04</span><div>Tudo cai na grade de 4 pt. Nenhum espaço, raio ou altura fora da escala.</div></div>
+  <div class="principle"><span>05</span><div>A carne é a imagem. Foto de produto isolada, mesma luz; nada de ilustração cômica.</div></div>
+ </div></div>
+</section>
+
+<section class="wrap"><div class="eyebrow">02 · Grade e espaço</div>
+ <div class="grid">
+  <div class="c6"><h2>Base de 4 pt</h2>
+   <div class="panel stack" style="gap:0">
+    <div class="space-bar"><span class="label tnum" style="width:72px">4 · s-1</span><i style="width:4px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">8 · s-2</span><i style="width:8px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">12 · s-3</span><i style="width:12px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">16 · s-4</span><i style="width:16px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">20 · s-5</span><i style="width:20px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">24 · s-6</span><i style="width:24px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">32 · s-8</span><i style="width:32px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">48 · s-12</span><i style="width:48px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">64 · s-16</span><i style="width:64px"></i></div>
+    <div class="space-bar"><span class="label tnum" style="width:72px">96 · s-24</span><i style="width:96px"></i></div>
+   </div>
+   <p class="small muted" style="margin-top:var(--s-4)">Dentro de componente: 4–16. Entre componentes: 12–24. Entre seções: 32–48 no celular, 64–96 no desktop.</p>
+  </div>
+  <div class="c6"><h2>Colunas e margens</h2>
+   <div class="panel stack">
+    <div class="label">Celular 390 · 4 colunas · margem 20 · gutter 12</div>
+    <div style="display:grid;grid-template-columns:20px repeat(4,1fr) 20px;gap:0;height:96px;background:var(--n-50);border-radius:var(--r-s);overflow:hidden">
+     <i style="background:var(--heat-soft)"></i><div style="grid-column:2/6;display:grid;grid-template-columns:repeat(4,1fr);gap:12px"><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i></div><i style="background:var(--heat-soft)"></i></div>
+    <div class="label" style="margin-top:var(--s-4)">Desktop 1440 · 12 colunas · margem 64 · gutter 24 · máx. 1312</div>
+    <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:6px;height:96px;padding:0 16px;background:var(--heat-soft);border-radius:var(--r-s)">
+     <i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i><i style="background:var(--brand-soft)"></i></div>
+    <p class="small muted">Alvos de toque ≥ 44. Alturas de controle: 32 chip · 40 botão pequeno · 48 stepper · 56 botão e campo · 64 linha de lista.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="wrap"><div class="eyebrow">03 · Raio e elevação</div>
+ <div class="grid">
+  <div class="c6"><h2>Raios concêntricos</h2>
+   <div class="hstack" style="gap:var(--s-4);align-items:flex-end">
+    <div class="stack" style="gap:var(--s-2);align-items:center"><div style="width:64px;height:64px;background:var(--surface);border-radius:8px;box-shadow:var(--e-1)"></div><span class="label">8</span></div>
+    <div class="stack" style="gap:var(--s-2);align-items:center"><div style="width:72px;height:72px;background:var(--surface);border-radius:12px;box-shadow:var(--e-1)"></div><span class="label">12</span></div>
+    <div class="stack" style="gap:var(--s-2);align-items:center"><div style="width:80px;height:80px;background:var(--surface);border-radius:20px;box-shadow:var(--e-1)"></div><span class="label">20</span></div>
+    <div class="stack" style="gap:var(--s-2);align-items:center"><div style="width:88px;height:88px;background:var(--surface);border-radius:28px;box-shadow:var(--e-1)"></div><span class="label">28</span></div>
+    <div class="stack" style="gap:var(--s-2);align-items:center"><div style="width:96px;height:96px;background:var(--surface);border-radius:36px;box-shadow:var(--e-1)"></div><span class="label">36</span></div>
+   </div>
+   <p class="small muted" style="margin-top:var(--s-6)">Regra: raio interno = raio externo − padding. Card 28 com padding 20 leva foto com raio 8; tab bar pílula com padding 4 leva aba pílula.</p>
+  </div>
+  <div class="c6"><h2>Três níveis de elevação</h2>
+   <div class="hstack" style="gap:var(--s-6)">
+    <div class="card" style="width:120px;height:96px;box-shadow:var(--e-1)"><span class="label">e-1 · card</span></div>
+    <div class="card" style="width:120px;height:96px;box-shadow:var(--e-2)"><span class="label">e-2 · tab bar</span></div>
+    <div class="card" style="width:120px;height:96px;box-shadow:var(--e-3)"><span class="label">e-3 · sheet, toast</span></div>
+   </div>
+   <p class="small muted" style="margin-top:var(--s-6)">Sombras longas e frias, opacidade máx. 16%. Nada de borda + sombra no mesmo elemento.</p>
+  </div>
+ </div>
+</section>
+
+<section class="wrap"><div class="eyebrow">04 · Tipografia</div>
+ <div class="grid">
+  <div class="c4"><h2>Geist</h2><p class="muted">Grotesca neo-suíça de desenho técnico (Vercel, OFL, no Google Fonts). Abertura alta para ler de pé, a um braço da churrasqueira; algarismos tabulares nativos (<code>tnum</code>) para timers e pesos que não “pulam”; pesos 400/500/600 bastam. Menos onipresente que Inter, mais neutra que display. Uma família só: hierarquia por tamanho e cinza, nunca por troca de fonte.</p></div>
+  <div class="c8 panel">
+   <div class="sp-row"><span class="label">Display 56/56</span><span class="tnum" style="font:var(--t-display);letter-spacing:-.03em">18:42</span></div>
+   <div class="sp-row"><span class="label">H1 32/36</span><span style="font:var(--t-h1);letter-spacing:var(--track-tight)">Picanha</span></div>
+   <div class="sp-row"><span class="label">H2 24/28</span><span style="font:var(--t-h2);letter-spacing:var(--track-tight)">Sábado, 12 pessoas</span></div>
+   <div class="sp-row"><span class="label">H3 18/24</span><span style="font:var(--t-h3)">Como fazer na brasa</span></div>
+   <div class="sp-row"><span class="label">Body 16/24</span><span>Sal grosso na hora. Não tire a capa.</span></div>
+   <div class="sp-row"><span class="label">Small 14/20</span><span class="small muted">Rende 68% do peso cru</span></div>
+   <div class="sp-row"><span class="label">Label 13/16</span><span style="font:var(--t-label)">Mal passada a ao ponto</span></div>
+   <div class="sp-row" style="border:0"><span class="label">Micro 11/16</span><span style="font:var(--t-micro);letter-spacing:var(--track-micro);text-transform:uppercase;color:var(--text-3)">Próxima virada</span></div>
+  </div>
+ </div>
+</section>
+
+<section class="wrap"><div class="eyebrow">05 · Cor</div>
+ <div class="grid">
+  <div class="c4"><h2>Verde de marca, laranja só para calor.</h2><p class="muted">Todo o segmento fala vermelho, preto e madeira. O verde-vivo das referências tira o churrasquin do balcão de açougue e o coloca na prateleira de ferramenta: lê como “pronto, certo, vai”, é o verde do chimichurri e da brasa de carvão de qualidade quando acende, e contrasta com o vermelho da carne crua nas fotos em vez de competir. O laranja-brasa fica como cor <b>semântica</b> de calor: timer rodando, temperatura subindo. Nunca decoração.</p></div>
+  <div class="c8"><div class="grid" style="grid-template-columns:repeat(4,1fr);gap:var(--s-3)">
+   <div class="sw" style="background:var(--brand);color:var(--brand-ink)">Marca<small>#00E28E</small></div>
+   <div class="sw" style="background:var(--brand-soft);color:var(--brand-ink)">Marca suave<small>#D6FBEA</small></div>
+   <div class="sw" style="background:var(--heat);color:#fff">Calor<small>#FF5A1F</small></div>
+   <div class="sw" style="background:var(--heat-soft);color:#A8350B">Calor suave<small>#FFE6DB</small></div>
+   <div class="sw" style="background:var(--n-1000);color:#fff">Carvão<small>#0A0A09</small></div>
+   <div class="sw" style="background:var(--n-900);color:#fff">Tinta<small>#141413</small></div>
+   <div class="sw" style="background:var(--n-600);color:#fff">Texto 2<small>#6B6B66</small></div>
+   <div class="sw" style="background:var(--n-300);color:var(--n-900)">Linha forte<small>#C2C2BD</small></div>
+   <div class="sw" style="background:var(--n-100);color:var(--n-900)">Superfície 2<small>#EBEBE8</small></div>
+   <div class="sw" style="background:var(--n-50);color:var(--n-900);box-shadow:inset 0 0 0 1px var(--n-200)">Fundo<small>#F4F4F2</small></div>
+   <div class="sw" style="background:#fff;color:var(--n-900);box-shadow:inset 0 0 0 1px var(--n-200)">Card<small>#FFFFFF</small></div>
+   <div class="sw" style="background:var(--err);color:#fff">Erro<small>#E0352B</small></div>
+  </div><p class="small muted" style="margin-top:var(--s-4)">Verde nunca em texto sobre branco (contraste 1.6:1): sobre ele, sempre tinta #003D27 (10.9:1). Modo escuro inverte neutros; marca e calor se mantêm.</p></div>
+ </div>
+</section>
+
+<section class="wrap"><div class="eyebrow">06 · Forma e granulado</div>
+ <div class="grid">
+  <div class="c4"><h2>A linguagem de marca, com hora marcada.</h2><p class="muted">Formas grandes em carvão (#0A0A09) sobre verde, com gradiente atravessado por ruído <code>feTurbulence</code> em multiply. Aparece em quatro lugares, e só neles:</p>
+   <div class="list" style="margin-top:var(--s-6)">
+    <div class="row"><div class="grow t">Abertura / splash</div><span class="label">tela cheia</span></div>
+    <div class="row"><div class="grow t">Cabeçalho do Início</div><span class="label">1 bloco</span></div>
+    <div class="row"><div class="grow t">Card de destaque</div><span class="label">máx. 1 por tela</span></div>
+    <div class="row"><div class="grow t">Estado vazio</div><span class="label">ilustra ausência</span></div>
+   </div>
+  </div>
+  <div class="c4"><div class="brandart grain" style="height:100%;min-height:400px;overflow:hidden"><svg class="shapes"><use href="#arches"/></svg></div></div>
+  <div class="c4 stack">
+   <div class="brandart grain" style="height:188px;overflow:hidden;background:var(--n-1000)"><svg class="shapes" style="opacity:.9"><rect width="100%" height="100%" fill="url(#gk)" transform="scale(1 -1) translate(0 -188)"/></svg><span style="position:absolute;left:20px;bottom:20px;z-index:2;color:#fff;font:var(--t-h3)">Variante escura<br><span class="small" style="color:var(--n-300)">Na brasa, à noite</span></span></div>
+   <div class="card" style="height:188px;display:flex;flex-direction:column;justify-content:space-between"><span class="label">Proibido</span><span class="small muted">Granulado em texto, em botões, em lista, em mais de um bloco por tela; formas como moldura de foto.</span></div>
+  </div>
+ </div>
+</section>
+
+<section class="wrap"><div class="eyebrow">07 · Fotografia</div>
+ <div class="grid">
+  <div class="c4"><h2>Carne crua, isolada, mesma luz.</h2><p class="muted">Peça inteira, crua, sobre pedra neutra clara (mármore cinza #E9E8E4). Câmera a 45°, luz suave de janela da esquerda, sombra curta. Mesmo enquadramento para todo o banco: a peça ocupa 70% da largura, centrada. Sem tábua, faca, fogo ou mão. No card, foto em proporção 4:3 (lista 1:1), raio = raio do card − padding.</p></div>
+  <div class="c8"><div class="grid" style="grid-template-columns:repeat(3,1fr);gap:var(--s-3)">
+   <div class="stack" style="gap:var(--s-2)"><div class="photo" style="aspect-ratio:1;border-radius:var(--r-m)"><img src="a/tabua.jpg" alt=""></div><span class="small muted">Provisório (Unsplash, J. I. Pompé): tem tábua, fora da regra.</span></div>
+   <div class="stack" style="gap:var(--s-2)"><div class="photo" style="aspect-ratio:1;border-radius:var(--r-m)"><img src="a/costela.jpg" alt=""></div><span class="small muted">Provisório (E. Vieira): ângulo serve, fundo não.</span></div>
+   <div class="stack" style="gap:var(--s-2)"><div class="photo" style="aspect-ratio:1;border-radius:var(--r-m)"><span class="label" style="color:var(--text-3)">Peça · 45° · pedra</span></div><span class="small muted">Placeholder: gradiente de pedra até o banco próprio.</span></div>
+  </div></div>
+ </div>
+</section>
+
+<section class="wrap"><div class="eyebrow">08 · Componentes</div>
+ <div class="grid">
+  <div class="c4 panel stack"><h3>Botões</h3>
+   <div class="hstack"><button class="btn btn-p">Começar</button><button class="btn btn-p press">Pressionado</button></div>
+   <div class="hstack"><button class="btn btn-s">Secundário</button><button class="btn" disabled>Desabilitado</button></div>
+   <div class="hstack"><button class="btn btn-b">Destaque</button><button class="btn btn-s btn-sm">Pequeno 40</button></div>
+   <div class="state">Padrão · pressionado 97% · desabilitado</div>
+  </div>
+  <div class="c4 panel stack"><h3>Chips e stepper</h3>
+   <div class="hstack"><span class="chip on">Todos</span><span class="chip">Nobres</span><span class="chip">Econômicos</span></div>
+   <div class="hstack"><span class="chip brand">Pronto</span><span class="chip heat">Na brasa</span></div>
+   <div class="hstack"><div class="stepper"><button>−</button><span>12</span><button>+</button></div><div class="stepper"><button disabled>−</button><span>1</span><button>+</button></div></div>
+   <div class="state">Ativo · inativo · semântico · mínimo</div>
+  </div>
+  <div class="c4 panel stack"><h3>Campo</h3>
+   <div class="field"><span class="label">Pessoas</span><input value="12"></div>
+   <div class="field"><span class="label">Gramas por pessoa</span><input class="focus" value="400"><span class="hint">Média para adultos: 350–450 g</span></div>
+   <div class="field"><span class="label">Horário</span><input class="err" value="25:00"><span class="hint e">Use um horário entre 00:00 e 23:59</span></div>
+  </div>
+  <div class="c4 stack"><h3>Lista</h3>
+   <div class="list">
+    <div class="row"><div class="check on"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2.5 6.2 5 8.5l4.5-5" stroke="#fff" stroke-width="1.75" fill="none" stroke-linecap="round"/></svg></div><div class="grow"><div class="t" style="text-decoration:line-through;color:var(--text-3)">Picanha</div></div><span class="val" style="color:var(--text-3)">2,4 kg</span></div>
+    <div class="row"><div class="check"></div><div class="grow"><div class="t">Fraldinha</div><div class="s">2 peças</div></div><span class="val">1,6 kg</span></div>
+    <div class="row"><div class="check"></div><div class="grow"><div class="t">Carvão</div></div><span class="val">10 kg</span></div>
+   </div><div class="state">Marcado · padrão</div>
+  </div>
+  <div class="c4 panel stack"><h3>Anel e barras</h3>
+   <div class="hstack" style="gap:var(--s-6)">
+    <div class="ring"><svg width="96" height="96"><circle cx="48" cy="48" r="42" stroke="var(--n-100)" stroke-width="8" fill="none"/><circle cx="48" cy="48" r="42" stroke="var(--n-900)" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="263.9" stroke-dasharray="263.9" stroke-dashoffset="92"/></svg><div class="in"><b class="tnum" style="font:600 20px/24px var(--font)">65%</b></div></div>
+    <div class="stack grow" style="flex:1;gap:var(--s-3)">
+     <div class="bar"><i style="width:80%"></i></div><div class="bar heat"><i style="width:45%"></i></div><div class="bar brand"><i style="width:100%"></i></div>
+    </div>
+   </div>
+   <div class="state">Progresso · calor · completo</div>
+  </div>
+  <div class="c4 stack"><h3>Toast e tab bar</h3>
+   <div class="toast"><svg width="20" height="20" style="color:var(--brand)"><use href="#i-bell"/></svg><b>Vire a picanha agora</b><a>Feito</a></div>
+   <div class="tabbar">
+    <div class="tab on"><svg><use href="#i-home"/></svg>Início</div><div class="tab"><svg><use href="#i-plan"/></svg>Plano</div><div class="tab"><svg><use href="#i-cut"/></svg>Cortes</div><div class="tab"><svg><use href="#i-fire"/></svg>Brasa</div><div class="tab"><svg><use href="#i-list"/></svg>Lista</div>
+   </div>
+  </div>
+  <div class="c12" style="background:var(--n-200);border-radius:var(--r-l);padding:var(--s-8) var(--s-8) 0;display:flex;justify-content:center">
+   <div class="sheet" style="width:390px"><div class="grab"></div><h3 style="margin-bottom:var(--s-2)">Adicionar ao plano</h3><p class="small muted" style="margin-bottom:var(--s-6)">Picanha · 2 peças para 12 pessoas</p><button class="btn btn-p" style="width:100%">Adicionar 2,4 kg</button></div>
+  </div>
+ </div>
+</section>
+
+<section class="wrap"><div class="eyebrow">09 · Prova</div><h2>Três telas, um sistema.</h2>
+ <div class="phones">
+  <!-- INÍCIO -->
+  <div class="phone"><div class="scroll">
+   <div class="brandart grain" style="position:absolute;left:0;right:0;top:0;height:372px;border-radius:0 0 var(--r-xl) var(--r-xl);overflow:hidden"><svg class="shapes" viewBox="0 0 390 372" preserveAspectRatio="none"><defs><linearGradient id="hg" x1="0" y1="1" x2=".5" y2="0"><stop offset="0" stop-color="#00E28E" stop-opacity=".7"/><stop offset=".6" stop-color="#00E28E" stop-opacity="0"/></linearGradient></defs>
+<path d="M262 400C262 250 300 170 360 170S470 250 470 400Z" fill="#0A0A09"/><path d="M262 400C262 250 300 170 360 170S470 250 470 400Z" fill="url(#hg)"/>
+<path d="M330 400C330 200 370 96 430 96S520 200 520 400Z" fill="#0A0A09" transform="translate(-6 0)"/><path d="M324 400C324 200 364 96 424 96S514 200 514 400Z" fill="url(#hg)" opacity=".6"/></svg></div>
+   <div class="status"><span>9:41</span><span>●●●</span></div>
+   <div class="scr" style="position:relative;z-index:2">
+    <div class="top"><span style="font:600 18px/24px var(--font);letter-spacing:-.02em">churrasquin</span><button class="iconbtn"><svg><use href="#i-bell"/></svg></button></div>
+    <div style="margin-top:var(--s-6);color:var(--n-1000)"><div style="font:var(--t-micro);letter-spacing:var(--track-micro);text-transform:uppercase">Sábado · 13:00</div><div style="font:600 40px/44px var(--font);letter-spacing:-.03em;margin-top:var(--s-2)">Churrasco<br>da família</div></div>
+    <div class="card" style="margin-top:var(--s-12);padding:var(--s-5)">
+     <div class="kv"><div><span class="label">Pessoas</span><b>12</b></div><div><span class="label">Carne</span><b>4,8 kg</b></div><div><span class="label">Acender</span><b>11:20</b></div></div>
+     <div style="margin-top:var(--s-5);display:flex;justify-content:space-between" class="label"><span>Lista comprada</span><span class="tnum">7 de 11</span></div>
+     <div class="bar" style="margin-top:var(--s-2)"><i style="width:64%"></i></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--s-8)"><h3>No cardápio</h3><span class="label">Ver plano</span></div>
+    <div class="list" style="margin-top:var(--s-3);box-shadow:var(--e-1)" id="home-list"></div>
+   </div></div>
+   <div class="tabbar"><div class="tab on"><svg><use href="#i-home"/></svg>Início</div><div class="tab"><svg><use href="#i-plan"/></svg>Plano</div><div class="tab"><svg><use href="#i-cut"/></svg>Cortes</div><div class="tab"><svg><use href="#i-fire"/></svg>Brasa</div><div class="tab"><svg><use href="#i-list"/></svg>Lista</div></div>
+  </div>
+
+  <!-- CORTE -->
+  <div class="phone"><div class="scroll">
+   <div class="photo" style="position:absolute;top:0;left:0;right:0;height:340px"><img src="a/tabua.jpg" alt=""></div>
+   <div class="status" style="color:#fff"><span>9:41</span><span>●●●</span></div>
+   <div class="scr" style="position:relative;z-index:2"><div class="top"><button class="iconbtn"><svg><use href="#i-back"/></svg></button><span class="chip" style="background:rgba(255,255,255,.9);box-shadow:none">Nobre</span></div></div>
+   <div id="ficha" style="position:absolute;top:308px;left:0;right:0;bottom:0;background:var(--bg);border-radius:var(--r-xl) var(--r-xl) 0 0;padding:var(--s-6) var(--margin-m) 0"></div>
+  </div>
+   <div class="tabbar"><div class="tab"><svg><use href="#i-home"/></svg>Início</div><div class="tab"><svg><use href="#i-plan"/></svg>Plano</div><div class="tab on"><svg><use href="#i-cut"/></svg>Cortes</div><div class="tab"><svg><use href="#i-fire"/></svg>Brasa</div><div class="tab"><svg><use href="#i-list"/></svg>Lista</div></div>
+  </div>
+
+  <!-- NA BRASA -->
+  <div class="phone"><div class="scroll">
+   <div class="status"><span>9:41</span><span>●●●</span></div>
+   <div class="scr">
+    <div class="top"><div><div style="font:var(--t-micro);letter-spacing:var(--track-micro);text-transform:uppercase;color:var(--text-3)">Na brasa · 3 peças</div><div style="font:var(--t-h2);letter-spacing:var(--track-tight);margin-top:2px">Linha do tempo</div></div><span class="chip heat">● Ao vivo</span></div>
+    <div class="card" style="margin-top:var(--s-4);padding:var(--s-5);display:flex;flex-direction:column;align-items:center">
+     <div class="ring"><svg width="192" height="192"><circle cx="96" cy="96" r="86" stroke="var(--n-100)" stroke-width="10" fill="none"/><circle cx="96" cy="96" r="86" stroke="var(--heat)" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="540.4" stroke-dashoffset="205"/></svg>
+      <div class="in"><div style="font:var(--t-micro);letter-spacing:var(--track-micro);text-transform:uppercase;color:var(--text-3)">Virar em</div><div class="tnum" style="font:var(--t-display);letter-spacing:-.04em;margin:var(--s-1) 0">04:12</div><div class="label" id="brasa-nome">Picanha · lado 2</div></div></div>
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);width:100%;margin-top:var(--s-6)">
+      <div style="background:var(--n-50);border-radius:var(--r-m);padding:var(--s-3) var(--s-4)"><span class="label">Interna agora</span><div class="tnum" style="font:600 24px/32px var(--font);letter-spacing:var(--track-tight)">47 °C</div></div>
+      <div style="background:var(--n-50);border-radius:var(--r-m);padding:var(--s-3) var(--s-4)"><span class="label">Alvo · ao ponto</span><div class="tnum" style="font:600 24px/32px var(--font);letter-spacing:var(--track-tight)">55 °C</div></div>
+     </div>
+     <div style="display:grid;grid-template-columns:56px 1fr;gap:var(--s-3);width:100%;margin-top:var(--s-3)"><button class="btn btn-s" style="padding:0"><svg width="20" height="20"><use href="#i-pause"/></svg></button><button class="btn btn-p">Virei</button></div>
+    </div>
+    <div class="list" style="margin-top:var(--s-4);box-shadow:var(--e-1)">
+     <div class="row"><div class="ico" style="background:var(--heat-soft);color:var(--heat)"><svg><use href="#i-fire"/></svg></div><div class="grow"><div class="t">Fraldinha</div><div class="s tnum">12 de 30 min</div><div class="bar heat" style="margin-top:var(--s-2)"><i style="width:40%"></i></div></div><span class="val">18 min</span></div>
+     <div class="row"><div class="ico"><svg style="color:var(--text-3)"><use href="#i-therm"/></svg></div><div class="grow"><div class="t">Linguiça</div><div class="s">Entra às 12:40</div></div><span class="val" style="color:var(--text-3)">em 9 min</span></div>
+    </div>
+   </div></div>
+   <div class="tabbar"><div class="tab"><svg><use href="#i-home"/></svg>Início</div><div class="tab"><svg><use href="#i-plan"/></svg>Plano</div><div class="tab"><svg><use href="#i-cut"/></svg>Cortes</div><div class="tab on"><svg><use href="#i-fire"/></svg>Brasa</div><div class="tab"><svg><use href="#i-list"/></svg>Lista</div></div>
+  </div>
+ </div>
+</section>
+</main>
+<footer class="wrap">churrasquin · sistema fase 1 · fotos provisórias: Unsplash (ver brand/v6/creditos.md) · tokens em design/sistema/tokens.css</footer>
+
+<script src="a/cortes.js"></script>
+<script>
+(function(){
+ var C=window.CORTES||[], by=function(id){return C.find(function(c){return c.id===id})||{}};
+ var brl=function(n){return n.toLocaleString('pt-BR')};
+ // Início: lista com dados reais
+ var ids=['picanha','fraldinha','ancho'], q=[2.4,1.6,0.8];
+ document.getElementById('home-list').innerHTML=ids.map(function(id,i){var c=by(id);
+  return '<div class="row"><div class="photo" style="width:48px;height:48px;border-radius:var(--r-s);flex:none"></div><div class="grow"><div class="t">'+c.nome+'</div><div class="s">'+(c.tempo||'').split(';')[0]+'</div></div><span class="val">'+brl(q[i])+' kg</span></div>'}).join('');
+ // Ficha
+ var p=by('picanha'), m=function(v){var s='';for(var i=1;i<=5;i++)s+='<i class="'+(i<=v?'on':'')+'"></i>';return '<div class="meter">'+s+'</div>'};
+ var nm={BR:p.nome,AR:p.nomes.ar,UY:p.nomes.uy,US:p.nomes.us};
+ var preco=p.precoKg?'R$ '+p.precoKg.min+'–'+p.precoKg.max:'—';
+ document.getElementById('ficha').innerHTML=
+  '<div style="display:flex;justify-content:space-between;align-items:flex-start"><div><h1 style="font:var(--t-h1);letter-spacing:var(--track-tight)">'+p.nome+'</h1><div class="small muted" style="margin-top:var(--s-1)">Boi · traseiro, sobre a alcatra</div></div><div style="text-align:right"><div class="tnum" style="font:600 18px/24px var(--font)">'+preco+'</div><div class="label" style="color:var(--text-3)">por kg · estimado</div></div></div>'+
+  '<div class="card" style="margin-top:var(--s-5);padding:var(--s-5)"><div class="kv"><div><span class="label">Maciez</span>'+m(p.maciez)+'</div><div><span class="label">Gordura</span>'+m(p.gordura)+'</div><div><span class="label">Sabor</span>'+m(p.sabor)+'</div></div>'+
+  '<div style="height:1px;background:var(--line);margin:var(--s-4) 0"></div><div class="kv"><div><span class="label">Rende</span><b>'+Math.round(p.rendimento*100)+'%</b></div><div><span class="label">Tempo</span><b>40–50′</b></div><div><span class="label">Ponto</span><b style="font-size:16px;line-height:24px">Mal a ao</b></div></div></div>'+
+  '<div style="margin-top:var(--s-6)" class="label">No balcão de outros países</div>'+
+  '<div class="list" style="margin-top:var(--s-3);box-shadow:var(--e-1)">'+['AR','UY','US'].map(function(k){return '<div class="row" style="min-height:52px;padding:var(--s-3) var(--s-4)"><svg class="flag"><use href="#f-'+k+'"/></svg><div class="grow t" style="font-size:15px">'+nm[k]+'</div><span class="label" style="color:var(--text-3)">'+k+'</span></div>'}).join('')+'</div>';
+})();
+</script>
+</body></html>

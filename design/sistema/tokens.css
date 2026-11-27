@@ -1,0 +1,39 @@
+/* churrasquin — tokens do sistema (fase 1). Base 4pt. */
+:root{
+  /* espaço: só múltiplos de 4 */
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:20px;--s-6:24px;--s-8:32px;--s-10:40px;--s-12:48px;--s-16:64px;--s-24:96px;
+  /* margens de tela e grid */
+  --margin-m:20px; --gutter-m:12px; --cols-m:4;      /* 390: 20 | 4 col × 79.5 | 12 */
+  --margin-d:64px; --gutter-d:24px; --cols-d:12; --max-d:1440px;
+  /* raios */
+  --r-xs:8px;--r-s:12px;--r-m:20px;--r-l:28px;--r-xl:36px;--r-pill:999px;
+  /* cor: neutros quentes-frios equilibrados */
+  --n-0:#FFFFFF;--n-50:#F4F4F2;--n-100:#EBEBE8;--n-200:#DCDCD8;--n-300:#C2C2BD;--n-500:#8A8A85;--n-600:#6B6B66;--n-700:#45453F;--n-900:#141413;--n-1000:#0A0A09;
+  --brand:#00E28E; --brand-ink:#003D27; --brand-soft:#D6FBEA;
+  --heat:#FF5A1F; --heat-soft:#FFE6DB;  /* só calor: brasa ativa, temperatura, timer correndo */
+  --ok:#00A86B; --warn:#E5A100; --err:#E0352B;
+  --bg:var(--n-50); --surface:var(--n-0); --text:var(--n-900); --text-2:var(--n-600); --text-3:var(--n-500); --line:var(--n-100);
+  /* elevação */
+  --e-0:none;
+  --e-1:0 1px 2px rgba(20,20,19,.04),0 2px 8px rgba(20,20,19,.04);
+  --e-2:0 2px 4px rgba(20,20,19,.04),0 12px 32px rgba(20,20,19,.08);
+  --e-3:0 8px 16px rgba(20,20,19,.08),0 32px 64px rgba(20,20,19,.16);
+  /* tipo: Geist (UI) + Geist Mono só p/ código; números com tnum */
+  --font:'Geist',system-ui,sans-serif;
+  --t-display:600 56px/56px var(--font);  /* timer, números heroicos */
+  --t-h1:600 32px/36px var(--font);
+  --t-h2:600 24px/28px var(--font);
+  --t-h3:600 18px/24px var(--font);
+  --t-body:400 16px/24px var(--font);
+  --t-body-s:400 14px/20px var(--font);
+  --t-label:500 13px/16px var(--font);
+  --t-micro:500 11px/16px var(--font);
+  --track-tight:-0.02em; --track-micro:0.06em;
+  /* movimento */
+  --ease:cubic-bezier(.2,.8,.2,1); --d-1:120ms; --d-2:220ms; --d-3:400ms;
+  /* granulado */
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.4 -.35'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.grain{position:relative;isolation:isolate;overflow:hidden}
+.grain::after{content:"";position:absolute;inset:0;background:var(--grain);mix-blend-mode:multiply;opacity:.55;pointer-events:none;z-index:1}
+.tnum{font-variant-numeric:tabular-nums}
