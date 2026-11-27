@@ -129,6 +129,7 @@ button { cursor: pointer; }
 
 /* ---------- tipografia ---------- */
 .h1 { margin: .1rem 0 1rem; font-size: 1.9rem; line-height: 1.05; font-weight: 900; letter-spacing: -.02em; color: var(--cobalto); }
+.lede { margin: -.6rem 0 1rem; max-width: 34rem; font-size: .95rem; line-height: 1.45; color: var(--sal); }
 .h2 { margin: 1.75rem 0 .75rem; font-size: 1.15rem; font-weight: 700; }
 .h2--flush { margin-top: 0; }
 .eyebrow { margin: 0 0 .25rem; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--brasa-ink); }
@@ -271,13 +272,10 @@ button { cursor: pointer; }
 .gcard__art svg { width: 100%; height: 100%; display: block; transition: transform 600ms var(--ease-brasa); }
 .gcard__b:hover .gcard__art svg, .gcard__b:focus-visible .gcard__art svg { transform: scale(1.06); }
 .gcard__k { font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--brasa-ink); }
-.gcard__n { font-size: 1rem; font-weight: 900; color: var(--cobalto); line-height: 1.15; padding-right: 2.5rem; }
+.gcard__n { font-size: 1rem; font-weight: 900; color: var(--cobalto); line-height: 1.15; }
+.gcard__t { font-size: .78rem; line-height: 1.3; color: var(--sal); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: .1rem; }
 .gcard__m { display: flex; align-items: center; gap: .25rem; font-size: .75rem; color: var(--sal); min-height: 1.2rem; }
 .gcard__m .i { width: .9rem; height: .9rem; }
-.gcard__add { position: absolute; right: .5rem; bottom: .5rem; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1.5px solid var(--carvao); background: var(--creme); display: grid; place-items: center; transition: background var(--dur-1), transform var(--dur-3) var(--ease-brasa); }
-.gcard.is-on .gcard__add { background: var(--brasa); border-color: var(--brasa); transform: rotate(360deg); }
-.gcard__stamp { position: absolute; top: .6rem; right: .6rem; padding: .15rem .55rem; border: 2px solid var(--brasa-ink); color: var(--brasa-ink); border-radius: .35rem; font-weight: 900; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; background: rgba(251, 241, 222, .85); opacity: 0; transform: scale(2) rotate(-14deg); pointer-events: none; }
-.gcard.is-on .gcard__stamp { opacity: .92; transform: rotate(-8deg); transition: opacity 200ms, transform 420ms var(--ease-brasa); }
 
 /* na brasa */
 .crono { position: relative; margin: 1rem 0; padding: 1rem; border-radius: var(--r-lg); background: var(--carvao); color: var(--creme); }
@@ -447,8 +445,8 @@ button { cursor: pointer; }
 .card, .atalhos, .gcard, .rcard__b, .mix, .pick, .mini-list button, .field--row, .next, .onb__prev, .dica, .seg span, .timer {
   background: var(--papel); border: 1px solid var(--linha); border-radius: var(--r-lg); box-shadow: var(--sombra); }
 .mix[aria-checked="true"] { border-color: var(--carvao); background: var(--papel); box-shadow: inset 0 0 0 1px var(--carvao); }
-.btn, .top__btn, .stepper__b, .search, .field input, .hsel, .sheet__x, .gcard__add, .hora, .qty, .chip { border-width: 1px; border-color: var(--borda); }
-.btn--brasa, .gcard.is-on .gcard__add { border-color: var(--brasa); }
+.btn, .top__btn, .stepper__b, .search, .field input, .hsel, .sheet__x, .hora, .qty, .chip { border-width: 1px; border-color: var(--borda); }
+.btn--brasa { border-color: var(--brasa); }
 .btn--zap { background: var(--brasa); border-color: var(--brasa); color: var(--carvao); }
 .check__box { border-width: 1.5px; border-color: var(--borda); }
 .btn--full { margin-top: var(--s5); }
@@ -531,5 +529,5 @@ button { cursor: pointer; }
 .anm-ico { flex: none; }
 .tabbar { --ic-body: #5E4837; }
 .tab.is-on { --ic-body: var(--creme); }
-.btn--brasa, .mix__ok, .gcard.is-on .gcard__add, .stepper__b:active { --ic-body: rgba(251, 241, 222, .6); }
+.btn--brasa, .mix__ok, .stepper__b:active { --ic-body: rgba(251, 241, 222, .6); }
 .btn--zap, .hero, .total, .crono, .chip[aria-pressed="true"], .hora[aria-checked="true"], .seg input:checked + span { --ic-body: rgba(251, 241, 222, .22); }

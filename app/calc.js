@@ -145,7 +145,7 @@
     var ex = r.extras.filter(function (e) { return e.on; });
     if (ex.length) { L.push(''); L.push('*Acompanhamentos*'); ex.forEach(function (e) { L.push('- ' + e.label + ': ' + qtdTxt(e)); }); }
     L.push('');
-    L.push('*Total estimado: ~' + brl(r.totalR) + '* (preços de referência, confira no açougue)');
+    L.push('*Total estimado: ~' + brl(r.totalR) + '* (preços de referência, confira no mercado)');
     L.push('Feito no churrasquin');
     return L.join('\n');
   }

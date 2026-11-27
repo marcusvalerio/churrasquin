@@ -1,0 +1,17 @@
+{
+  "name": "churrasquin — pra quem toca a brasa",
+  "short_name": "churrasquin",
+  "description": "Guia de carnes para churrasco: o que é cada corte, os nomes que aparecem no mercado e como fazer na brasa.",
+  "lang": "pt-BR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FBF1DE",
+  "theme_color": "#FBF1DE",
+  "icons": [
+    { "src": "icons/app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "brand/final/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
