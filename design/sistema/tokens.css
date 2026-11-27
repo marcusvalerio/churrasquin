@@ -8,8 +8,8 @@
   /* raios */
   --r-xs:8px;--r-s:12px;--r-m:20px;--r-l:28px;--r-xl:36px;--r-pill:999px;
   /* cor: neutros quentes-frios equilibrados */
-  --n-0:#FFFFFF;--n-50:#F4F4F2;--n-100:#EBEBE8;--n-200:#DCDCD8;--n-300:#C2C2BD;--n-500:#8A8A85;--n-600:#6B6B66;--n-700:#45453F;--n-900:#141413;--n-1000:#0A0A09;
-  --brand:#00E28E; --brand-ink:#003D27; --brand-soft:#D6FBEA;
+  --n-0:#FFFFFF;--n-50:#F4F2EE;--n-100:#ECE8E1;--n-200:#DCDCD8;--n-300:#C2C2BD;--n-500:#8A8A85;--n-600:#6B6B66;--n-700:#45453F;--n-900:#141413;--n-1000:#0A0A09;
+  --brand:#111111; --brand-ink:#F4F2EE; --brand-soft:#ECE8E1;
   --heat:#FF5A1F; --heat-soft:#FFE6DB;  /* só calor: brasa ativa, temperatura, timer correndo */
   --ok:#00A86B; --warn:#E5A100; --err:#E0352B;
   --bg:var(--n-50); --surface:var(--n-0); --text:var(--n-900); --text-2:var(--n-600); --text-3:var(--n-500); --line:var(--n-100);
@@ -43,7 +43,7 @@
   --tab-h:64px; --tab-gap:12px;
   --tab-space:calc(var(--tab-h) + var(--tab-gap) + max(var(--safe-b),16px)); /* topo da barra a partir do fundo */
   /* gradiente limpo de destaque (sem ruído) */
-  --g-brand:radial-gradient(120% 90% at 85% 100%,#00C97E 0%,rgba(0,201,126,0) 60%),linear-gradient(170deg,#3BF0AE 0%,#00E28E 55%,#00D184 100%);
+  --g-brand:radial-gradient(120% 90% at 85% 100%,#FF5A1F 0%,rgba(255,90,31,0) 60%),linear-gradient(170deg,#2A2A28 0%,#111111 55%,#0A0A09 100%);
 }
 /* formas que respiram (substitui o granulado) */
 .drift{animation:drift 9s var(--fole) infinite alternate;will-change:transform}

@@ -162,8 +162,8 @@ label.row{cursor:pointer}
 .tabbar.away{transform:translateY(calc(100% + 40px));opacity:0;pointer-events:none}
 .tab{position:relative;z-index:1;min-width:44px;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:500 12px/16px var(--font);color:var(--n-700);white-space:nowrap;transition:color var(--d-2) var(--ease)}
 .tab .i{width:22px;height:22px;--ic-body-opacity:0;transition:transform var(--d-2) var(--ease)}
-.tab.on{color:var(--n-1000);font-weight:600}
-.tab.on .i{--ic-body:var(--n-1000);--ic-body-opacity:1;--ic-line:var(--n-1000);transform:translateY(-1px)}
+.tab.on{color:var(--brand-ink);font-weight:600}
+.tab.on .i{--ic-body:var(--brand-ink);--ic-body-opacity:1;--ic-line:var(--brand-ink);transform:translateY(-1px)}
 .tab:focus-visible{outline:2px solid var(--n-900);outline-offset:-2px;border-radius:var(--r-pill)}
 .tabbar__ink{position:absolute;top:var(--s-1);left:var(--s-1);width:calc((100% - var(--s-2)) / 5);height:56px;pointer-events:none;transform:translateX(calc(var(--x,0) * 100%));will-change:transform}
 .tabbar__ink::before{content:"";position:absolute;inset:0 2px;border-radius:var(--r-pill);background:var(--brand)}
@@ -182,7 +182,7 @@ label.row{cursor:pointer}
 .app.flow .toast{bottom:calc(var(--cta-space) + var(--s-2))}
 .toast.on{opacity:1;transform:none;pointer-events:auto}
 .toast b{font-weight:500;flex:1}
-.toast__a{min-height:44px;padding:0 var(--s-3);color:var(--brand);font:600 14px/20px var(--font);border-radius:var(--r-s)}
+.toast__a{min-height:44px;padding:0 var(--s-3);color:#FFB08A;font:600 14px/20px var(--font);border-radius:var(--r-s)}
 .bump{animation:bump var(--d-estado) var(--brasa)}
 @keyframes bump{40%{transform:scale(1.08)}}
 .odo{display:inline-block;height:1em;line-height:1;overflow:hidden;vertical-align:-.1em}
@@ -203,7 +203,7 @@ label.row{cursor:pointer}
 .wordmark{font:600 24px/28px var(--font);letter-spacing:-.02em;color:var(--n-50)}
 .eyebrow--ink{color:rgba(244,244,242,.82)}
 .hero .iconbtn--glass{background:rgba(244,244,242,.14);color:var(--n-50);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-.hero .badge{background:var(--brand);color:var(--brand-ink);box-shadow:0 0 0 2px #2A0C06}
+.hero .badge{background:#F4F2EE;color:#111111;box-shadow:0 0 0 2px #2A0C06}
 .hero__t{margin-top:var(--s-2);font:600 40px/44px var(--font);letter-spacing:-.03em;color:var(--n-50)}
 /* a folha clara que sobe com mola sobre o fogo */
 .home{position:relative;z-index:3;margin-top:-36px;padding-top:var(--s-5);background:var(--bg);border-radius:var(--r-xl) var(--r-xl) 0 0}
