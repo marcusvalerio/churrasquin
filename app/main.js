@@ -224,10 +224,11 @@
   /* ============ ABERTURA ============ */
   function splash(done) {
     var s = $('#splash'); setAbout('splash');
-    var fin = false, finish = function () { if (fin) return; fin = true; done(); s.classList.add('out'); setTimeout(function () { s.hidden = true; }, reduced() ? 0 : 280); };
-    s.addEventListener('click', finish);
-    requestAnimationFrame(function () { requestAnimationFrame(function () { s.classList.add('play'); }); });
-    setTimeout(finish, reduced() ? 900 : 2100);
+    var h = location.hash.slice(1);
+    if (!window.MOTION || reduced() || (h && h !== 'inicio')) { if (s) s.remove(); done(); return; }
+    // Onda de fogo: a onda cobre a tela, revela o logo, e aos 3 s vira o fundo do topo da Início
+    $('#app').classList.add('intro'); done();
+    MOTION.intro({ app: $('#app'), view: $('#v-inicio'), onEnd: function () { if (s) s.remove(); setAbout(cur || 'inicio'); } });
   }
 
   /* ============ NAVEGAÇÃO ============ */
@@ -235,15 +236,17 @@
   function setView(v, push) {
     if (VIEWS.indexOf(v) < 0) v = 'inicio';
     if (v === cur) { var sc = $('#v-' + v); if (push && sc) sc.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' }); render(v); return; }
-    var from = cur ? $('#v-' + cur) : null, to = $('#v-' + v);
+    var from = cur ? $('#v-' + cur) : null, to = $('#v-' + v), oldI = VIEWS.indexOf(cur);
     cur = v; render(v);
     $$('.tab').forEach(function (t) { var on = t.dataset.tab === v; t.classList.toggle('on', on); if (on) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
     $('.tabbar').style.setProperty('--x', VIEWS.indexOf(v));
+    if (window.MOTION && from) MOTION.ink($('.tabbar__ink'), oldI, VIEWS.indexOf(v));
     var flow = v === 'planejar'; $('#app').classList.toggle('flow', flow); $('.tabbar').classList.toggle('away', flow); $('.tabbar').inert = flow; $('#planbar').hidden = !flow;
     if (from) from.hidden = true;
     to.hidden = false; to.scrollTop = 0;
     to.classList.remove('enter'); void to.offsetWidth; if (from && !reduced()) to.classList.add('enter');
     if (push && location.hash !== '#' + v) history.replaceState(null, '', '#' + v);
+    if (v === 'brasa' && window.MOTION && $('#t-in')) MOTION.climb(40, 57, function (x) { var i = $('#t-in'); if (i) i.value = x; termo(x); });
     setAbout(v);
   }
   function setAbout(k) {
@@ -304,7 +307,7 @@
     var cards = EM_ALTA.map(corte).filter(Boolean);
     var novos = NOVOS.map(corte).filter(Boolean);
     el.innerHTML =
-      '<header class="hero"><svg class="hero__shapes drift" aria-hidden="true"><use href="#arches"/></svg>' +
+      '<header class="hero"><canvas class="hero__fire" aria-hidden="true"></canvas>' +
         '<div class="hero__in"><div class="top top--hero"><span class="wordmark">churrasquin</span>' + listaBtn(true) + '</div>' +
         '<p class="eyebrow eyebrow--ink">' + DIAS[h.getDay()] + ', ' + h.getDate() + ' de ' + MESES[h.getMonth()] + '</p>' +
         '<p class="hero__t">' + oi + ',<br>assador.</p></div></header>' +
@@ -328,6 +331,10 @@
         '<section class="sec" style="--i:5" aria-label="Seus churrascos" id="memo-sec">' + secHead('Seus churrascos') + '<div id="memo"></div></section>' +
       '</div>';
     renderMemorias();
+    if (window.MOTION) {
+      MOTION.hero(el.querySelector('.hero'));
+      MOTION.ptr(el, function () { var bw = $('.banner-wrap'); if (bw) bw.innerHTML = banner(); renderMemorias(); toast('Início atualizado'); });
+    }
   }
   function renderMemorias() {
     var box = $('#memo'); if (!box) return;
@@ -344,13 +351,13 @@
         '<div class="memo__b"><p class="memo__k">' + esc(relTempo(m.data)) + '</p><p class="memo__t">' + esc(dataCurta(m.data)) + '</p>' +
         '<p class="memo__m tnum">' + m.pessoas + ' pessoas · ' + kgTxt(m.g || 0) + '</p>' + (m.nota ? '<p class="memo__n">“' + esc(m.nota) + '”</p>' : '') + st + '</div></article></li>';
     }).join('') + '</ul>';
-    l.forEach(function (m) {
+    l.forEach(function (m, i) {
       var ph = box.querySelector('[data-memo="' + m.id + '"] .memo__ph');
       if (!m.foto) { ph.classList.remove('is-loading'); return; }
       M().foto(m.id).then(function (u) {
         if (!u) { ph.classList.remove('is-loading'); ph.innerHTML = ic('x-camera'); return; }
         var img = new Image(); img.alt = 'Foto do churrasco de ' + dataCurta(m.data); img.decoding = 'async';
-        img.onload = function () { ph.classList.remove('is-loading'); ph.appendChild(img); };
+        img.onload = function () { ph.classList.remove('is-loading'); ph.appendChild(img); if (window.MOTION) MOTION.lit(img, i); };
         img.onerror = function () { ph.classList.remove('is-loading'); ph.innerHTML = ic('x-camera'); };
         img.src = u;
       });
@@ -433,6 +440,7 @@
   function stepTap(b) {
     var k = b.closest('[data-k]').dataset.k;
     plan[k] = Math.max(k === 'adultos' ? 1 : 0, Math.min(200, plan[k] + +b.dataset.d)); commit();
+    if (window.MOTION) { MOTION.pop($('[data-odo="' + k + '"]')); MOTION.pop($('[data-odo="p-pes"]')); }
   }
 
   /* ============ CORTES ============ */
@@ -530,7 +538,7 @@
         '<li class="row"><time class="ordem__h tnum">' + hhmm(T) + '</time><span class="grow"><b class="t">Servir</b><span class="s">Fatie contra a fibra, com a faca bem afiada.</span></span></li></ol></div>';
     }
     html += '<h2 class="h3 sec__t">Ponto pelo termômetro</h2>' +
-      '<section class="card termo"><div class="termo__top"><p class="display tnum"><span id="t-v">57</span><small> °C</small></p><div><p class="h3" id="t-p">Ao ponto</p><p class="s" id="t-s">centro rosado</p></div></div>' +
+      '<section class="card termo"><div class="termo__top"><p class="display tnum"><span id="t-v">57</span><small> °C</small></p><div><p class="h3 termo__st"><span class="termo__dot" id="t-dot" aria-hidden="true"></span><span id="t-p">Ao ponto</span></p><p class="s" id="t-s">centro rosado</p></div></div>' +
       '<label class="range"><span class="termo__bar" aria-hidden="true"><i id="t-fill"></i></span><span class="sr">Temperatura no centro da peça</span><input type="range" id="t-in" min="40" max="80" value="57" step="1"></label>' +
       '<ul class="termo__list">' + PONTOS.map(function (p) { return '<li><b>' + p.nome + '</b><span class="tnum">' + p.min + '–' + p.max + ' °C</span></li>'; }).join('') + '</ul>' +
       '<p class="s nota">Tire 2–3 °C antes do alvo: a carne continua subindo no descanso.</p></section>' +
@@ -541,6 +549,7 @@
       (plan.ativo || seq.length ? '<button type="button" class="btn btn-s btn--full fim-btn" data-fim="1">' + ic('x-camera') + 'Encerrar churrasco</button>' : '') + '</div>';
     el.innerHTML = html;
     termo(57);
+    if (window.MOTION) MOTION.ring($('.ring', el));
     tickTimers();
   }
   function termo(v) {
@@ -549,7 +558,11 @@
     f.style.transform = 'scaleX(' + ((v - 40) / 40).toFixed(3) + ')';
     $('#t-v').textContent = v; $('#t-p').textContent = v < 45 ? 'Ainda cru' : p.nome; $('#t-s').textContent = v < 45 ? 'continue na brasa' : p.sub;
     $$('.termo__list li').forEach(function (li, i) { li.classList.toggle('on', PONTOS[i] === p && v >= 45); });
+    // o ponto muda de cor a cada estágio e pulsa quando cruza a fronteira
+    var k = v < 45 ? -1 : PONTOS.indexOf(p), dot = $('#t-dot');
+    if (dot) { dot.style.background = TCOR[k + 1] || TCOR[TCOR.length - 1]; if (dot.dataset.k !== String(k)) { dot.dataset.k = k; if (window.MOTION) MOTION.pulse(dot); } }
   }
+  var TCOR = ['#8A8A85', '#C2304A', '#E0567A', '#D9775B', '#9A6345', '#5C3A26', '#3E2718'];
   var tickT;
   function tickTimers() {
     var any = false;
@@ -690,7 +703,7 @@
       var semFoto = fim.file && res && !res.fotoOk;
       fim = null; closeSheet(); commit(); setView('inicio', true); renderInicio();
       toast(semFoto ? 'Lembrança guardada, mas sem foto: o aparelho não deixou salvar' : 'Lembrança guardada');
-      var first = $('#memo .memo'); if (first && !reduced()) first.classList.add('memo--new');
+      var first = $('#memo .memo'); if (first && window.MOTION) MOTION.polaroid(first); else if (first && !reduced()) first.classList.add('memo--new');
     };
     if (!M()) return go(null);
     M().add(meta, fim.file).then(go, function () { fim.busy = false; fim.err = 'Não deu para guardar agora. Tente de novo.'; redrawFim(); });
@@ -710,7 +723,7 @@
     if (!sheetKind) return; sheetKind = null; sheetR = null;
     var sh = $('#sheet'), sc = $('#scrim');
     sh.classList.remove('on'); sc.classList.remove('on');
-    setTimeout(function () { if (!sheetKind) { sh.hidden = true; sc.hidden = true; } }, reduced() ? 0 : 400);
+    setTimeout(function () { if (!sheetKind) { sh.hidden = true; sc.hidden = true; } }, reduced() ? 0 : 260);
     if (sheetRet && sheetRet.focus && document.contains(sheetRet)) sheetRet.focus({ preventScroll: true });
     setAbout(cur);
   }
@@ -745,7 +758,7 @@
       if (b.dataset.open === 'lista') { openLista(); return; }
       if (b.id === 'sheet-x') { closeSheet(); return; }
       if (b.dataset.fim) { openFim(); return; }
-      if (b.id === 'fim-ok') { salvarFim(); return; }
+      if (b.id === 'fim-ok') { if (window.MOTION && fim && !fim.busy) MOTION.burst(b); salvarFim(); return; }
       if (b.dataset.d) { stepTap(b); return; }
       if (b.dataset.passoGo != null) { plan.passo = +b.dataset.passoGo; save(); renderPlanejar(); $('#v-planejar').scrollTop = 0; var st = $('#v-planejar .step'); if (st && !reduced()) { st.classList.remove('enter'); void st.offsetWidth; st.classList.add('enter'); } return; }
       if (b.dataset.marcar) {
@@ -755,7 +768,7 @@
       }
       if (b.dataset.dia) { plan.dia = b.dataset.dia; save(); renderPlanejar(); var nd = $('[data-dia="' + plan.dia + '"]'); if (nd) nd.focus({ preventScroll: true }); return; }
       if (b.dataset.mix) { var prev = plan.itens.slice(), pm = plan.mix; applyMix(b.dataset.mix); renderPlanejar(); toast('Estilo ' + MIXES[b.dataset.mix].label, { label: 'Desfazer', fn: function () { plan.itens = prev; plan.mix = pm; commit(); renderPlanejar(); } }); return; }
-      if (b.dataset.add) { add(b.dataset.add); return; }
+      if (b.dataset.add) { if (window.MOTION) MOTION.fly(b); add(b.dataset.add); return; }
       if (b.dataset.act && b.closest('.pick')) {
         var id = b.closest('.pick').dataset.id, it = plan.itens.filter(function (x) { return x.id === id; })[0], cl = last.linhas.filter(function (l) { return l.id === id; })[0];
         if (b.dataset.act === 'inc') it.g = cl.g + 250; else if (b.dataset.act === 'dec') it.g = Math.max(250, cl.g - 250);
@@ -783,7 +796,7 @@
       }
       if (b.dataset.cat != null && b.closest('#r-cat')) { rst.cat = b.dataset.cat; $$('#r-cat .chip').forEach(function (x) { x.setAttribute('aria-pressed', x === b); x.classList.toggle('on', x === b); }); listReceitas(); return; }
       if (b.dataset.receita) { openReceita(b.dataset.receita); return; }
-      if (b.dataset.porc && sheetR) { sheetR.n = Math.max(1, Math.min(200, sheetR.n + +b.dataset.porc)); refreshReceita(); return; }
+      if (b.dataset.porc && sheetR) { sheetR.n = Math.max(1, Math.min(200, sheetR.n + +b.dataset.porc)); refreshReceita(); if (window.MOTION) MOTION.pop($('#sheet [data-odo="porcoes"]')); return; }
       if (b.dataset.act === 'rc-lista' && sheetR) {
         var rid = sheetR.id, i = plan.receitas.indexOf(rid);
         if (i >= 0) { plan.receitas.splice(i, 1); toast('Ingredientes saíram da lista'); }
@@ -821,15 +834,9 @@
         if (e.shiftKey && a === f[0]) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && a === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
       }
     });
-    // arrastar o sheet para baixo fecha
-    (function () {
-      var sh = $('#sheet'), y0 = null, dy = 0;
-      sh.addEventListener('touchstart', function (e) { if ($('#sheet-body').scrollTop > 0) return; y0 = e.touches[0].clientY; dy = 0; }, { passive: true });
-      sh.addEventListener('touchmove', function (e) { if (y0 == null) return; dy = Math.max(0, e.touches[0].clientY - y0); sh.style.transform = 'translateY(' + dy + 'px)'; }, { passive: true });
-      sh.addEventListener('touchend', function () { if (y0 == null) return; sh.style.transform = ''; if (dy > 110) closeSheet(); y0 = null; });
-    })();
-
-    window.Plan = { has: has, add: function (id) { return add(id); }, remove: remove, toggle: toggle };
+    // arrastar o sheet para baixo fecha (com velocidade); solto antes, volta com mola
+    if (window.MOTION) MOTION.drag($('#sheet'), function () { return $('#sheet-body'); }, closeSheet);
+    window.Plan = { has: has, add: function (id) { return add(id); }, remove: remove, toggle: function (id) { var had = has(id); var r = toggle(id); if (!had && has(id) && window.MOTION) MOTION.fly(document.querySelector('.anm-levar') || document.activeElement); return r; } };
     document.addEventListener('corte:levar', function (e) { var id = e.detail && e.detail.id; if (corte(id) && !has(id)) add(id); });
     window.addEventListener('hashchange', function () { if (!$('#app').hidden) setView(location.hash.slice(1)); });
     // passou a hora de servir com o app aberto: o Início troca o banner sozinho

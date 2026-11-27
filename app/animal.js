@@ -242,8 +242,9 @@
     '.anm-root.anm-show{display:block}',
     '.anm-backdrop{position:absolute;inset:0;background:var(--n-1000);opacity:0;transition:opacity var(--d-2) var(--ease)}',
     '.anm-in .anm-backdrop{opacity:.4}',
-    '.anm-dialog{position:absolute;left:0;right:0;bottom:0;top:var(--s-10);display:grid;grid-template-rows:auto auto minmax(0,1fr);background:var(--bg);border-radius:var(--r-xl) var(--r-xl) 0 0;overflow:hidden;box-shadow:var(--e-3);transform:translateY(100%);transition:transform var(--d-3) var(--ease)}',
-    '.anm-in .anm-dialog{transform:none}',
+    '.anm-dialog{position:absolute;left:0;right:0;bottom:0;top:var(--s-10);display:grid;grid-template-rows:auto auto minmax(0,1fr);background:var(--bg);border-radius:var(--r-xl) var(--r-xl) 0 0;overflow:hidden;box-shadow:var(--e-3);transform:translateY(100%);transition:transform var(--d-estado) var(--fole)}',
+    '.anm-in .anm-dialog{transform:none;transition:transform var(--d-mola) var(--mola)}',
+    '.anm-dialog.anm-drag{transition:none}',
     '.anm-head{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);height:64px;padding:0 var(--s-3) 0 var(--margin-m)}',
     '.anm-kicker{margin:0;font:var(--t-micro);letter-spacing:var(--track-micro);text-transform:uppercase;color:var(--text-3)}',
     '.anm-btn{min-height:44px;border-radius:var(--r-pill);border:0;background:var(--n-100);color:var(--text);font:600 14px/20px var(--font);padding:0 var(--s-4);cursor:pointer;transition:transform var(--d-1) var(--ease),background var(--d-1)}',
@@ -394,6 +395,7 @@
     dialog.setAttribute('aria-modal', 'true');
     dialog.setAttribute('aria-labelledby', titleId);
     var head = el('div', 'anm-head');
+    if (window.MOTION) MOTION.drag(dialog, null, function () { close(); }, head, 'anm-drag');
     kicker = el('p', 'anm-kicker', 'De onde vem');
     var x = el('button', 'anm-btn anm-x'); x.innerHTML = '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-fechar"/></svg>';
     x.type = 'button';
@@ -700,7 +702,7 @@
 
   function play(primeira) {
     clearTimers();
-    var d2 = ms('--dur-2', 260), d3 = ms('--dur-3', 520);
+    var d2 = ms('--d-estado', 220), d3 = ms('--d-cena', 400);
     svg.classList.remove('anm-litup');
     cam.style.transform = 'none';
     root.classList.remove('anm-panel-in');
@@ -755,7 +757,7 @@
     if (reduced()) done();
     else {
       root.classList.remove('anm-panel-in', 'anm-in');
-      setTimeout(done, ms('--dur-2', 260));
+      setTimeout(done, ms('--d-estado', 220));
     }
     var r = st.ret; st.ret = null;
     if (r && r.focus && document.contains(r)) r.focus({ preventScroll: true });

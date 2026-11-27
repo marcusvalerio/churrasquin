@@ -30,7 +30,14 @@
   --t-micro:500 11px/16px var(--font);
   --track-tight:-0.02em; --track-micro:0.06em;
   /* movimento */
-  --ease:cubic-bezier(.2,.8,.2,1); --d-1:120ms; --d-2:220ms; --d-3:400ms;
+  /* movimento da marca (design/movimento): 3 curvas, 3 durações. Nada fora disso. */
+  --brasa:cubic-bezier(.2,.8,.2,1);   /* entrar e responder ao toque */
+  --fole:cubic-bezier(.65,0,.35,1);   /* mover o que já está na tela */
+  --mola:linear(0,0.06,0.1587,0.2816,0.4139,0.5758,0.6936,0.7961,0.8814,0.9492,1.0002,1.0362,1.0594,1.072,1.0763,1.0734,1.0666,1.0576,1.0476,1.0375,1.0281,1.0196,1.0124,1.0065,1.0019,0.9979,0.9959,0.9947,0.9942,0.9942,0.9946,0.9952,0.996,0.9967,0.9975,0.9983,0.9989,0.9994,0.9998,1,1); /* mola real: rigidez 260, amortecimento 20 */
+  --d-toque:120ms; --d-estado:220ms; --d-cena:400ms;
+  --d-mola:690ms;                     /* duração natural da mola (não é uma 4ª duração: é a física dela) */
+  /* nomes antigos apontam para os da marca */
+  --ease:var(--brasa); --d-1:var(--d-toque); --d-2:var(--d-estado); --d-3:var(--d-cena);
   /* barra de navegação e área segura */
   --safe-b:env(safe-area-inset-bottom,0px);
   --tab-h:64px; --tab-gap:12px;
@@ -39,7 +46,7 @@
   --g-brand:radial-gradient(120% 90% at 85% 100%,#00C97E 0%,rgba(0,201,126,0) 60%),linear-gradient(170deg,#3BF0AE 0%,#00E28E 55%,#00D184 100%);
 }
 /* formas que respiram (substitui o granulado) */
-.drift{animation:drift 9s ease-in-out infinite alternate;will-change:transform}
+.drift{animation:drift 9s var(--fole) infinite alternate;will-change:transform}
 @keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-6px,-8px,0) scale(1.015)}}
 @media (prefers-reduced-motion:reduce){.drift{animation:none}}
 .tnum{font-variant-numeric:tabular-nums}
