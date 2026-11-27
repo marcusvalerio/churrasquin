@@ -1,0 +1,543 @@
+{
+  "root": "/home/user/churrasquin",
+  "tokens": {
+    "color": [
+      {
+        "name": "--c-carvao",
+        "value": "#1C1512",
+        "source": "brand/tokens.css:4",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carvao-2",
+        "value": "#2B211C",
+        "source": "brand/tokens.css:5",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-brasa",
+        "value": "#E85D24",
+        "source": "brand/tokens.css:6",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-brasa-2",
+        "value": "#FF7A3D",
+        "source": "brand/tokens.css:7",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-osso",
+        "value": "#F7F0E6",
+        "source": "brand/tokens.css:8",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-sal",
+        "value": "#B9ACA0",
+        "source": "brand/tokens.css:9",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-ervas",
+        "value": "#8BA35A",
+        "source": "brand/tokens.css:10",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-gordura",
+        "value": "#F2E2C4",
+        "source": "brand/tokens.css:11",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carne",
+        "value": "#B42B3C",
+        "source": "brand/tokens.css:12",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carvao",
+        "value": "#17120F",
+        "source": "brand/final/tokens.css:3",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carvao-2",
+        "value": "#241D19",
+        "source": "brand/final/tokens.css:4",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-brasa",
+        "value": "#FF5F1F",
+        "source": "brand/final/tokens.css:5",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-brasa-2",
+        "value": "#E24A0E",
+        "source": "brand/final/tokens.css:6",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-osso",
+        "value": "#F3EADB",
+        "source": "brand/final/tokens.css:7",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-sal",
+        "value": "#6E625A",
+        "source": "brand/final/tokens.css:8",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-ervas",
+        "value": "#1D2A9E",
+        "source": "brand/final/tokens.css:9",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-gordura",
+        "value": "#FBF1DE",
+        "source": "brand/final/tokens.css:10",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carne",
+        "value": "#C9962E",
+        "source": "brand/final/tokens.css:11",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carvao",
+        "value": "#1F1A17",
+        "source": "brand/v3/tokens.css:7",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carvao-2",
+        "value": "#2E2723",
+        "source": "brand/v3/tokens.css:8",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-brasa",
+        "value": "#EB6440",
+        "source": "brand/v3/tokens.css:9",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-brasa-2",
+        "value": "#F47E5C",
+        "source": "brand/v3/tokens.css:10",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-osso",
+        "value": "#F3EADB",
+        "source": "brand/v3/tokens.css:11",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-sal",
+        "value": "#BCAE9E",
+        "source": "brand/v3/tokens.css:12",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-ervas",
+        "value": "#3FA295",
+        "source": "brand/v3/tokens.css:13",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-gordura",
+        "value": "#F6DDB8",
+        "source": "brand/v3/tokens.css:14",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carne",
+        "value": "#D92710",
+        "source": "brand/v3/tokens.css:15",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--creme",
+        "value": "#FBF1DE",
+        "source": "app/styles.css:4",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--creme-2",
+        "value": "#F4E7CD",
+        "source": "app/styles.css:4",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--papel",
+        "value": "#FFF9EE",
+        "source": "app/styles.css:4",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--brasa",
+        "value": "#FF5F1F",
+        "source": "app/styles.css:5",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--brasa-2",
+        "value": "#E64A0C",
+        "source": "app/styles.css:5",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--brasa-ink",
+        "value": "#B83A08",
+        "source": "app/styles.css:5",
+        "scope": ":root",
+        "role": "neutral"
+      },
+      {
+        "name": "--cobalto",
+        "value": "#1D2A9E",
+        "source": "app/styles.css:6",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--cobalto-2",
+        "value": "#0F1870",
+        "source": "app/styles.css:6",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--carvao",
+        "value": "#17120F",
+        "source": "app/styles.css:7",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--tinta",
+        "value": "#3E352E",
+        "source": "app/styles.css:7",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--sal",
+        "value": "#5A4E44",
+        "source": "app/styles.css:7",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--linha",
+        "value": "rgba(23, 18, 15, .14)",
+        "source": "app/styles.css:7",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--ouro",
+        "value": "#C9962E",
+        "source": "app/styles.css:8",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carvao",
+        "value": "#17120F",
+        "source": "app/styles.css:10",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carvao-2",
+        "value": "#FBF1DE",
+        "source": "app/styles.css:10",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-brasa",
+        "value": "#FF5F1F",
+        "source": "app/styles.css:10",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-brasa-2",
+        "value": "#E64A0C",
+        "source": "app/styles.css:10",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-osso",
+        "value": "#17120F",
+        "source": "app/styles.css:10",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-sal",
+        "value": "#5A4E44",
+        "source": "app/styles.css:11",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-ervas",
+        "value": "#1D2A9E",
+        "source": "app/styles.css:11",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-gordura",
+        "value": "#F7DCC0",
+        "source": "app/styles.css:11",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--c-carne",
+        "value": "#B3261A",
+        "source": "app/styles.css:11",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--borda",
+        "value": "rgba(23, 18, 15, .22)",
+        "source": "app/styles.css:430",
+        "scope": ":root",
+        "role": "other"
+      },
+      {
+        "name": "--sombra",
+        "value": "0 1px 2px rgba(23, 18, 15, .06), 0 2px 8px rgba(23, 18, 15, .04)",
+        "source": "app/styles.css:431",
+        "scope": ":root",
+        "role": "other"
+      }
+    ],
+    "radius": [],
+    "border": [],
+    "font": [
+      {
+        "name": "--font-display",
+        "value": "\"Rockwell\",\"Roboto Slab\",\"Caladea\",\"Georgia\",\"Cambria\",serif",
+        "source": "brand/tokens.css:13",
+        "scope": ":root"
+      },
+      {
+        "name": "--font-body",
+        "value": "system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,sans-serif",
+        "source": "brand/tokens.css:14",
+        "scope": ":root"
+      },
+      {
+        "name": "--font-display",
+        "value": "\"Archivo Black\",system-ui,sans-serif",
+        "source": "brand/final/tokens.css:12",
+        "scope": ":root"
+      },
+      {
+        "name": "--font-body",
+        "value": "\"Rubik\",system-ui,sans-serif",
+        "source": "brand/final/tokens.css:13",
+        "scope": ":root"
+      },
+      {
+        "name": "--font-display",
+        "value": "\"Archivo Narrow\",\"Roboto Condensed\",\"Arial Narrow\",system-ui,sans-serif",
+        "source": "brand/v3/tokens.css:16",
+        "scope": ":root"
+      },
+      {
+        "name": "--font-body",
+        "value": "system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,sans-serif",
+        "source": "brand/v3/tokens.css:17",
+        "scope": ":root"
+      },
+      {
+        "name": "--font-body",
+        "value": "Rubik, system-ui, sans-serif",
+        "source": "app/styles.css:12",
+        "scope": ":root"
+      },
+      {
+        "name": "--font-display",
+        "value": "Rubik, system-ui, sans-serif",
+        "source": "app/styles.css:12",
+        "scope": ":root"
+      },
+      {
+        "name": "--font-script",
+        "value": "Yellowtail, cursive",
+        "source": "app/styles.css:12",
+        "scope": ":root"
+      }
+    ],
+    "shadow": [],
+    "icon": []
+  },
+  "darkMode": {
+    "strategy": null,
+    "evidence": []
+  },
+  "tailwind": {
+    "version": null,
+    "configs": [],
+    "themeBlocks": []
+  },
+  "themes": [],
+  "tokenFiles": [],
+  "iconLibraries": {},
+  "iconUsage": {
+    "sizes": {
+      "11": 23,
+      "10": 12,
+      "24": 12,
+      "16": 6,
+      "76": 5,
+      "12": 5,
+      "13": 5,
+      "17": 5
+    },
+    "tailwindSizeClasses": {},
+    "strokeWidths": {
+      "0.25": 130,
+      "3": 49,
+      "24": 39,
+      "4": 30,
+      "0.5": 30,
+      "6": 24
+    },
+    "weights": {},
+    "topIcons": {}
+  },
+  "customSvg": {
+    "files": 167,
+    "inline": 228,
+    "fill": 269,
+    "stroke": 15,
+    "strokeWidths": {
+      "0.4": 176,
+      "3": 101,
+      "6": 59,
+      "4": 51,
+      "2": 43,
+      "1.5": 28
+    },
+    "viewBoxes": {
+      "0 0 24 24": 46,
+      "0 0 400 400": 26,
+      "0 0 787 150": 21,
+      "8 8 120 104": 17,
+      "0 0 1024 1024": 15,
+      "0 0 1000 1000": 11
+    },
+    "currentColor": 14,
+    "hexColors": 249,
+    "examples": [
+      "brand/logo-2.svg",
+      "brand/logo-1.svg",
+      "brand/logo-4-claro.svg",
+      "brand/logo-2-claro.svg",
+      "brand/logo.svg",
+      "brand/logo-3-claro.svg",
+      "brand/logo-1-claro.svg",
+      "brand/logo-3.svg",
+      "brand/logo-4.svg",
+      "brand/v5/b/app-icon.svg",
+      "brand/v5/b/simbolo.svg",
+      "brand/v5/b/logo.svg"
+    ]
+  },
+  "fonts": [
+    {
+      "family": "\"Rockwell\",\"Roboto Slab\",\"Caladea\",\"Georgia\",\"Cambria\",serif",
+      "source": "brand/tokens.css:13",
+      "class": "neo-grotesque"
+    },
+    {
+      "family": "system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,sans-serif",
+      "source": "brand/tokens.css:14",
+      "class": "neo-grotesque"
+    },
+    {
+      "family": "\"Archivo Black\",system-ui,sans-serif",
+      "source": "brand/final/tokens.css:12",
+      "class": "neo-grotesque"
+    },
+    {
+      "family": "\"Rubik\",system-ui,sans-serif",
+      "source": "brand/final/tokens.css:13",
+      "class": "neo-grotesque"
+    },
+    {
+      "family": "\"Archivo Narrow\",\"Roboto Condensed\",\"Arial Narrow\",system-ui,sans-serif",
+      "source": "brand/v3/tokens.css:16",
+      "class": "neo-grotesque"
+    },
+    {
+      "family": "Rubik, system-ui, sans-serif",
+      "source": "app/styles.css:12",
+      "class": "neo-grotesque"
+    }
+  ],
+  "shape": {
+    "roundedClasses": {},
+    "shadowUses": 66,
+    "gradientUses": 54,
+    "borderUses": 371,
+    "typicalRadiusPx": null
+  },
+  "packages": {},
+  "shadcn": null,
+  "gaps": [
+    "color tokens exist but none is named primary/brand/accent: confirm which one is the brand",
+    "no radius token or rounded classes: ask how rounded the corners should be",
+    "no dark mode found: ask if the icons need a dark theme"
+  ]
+}

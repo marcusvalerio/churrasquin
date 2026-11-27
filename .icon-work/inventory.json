@@ -1,0 +1,80 @@
+{
+  "candidates": [
+    {
+      "name": "emoji-275a",
+      "label": "❚",
+      "kinds": [
+        "emoji"
+      ],
+      "sources": [
+        "brand/v5/b/index.html:206  <div style=\"display:flex;gap:10px;padding:8px 24px 14px\"><button class=\"btn b1\" style=\"box",
+        "brand/v5/c/index.html:317  <button class=\"btn\" aria-label=\"Pausar timer\" style=\"min-width:56px;min-height:56px;paddin"
+      ],
+      "currentIcons": []
+    },
+    {
+      "name": "emoji-2713",
+      "label": "✓",
+      "kinds": [
+        "emoji"
+      ],
+      "sources": [
+        "brand/v5/b/index.html:253  tl.innerHTML='<i style=\"position:absolute;left:39px;top:8px;bottom:8px;width:3px;backgroun",
+        "brand/v5/c/index.html:325  <li class=\"done\"><time>18:30</time><i></i><span>Acender 3 kg de carvão</span><span>✓</span",
+        "brand/v5/c/index.html:326  <li class=\"done\"><time>18:40</time><i></i><span>Costela no alto, osso p/ baixo</span><span",
+        "brand/v5/a/index.html:280  <li style=\"padding:0 0 14px 20px;position:relative;color:#A89E8E\"><i style=\"position:absol",
+        "brand/v5/a/index.html:281  <li style=\"padding:0 0 14px 20px;position:relative;color:#A89E8E\"><i style=\"position:absol"
+      ],
+      "currentIcons": []
+    },
+    {
+      "name": "emoji-270e",
+      "label": "✎",
+      "kinds": [
+        "emoji"
+      ],
+      "sources": [
+        "brand/v5/c/index.html:272  <div class=\"ap\"><svg class=\"s\"><use href=\"#sym\"/></svg><h3>Sábado · Sítio do Lu</h3><butto"
+      ],
+      "currentIcons": []
+    },
+    {
+      "name": "emoji-2605",
+      "label": "★",
+      "kinds": [
+        "emoji"
+      ],
+      "sources": [
+        "brand/v6/index.html:233  <div class=\"tape t1\"><div><svg class=\"lg \" style=\"\" viewBox=\"0 0 787 150\"><use href=\"#lg\"/"
+      ],
+      "currentIcons": []
+    },
+    {
+      "name": "emoji-2665",
+      "label": "♥",
+      "kinds": [
+        "emoji"
+      ],
+      "sources": [
+        "brand/v6/index.html:279  <section class=\"pl social kraft\"><div class=\"ig\"><div class=\"igh\"><span class=\"av\"><svg cl",
+        "brand/v6/index.html:280  <div class=\"ig\"><div class=\"igh\"><span class=\"av\"><svg class=\"tl \" style=\"\" viewBox=\"8 10 ",
+        "brand/v6/index.html:281  <div class=\"ig\"><div class=\"igh\"><span class=\"av\"><svg class=\"tl \" style=\"\" viewBox=\"8 10 "
+      ],
+      "currentIcons": []
+    },
+    {
+      "name": "emoji-27a4",
+      "label": "➤",
+      "kinds": [
+        "emoji"
+      ],
+      "sources": [
+        "brand/v6/index.html:279  <section class=\"pl social kraft\"><div class=\"ig\"><div class=\"igh\"><span class=\"av\"><svg cl",
+        "brand/v6/index.html:280  <div class=\"ig\"><div class=\"igh\"><span class=\"av\"><svg class=\"tl \" style=\"\" viewBox=\"8 10 ",
+        "brand/v6/index.html:281  <div class=\"ig\"><div class=\"igh\"><span class=\"av\"><svg class=\"tl \" style=\"\" viewBox=\"8 10 "
+      ],
+      "currentIcons": []
+    }
+  ],
+  "genericIcons": {}
+}

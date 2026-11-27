@@ -1,0 +1,372 @@
+{
+ "package": {
+  "name": "churrasquin-icons",
+  "version": "0.1.0"
+ },
+ "framework": "svg",
+ "style": "../icon-style.json",
+ "icons": [
+  {
+   "name": "boi",
+   "label": "Boi",
+   "group": "conteudo",
+   "tags": [
+    "carne bovina",
+    "vaca"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 15V8.5A1.5 1.5 0 0 1 8 7h8a1.5 1.5 0 0 1 1.5 1.5V15"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8 7C5.5 7 3.5 5.6 3.5 3.5"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M16 7c2.5 0 4.5-1.4 4.5-3.5"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 9.8 3.5 10.3c.8 1.4 1.8 1.9 3 1.9"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M17.5 9.8l3 .5c-.8 1.4-1.8 1.9-3 1.9"
+    },
+    {
+     "tone": "line",
+     "type": "rect",
+     "x": 6.5,
+     "y": 14.5,
+     "width": 11,
+     "height": 6.5,
+     "rx": 3.25
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 9.6,
+     "cy": 11.2,
+     "r": 0.95,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 14.4,
+     "cy": 11.2,
+     "r": 0.95,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 10,
+     "cy": 17.8,
+     "r": 0.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 14,
+     "cy": 17.8,
+     "r": 0.8,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "porco",
+   "label": "Porco",
+   "group": "conteudo",
+   "tags": [
+    "suino"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.6 8.2 5.6 3.6l4.2 2.3"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M17.4 8.2l1-4.6-4.2 2.3"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 13,
+     "r": 7.6
+    },
+    {
+     "tone": "line",
+     "type": "ellipse",
+     "cx": 12,
+     "cy": 15.4,
+     "rx": 3.4,
+     "ry": 2.4
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 9,
+     "cy": 10.8,
+     "r": 0.95,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 15,
+     "cy": 10.8,
+     "r": 0.95,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 10.9,
+     "cy": 15.4,
+     "r": 0.7,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 13.1,
+     "cy": 15.4,
+     "r": 0.7,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "frango",
+   "label": "Frango",
+   "group": "conteudo",
+   "tags": [
+    "galinha",
+    "ave"
+   ],
+   "note": "ave inteira de perfil: so a cabeca nao le (teste cego)",
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 8.5,
+     "cy": 7.2,
+     "r": 2.6
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7.3 4.6c.1-1.1 1.4-1.6 2.2-.7.6-.6 1.8-.3 1.8.9"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5.9 6.6 3.6 7.5l2.4.8"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7.4 9.6C5.9 10.8 5 12.6 5 14.6c0 2.9 2.7 4.6 6.6 4.6 4 0 6.6-2 7.1-5.3.3-1.8.4-3.6 1.4-5.5-2.4.3-4 1.4-5.2 3-1.5.7-3.8.4-5-1.6"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M10.5 19.2v1.8M13.5 19v2"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 8.7,
+     "cy": 6.9,
+     "r": 0.75,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "grelha",
+   "label": "Grelha",
+   "group": "conteudo",
+   "tags": [
+    "churrasqueira",
+    "grill"
+   ],
+   "note": "churrasqueira de bacia com grelha e pes",
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.5 9h17"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M7 9V6M10.3 9V6M13.7 9V6M17 9V6"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M4.5 9a7.5 6.5 0 0 0 15 0"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M8.5 14.8 7 21M15.5 14.8 17 21"
+    }
+   ]
+  },
+  {
+   "name": "termometro",
+   "label": "Termometro",
+   "group": "conteudo",
+   "tags": [
+    "temperatura",
+    "ponto"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.8 13.2V6a2.2 2.2 0 0 1 4.4 0v7.2a4 4 0 1 1-4.4 0Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 9v7.5"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M17.5 6h2M17.5 9.5h2"
+    }
+   ]
+  },
+  {
+   "name": "fogo-forte",
+   "label": "Fogo forte",
+   "group": "conteudo",
+   "tags": [
+    "brasa",
+    "calor alto"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M12 3c1 3 5 4.8 5 9.6a5 5 0 0 1-10 0c0-2 1-3.4 2-4.5.4 1.3 1 2 1.8 2.3C10.6 8 11 5.3 12 3Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.2 11.6c-1.8 1.4-2.7 3-2.7 4.8a4 4 0 0 0 4 4h9a4 4 0 0 0 4-4c0-1.8-.9-3.4-2.7-4.8"
+    }
+   ]
+  },
+  {
+   "name": "farofa",
+   "label": "Farofa",
+   "group": "conteudo",
+   "tags": [
+    "acompanhamento",
+    "tigela"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M3.5 11.5h17c0 4.4-3.6 7.5-8.5 7.5s-8.5-3.1-8.5-7.5Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9 21h6"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M6.5 11.5C7.4 9.4 9.5 8 12 8s4.6 1.4 5.5 3.5"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 8.5,
+     "cy": 5.2,
+     "r": 0.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 12,
+     "cy": 4,
+     "r": 0.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 15.5,
+     "cy": 5.4,
+     "r": 0.8,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 11,
+     "cy": 11,
+     "r": 0.7,
+     "paint": "fill"
+    },
+    {
+     "tone": "line",
+     "type": "circle",
+     "cx": 13.6,
+     "cy": 10.3,
+     "r": 0.7,
+     "paint": "fill"
+    }
+   ]
+  },
+  {
+   "name": "lista-sacola",
+   "label": "Lista / sacola",
+   "group": "navegacao",
+   "tags": [
+    "compras",
+    "lista"
+   ],
+   "shapes": [
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M5 8h14l-1.3 11.2a2 2 0 0 1-2 1.8H8.3a2 2 0 0 1-2-1.8Z"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9 8V6.5a3 3 0 0 1 6 0V8"
+    },
+    {
+     "tone": "line",
+     "type": "path",
+     "d": "M9.5 12.5h5M9.5 16h3"
+    }
+   ]
+  }
+ ]
+}

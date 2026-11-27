@@ -1,0 +1,89 @@
+{
+ "groups": {
+  "navegacao": [
+   "inicio",
+   "planejar",
+   "cortes",
+   "na-brasa",
+   "receitas",
+   "lista-sacola"
+  ],
+  "acoes": [
+   "adicionar",
+   "remover",
+   "compartilhar",
+   "copiar",
+   "fechar",
+   "voltar",
+   "info",
+   "busca",
+   "filtro",
+   "play",
+   "pause",
+   "check",
+   "editar",
+   "desfazer"
+  ],
+  "conteudo": [
+   "boi",
+   "porco",
+   "cordeiro",
+   "frango",
+   "linguica",
+   "carvao",
+   "fogo-forte",
+   "fogo-medio",
+   "fogo-brando",
+   "fogo-indireto",
+   "termometro",
+   "faca",
+   "espeto",
+   "grelha",
+   "turma",
+   "adulto",
+   "crianca",
+   "relogio",
+   "maciez",
+   "gordura",
+   "sabor",
+   "farofa",
+   "molho",
+   "maionese",
+   "acompanhamento",
+   "tempero",
+   "bebida",
+   "timer",
+   "alerta",
+   "bandeira-br",
+   "bandeira-ar",
+   "bandeira-uy",
+   "bandeira-us"
+  ]
+ },
+ "third_party_official_asset_only": [
+  {
+   "name": "brand-whatsapp",
+   "note": "WhatsApp mark: do not draw; use official asset from Meta brand resources (references/third-party-marks.md)"
+  }
+ ],
+ "emoji_to_replace": [
+  "❚ (pause) brand/v5/b",
+  "✓ check brand/v5/b",
+  "✎ editar brand/v5/c"
+ ],
+ "notes": {
+  "acoes": "generic actions already exist inline in app/main.js (I map); redraw only for family coherence, same 1.8 construction",
+  "bandeiras": "outline flags: field rect rx 2.5 + key emblem; correct proportions simplified (BR losango+circulo, AR 3 faixas+sol, UY faixas+sol no canto, US faixas+canton); documented in icon-style rationale",
+  "timer_vs_relogio": "relogio=clock face; timer=stopwatch with crown, to keep one metaphor each"
+ },
+ "sample": [
+  "boi",
+  "porco",
+  "frango",
+  "grelha",
+  "termometro",
+  "fogo-forte",
+  "farofa",
+  "lista-sacola"
+ ]
+}
