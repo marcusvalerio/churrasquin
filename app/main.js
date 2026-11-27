@@ -31,7 +31,7 @@
   var MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
   var PASSOS = [['turma', 'Turma'], ['cortes', 'Cortes'], ['compra', 'Compra'], ['hora', 'Quando']];
   var ABOUT = {
-    splash: 'Abertura: o verde de marca com as formas grandes e o nome. Dura pouco mais de um segundo.',
+    splash: 'Abertura: a brasa acende no carvão, as chamas sobem, faíscas voam e o nome aparece no verde da marca. Pouco mais de 2 segundos.',
     inicio: 'Início: banner do próximo churrasco, cortes em alta, curiosidades, receitas da semana e as lembranças com foto.',
     planejar: 'Planejar: quatro passos. Turma, cortes, quanto comprar e quando servir. A conta divide a carne pelo rendimento de cada peça.',
     cortes: 'Cortes: guia com busca por nome de qualquer país. A ficha mostra o mapa do animal e a região da peça.',
@@ -217,17 +217,17 @@
   function toast(msg, act) {
     var t = $('#toast'); t.innerHTML = '<b>' + esc(msg) + '</b>' + (act ? '<button type="button" class="toast__a">' + esc(act.label) + '</button>' : '');
     if (act) t.querySelector('button').onclick = function () { act.fn(); t.classList.remove('on'); };
-    t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('on'); }, act ? 4200 : 2600);
+    t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('on'); }, 3000);
   }
   function bump(el) { if (!el) return; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
 
   /* ============ ABERTURA ============ */
   function splash(done) {
     var s = $('#splash'); setAbout('splash');
-    var fin = false, finish = function () { if (fin) return; fin = true; done(); s.classList.add('out'); setTimeout(function () { s.hidden = true; }, reduced() ? 0 : 360); };
+    var fin = false, finish = function () { if (fin) return; fin = true; done(); s.classList.add('out'); setTimeout(function () { s.hidden = true; }, reduced() ? 0 : 280); };
     s.addEventListener('click', finish);
     requestAnimationFrame(function () { requestAnimationFrame(function () { s.classList.add('play'); }); });
-    setTimeout(finish, reduced() ? 500 : 1300);
+    setTimeout(finish, reduced() ? 900 : 2100);
   }
 
   /* ============ NAVEGAÇÃO ============ */
@@ -239,6 +239,7 @@
     cur = v; render(v);
     $$('.tab').forEach(function (t) { var on = t.dataset.tab === v; t.classList.toggle('on', on); if (on) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
     $('.tabbar').style.setProperty('--x', VIEWS.indexOf(v));
+    var flow = v === 'planejar'; $('#app').classList.toggle('flow', flow); $('.tabbar').classList.toggle('away', flow); $('.tabbar').inert = flow; $('#planbar').hidden = !flow;
     if (from) from.hidden = true;
     to.hidden = false; to.scrollTop = 0;
     to.classList.remove('enter'); void to.offsetWidth; if (from && !reduced()) to.classList.add('enter');
@@ -303,7 +304,7 @@
     var cards = EM_ALTA.map(corte).filter(Boolean);
     var novos = NOVOS.map(corte).filter(Boolean);
     el.innerHTML =
-      '<header class="hero grain"><svg class="hero__shapes" aria-hidden="true"><use href="#arches"/></svg>' +
+      '<header class="hero"><svg class="hero__shapes drift" aria-hidden="true"><use href="#arches"/></svg>' +
         '<div class="hero__in"><div class="top top--hero"><span class="wordmark">churrasquin</span>' + listaBtn(true) + '</div>' +
         '<p class="eyebrow eyebrow--ink">' + DIAS[h.getDay()] + ', ' + h.getDate() + ' de ' + MESES[h.getMonth()] + '</p>' +
         '<p class="hero__t">' + oi + ',<br>assador.</p></div></header>' +
@@ -359,7 +360,7 @@
   /* ============ PLANEJAR ============ */
   function renderPlanejar() {
     var el = $('#v-planejar'), p = plan.passo || 0, r = last;
-    var head = top('Planejar', plan.ativo ? 'Churrasco marcado' : 'Passo ' + (p + 1) + ' de 4') +
+    var head = top('Planejar', plan.ativo ? 'Churrasco marcado' : 'Passo ' + (p + 1) + ' de 4').replace('<button type="button" class="iconbtn"', '<span class="top__a"><button type="button" class="iconbtn" data-go="inicio" aria-label="Sair do planejamento">' + ic('fechar') + '</button><button type="button" class="iconbtn"').replace(/<\/header>$/, '</span></header>') +
       (plan.ativo ? '<div class="card marcado"><span class="grow"><span class="label">' + esc(diaNome(servirDate(), true)) + ' · ' + plan.servir + '</span><b class="tnum">' + r.pessoas + ' pessoas · ' + kgTxt(r.totalG) + '</b></span><button type="button" class="btn btn-s btn-sm" data-fim="1">Encerrar</button></div>' : '') +
       '<nav class="steps" aria-label="Passos do planejamento">' + PASSOS.map(function (s, i) { return '<button type="button" class="steps__b' + (i === p ? ' on' : '') + (i < p ? ' done' : '') + '" data-passo-go="' + i + '"' + (i === p ? ' aria-current="step"' : '') + '><i aria-hidden="true"></i><span>' + s[1] + '</span></button>'; }).join('') + '</nav>' +
       '<div class="card kv kv--plan" aria-live="polite"><div><span class="label">Pessoas</span><b class="tnum" data-odo="p-pes"></b></div><div><span class="label">Carne</span><b class="tnum"><span data-odo="p-kg"></span> kg</b></div><div><span class="label">Carvão</span><b class="tnum"><span data-odo="p-cv"></span> kg</b></div></div>';
@@ -400,7 +401,8 @@
     var nav = '<div class="step__nav">' + (p > 0 ? '<button type="button" class="btn btn-s btn--sq" data-passo-go="' + (p - 1) + '" aria-label="Passo anterior">' + ic('back') + '</button>' : '') +
       (p < 3 ? '<button type="button" class="btn btn-p grow" data-passo-go="' + (p + 1) + '"' + (p === 1 && !r.linhas.length ? ' disabled' : '') + '>Continuar</button>'
         : '<button type="button" class="btn btn-p grow" data-marcar="1"' + (!r.linhas.length ? ' disabled' : '') + '>' + (plan.ativo ? 'Salvar alterações' : 'Marcar churrasco') + '</button>') + '</div>';
-    el.innerHTML = '<div class="pad">' + head + '<div class="step cascade" data-step="' + p + '">' + body + '</div>' + nav + '</div>';
+    el.innerHTML = '<div class="pad">' + head + '<div class="step cascade" data-step="' + p + '">' + body + '</div></div>';
+    $('#planbar').innerHTML = nav;
     if (p === 1) fillPicks();
     syncCounts();
   }
@@ -718,7 +720,7 @@
   function commit() {
     save(); last = compute();
     syncCounts();
-    if (cur === 'planejar') { if (plan.passo === 1 && $('#picks')) { fillPicks(); var h = $('#v-planejar .step__t .label'); if (h) h.textContent = last.linhas.length; var nx = $('#v-planejar [data-passo-go="2"].btn'); if (nx) nx.disabled = !last.linhas.length; } else if (plan.passo !== 0) renderPlanejar(); }
+    if (cur === 'planejar') { if (plan.passo === 1 && $('#picks')) { fillPicks(); var h = $('#v-planejar .step__t .label'); if (h) h.textContent = last.linhas.length; var nx = $('#planbar [data-passo-go="2"].btn'); if (nx) nx.disabled = !last.linhas.length; } else if (plan.passo !== 0) renderPlanejar(); }
     if (cur === 'inicio' && !$('#app').hidden) renderInicio();
     if (sheetKind === 'lista') { var y = $('#sheet-body').scrollTop; $('#sheet-body').innerHTML = listaHTML(); $('#sheet-body').scrollTop = y; }
   }
