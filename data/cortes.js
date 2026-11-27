@@ -225,12 +225,64 @@
     salsichao: 'Espeto ou grelha: 1,5 palmo (~30 cm), brasa média.',
     'linguica-toscana': 'Espeto: 1,5 palmo (~30 cm), brasa média.'
   };
+
+  /* mercado: o que aparece na etiqueta/no balcão do mercado e como escolher a peça.
+   * rotulos = outros nomes e variações comuns em mercados brasileiros (servem também para a busca).
+   * escolha = o que olhar na hora de pegar a bandeja. Conteúdo de culinária geral, sem medição. */
+  var MERCADO = {
+    picanha: [['Picanha bovina', 'Picanha resfriada', 'Picanha maturada', 'Bife de picanha', 'Coulotte'], 'Prefira peça de até 1,5 kg com capa de gordura uniforme de uns 1 cm. Peça muito maior costuma vir com parte da alcatra junto.'],
+    maminha: [['Maminha da alcatra', 'Ponta da alcatra', 'Maminha bovina'], 'Escolha peça inteira, com a gordurinha de um lado e cor vermelho-vivo; evite bandeja com muito líquido.'],
+    fraldinha: [['Fraldinha bovina', 'Fraldão', 'Bife do vazio', 'Aba de filé (às vezes confundida)'], 'Procure fibras longas e aparentes e gordura entremeada branca. Fina demais seca rápido.'],
+    contrafile: [['Contrafilé', 'Filé de lombo', 'Bife de contra', 'Chorizo', 'Strip loin', 'Contrafilé com noix (quando vem a ponta do ancho)'], 'Bife de 3 a 4 cm de altura e faixa de gordura na lateral. Se vier escrito "com noix", é a parte mais macia, perto do ancho.'],
+    ancho: [['Bife ancho', 'Ancho', 'Contrafilé de costela', 'Noix', 'Entrecôte'], 'Quanto mais "rede" de gordura branca na carne, mais suculento. Procure o olho de gordura no meio e bife alto.'],
+    'file-mignon': [['Filé mignon', 'Filé limpo', 'Filé com cordão', 'Medalhão', 'Tenderloin'], '"Com cordão" vem com uma tira de carne grudada e é mais barato; "limpo" já vem pronto. É magro: ótimo em medalhão com bacon.'],
+    alcatra: [['Alcatra completa', 'Miolo da alcatra', 'Coração da alcatra', 'Baby beef', 'Top sirloin'], '"Alcatra completa" traz picanha e maminha juntas; "miolo" é só o centro. Prefira carne vermelho-vivo sem manchas escuras.'],
+    cupim: [['Cupim bovino', 'Cupim A', 'Cupim B', 'Giba'], 'Cupim A (de boi zebu jovem) é mais macio que o B. Procure gordura branca bem entremeada; precisa de muitas horas de fogo.'],
+    costela: [['Costela ripa', 'Costela minga', 'Costela gaúcha', 'Costela em tiras', 'Ponta de costela', 'Costela do dianteiro'], 'Ripa é a parte com mais osso; minga, a ponta com mais carne e gordura. Peça com gordura branca e firme.'],
+    'costela-janela': [['Costela janela', 'Costela do traseiro', 'Costela com osso', 'Costela em manta'], 'Vem em manta com os ossos aparentes ("janelas"). Prefira carne grossa sobre os ossos.'],
+    acem: [['Acém', 'Acém em bifes', 'Bife de acém', 'Agulha (às vezes)', 'Chuck'], 'Barato e saboroso, mas firme: na brasa vale em bifes finos marinados ou em peça bem lenta.'],
+    peito: [['Peito bovino', 'Granito', 'Brisket', 'Peito com osso'], 'Para churrasco lento, prefira com uma boa camada de gordura por cima. Peça magra demais resseca.'],
+    vazio: [['Vacío', 'Vazio', 'Fraldinha com aba', 'Flank (parte)'], 'É a manta inteira que inclui a fraldinha. Escolha com membrana e gordura de um lado: protegem na brasa.'],
+    entrana: [['Entraña', 'Diafragma', 'Saia', 'Skirt steak', 'Fraldinha de dentro'], 'Tira fina e comprida, com uma película que costuma vir: pode tirar ou deixar para proteger. Rara em mercado comum.'],
+    'tira-de-asado': [['Tira de asado', 'Costela em tiras', 'Costela fatiada', 'Asado de tira', 'Costela no corte argentino'], 'Tiras de 3-4 cm cortadas atravessando os ossos. Procure carne entre os ossos, não só gordura.'],
+    matambre: [['Matambre', 'Matambre bovino', 'Capa de costela (às vezes)'], 'Manta fina que cobre a costela. Escolha com espessura uniforme; vai bem lento ou recheado e enrolado.'],
+    'ojo-de-bife': [['Ojo de bife', 'Bife ancho', 'Ribeye', 'Ancho'], 'É o mesmo ancho com nome argentino. Bife alto e bem marmorizado.'],
+    'bife-de-chorizo': [['Bife de chorizo', 'Contrafilé', 'Chorizo', 'Strip'], 'É o contrafilé com nome argentino, em bife bem alto (4-5 cm). Não confunda com a linguiça chorizo.'],
+    'colita-de-cuadril': [['Colita de cuadril', 'Maminha', 'Tri-tip'], 'É a maminha com nome argentino. Peça inteira de formato triangular.'],
+    entrecot: [['Entrecôte', 'Entrecot', 'Bife ancho', 'Contrafilé de costela'], 'Nome francês para a região do ancho. Na prática, procure como ancho.'],
+    't-bone': [['T-bone', 'Bisteca bovina', 'Chuleta (em alguns lugares)'], 'Bife com osso em T: de um lado contrafilé, do outro um pedaço pequeno de filé. Prefira com 3-4 cm.'],
+    porterhouse: [['Porterhouse', 'T-bone grande', 'Bisteca do traseiro'], 'É um T-bone com o lado do filé mignon maior. Bife grosso, para dividir.'],
+    tomahawk: [['Tomahawk', 'Ancho com osso', 'Bife de costela com osso longo', 'Cowboy steak (osso curto)'], 'Ancho com o osso da costela inteiro. Bife de 5 cm ou mais; peso costuma passar de 1 kg.'],
+    ribeye: [['Ribeye', 'Ancho', 'Ojo de bife', 'Bife ancho'], 'Nome americano do ancho. Prefira "prime" ou com muito marmoreio quando vier a graduação.'],
+    'ny-strip': [['NY strip', 'New York steak', 'Contrafilé', 'Strip loin'], 'Nome americano do contrafilé. Bife alto com faixa de gordura de um lado.'],
+    'flat-iron': [['Flat iron', 'Raquete', 'Peixinho (parte)', 'Miolo da paleta', 'Top blade'], 'Sai da paleta: tem um nervo no meio que o açougueiro retira. Se vier inteira, peça para abrir em dois bifes.'],
+    denver: [['Denver steak', 'Acém nobre', 'Miolo do acém', 'Underblade'], 'Bife do miolo do acém, mais macio que o acém comum. Procure bem marmorizado.'],
+    'tri-tip': [['Tri-tip', 'Maminha', 'Colita de cuadril'], 'Nome americano da maminha. Peça inteira triangular, vai bem na grelha ou defumada.'],
+    'short-rib': [['Short rib', 'Costela do dianteiro em cubos', 'Costela curta', 'Costela minga em bloco'], 'Blocos de costela com um osso só. Precisa de fogo lento; procure bastante carne sobre o osso.'],
+    'ponta-de-peito': [['Ponta de peito', 'Peito bovino', 'Granito', 'Brisket'], 'Escolha com gordura por cima, sem pontas secas. É a parte do peito que mais rende no fogo lento.'],
+    salsichao: [['Salsichão', 'Linguiça gaúcha', 'Salsichão de porco', 'Linguiça fina em espiral'], 'Linguiça fina, em rolo. Procure tripa natural e textura firme; serve de entrada rápida.'],
+    'costela-minga': [['Costela minga', 'Ponta de costela', 'Costela do dianteiro', 'Costela gaúcha'], 'Parte da costela com mais carne e gordura e menos osso. Ideal para fogo de chão.'],
+    'pancetta-suina': [['Pancetta', 'Barriga suína', 'Panceta suína', 'Toucinho com carne', 'Pork belly'], 'Prefira camadas bem definidas de carne e gordura, com a pele. Pele lisa e seca estala melhor.'],
+    'costelinha-suina': [['Costelinha suína', 'Costela de porco', 'Costelinha em tiras', 'Costela suína em manta', 'Ribs'], 'Manta com bastante carne sobre os ossos. Tem uma película atrás que vale tirar.'],
+    'lombo-suino': [['Lombo suíno', 'Lombo de porco', 'Carré suíno (com osso)', 'Bisteca suína (em bifes)'], 'Magro: prefira peça com capa de gordura por cima. Com osso, vira carré ou bisteca.'],
+    'copa-lombo': [['Copa-lombo', 'Sobrepaleta', 'Nuca de porco', 'Pescoço suíno', 'Capa de lombo'], 'Bem entremeado de gordura, aguenta brasa forte sem secar. Procure rede de gordura visível.'],
+    panceta: [['Panceta', 'Barriga suína em tiras', 'Pancetta fatiada'], 'Em tiras de 1-2 cm, com pele. Escolha tiras com mais carne do que gordura se quiser crocante e macia.'],
+    'linguica-toscana': [['Linguiça toscana', 'Linguiça para churrasco', 'Linguiça suína', 'Linguiça fresca'], 'Leia o rótulo: "toscana" de verdade é só carne suína, sem frango. Gomos firmes e úmidos.'],
+    'carre-cordeiro': [['Carré de cordeiro', 'Costeleta de cordeiro', 'French rack', 'Carré francês'], '"Francês" vem com os ossos limpos. Carne rosada, gordura branca e firme.'],
+    'pernil-cordeiro': [['Pernil de cordeiro', 'Perna de cordeiro', 'Pernil com osso', 'Pernil desossado'], 'Com osso fica mais suculento; desossado assa mais rápido. Prefira de cordeiro jovem (cor rosada, não vermelho-escuro).'],
+    'coracao-frango': [['Coração de frango', 'Coraçãozinho', 'Miúdos de frango'], 'Corações inteiros, firmes e vermelho-escuros. Tire o excesso de gordura do topo se quiser.'],
+    'coxa-sobrecoxa': [['Coxa e sobrecoxa', 'Coxa com sobrecoxa', 'Sobrecoxa desossada', 'Drumet (coxinha da asa, diferente)'], 'Com pele e osso é mais suculento. Sobrecoxa desossada é rápida e boa no espeto.'],
+    'asa-frango': [['Asa de frango', 'Tulipa', 'Meio da asa', 'Coxinha da asa', 'Drumet', 'Asinha'], '"Tulipa" e "coxinha da asa" são a parte mais carnuda; "meio da asa" tem dois ossinhos e pele que fica crocante.'],
+    chorizo: [['Chorizo', 'Chorizo criollo', 'Linguiça argentina', 'Chorizo parrillero'], 'O argentino é fresco (vai cru para a brasa); o espanhol é curado e não serve para churrasco.'],
+    morcilla: [['Morcilla', 'Morcela', 'Chouriço de sangue', 'Morcilla dulce'], 'Já vem cozida, só esquentar. A doce leva laranja ou nozes; a salgada é a mais comum.']
+  };
   var NOTA = { entrana: 'peça interna (diafragma)', vazio: 'nome usado na Argentina e no Uruguai' };
   window.CORTES.forEach(function (k) {
     var p = PRECO[k.id];
     if (p) { k.precoKg = { min: p[0], max: p[1] }; k.precoFonte = 'estimativa'; }
     if (BRASA[k.id]) k.brasa = BRASA[k.id];
     if (NOTA[k.id]) k.nota = NOTA[k.id];
+    if (MERCADO[k.id]) k.mercado = { rotulos: MERCADO[k.id][0], escolha: MERCADO[k.id][1] };
   });
   /* ids dos cortes mais baratos (preço médio estimado ≤ R$ 40/kg), do mais barato ao mais caro */
   window.CORTES_ECONOMICOS = window.CORTES.filter(function (k) { return k.precoKg && (k.precoKg.min + k.precoKg.max) / 2 <= 40; })

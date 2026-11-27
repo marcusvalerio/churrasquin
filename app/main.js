@@ -402,8 +402,8 @@
     if (!el.dataset.built) {
       el.dataset.built = '1';
       el.innerHTML = '<div class="pad">' +
-        '<header class="cascade"><p class="eyebrow" style="--i:0">Guia de cortes</p><h1 class="h1" style="--i:1">De onde vem cada peça</h1></header>' +
-        '<label class="search">' + ic('search') + '<span class="sr">Buscar corte</span><input type="search" id="c-q" placeholder="picanha, vacío, ribeye…" autocomplete="off"></label>' +
+        '<header class="cascade"><p class="eyebrow" style="--i:0">Guia de carnes</p><h1 class="h1" style="--i:1">Conheça cada corte</h1><p class="lede" style="--i:2">O que é, os nomes que aparecem na etiqueta do mercado e como fazer na brasa.</p></header>' +
+        '<label class="search">' + ic('search') + '<span class="sr">Buscar corte</span><input type="search" id="c-q" placeholder="picanha, maminha, bife de chorizo…" autocomplete="off"></label>' +
         '<div class="chips chips--scroll" id="c-an" role="group" aria-label="Animal">' + [['', 'Todos'], ['boi', 'Boi'], ['porco', 'Porco'], ['cordeiro', 'Cordeiro'], ['frango', 'Frango']].map(function (a) { return '<button type="button" class="chip" data-an="' + a[0] + '" aria-pressed="' + (a[0] === cst.animal) + '">' + a[1] + '</button>'; }).join('') + '</div>' +
         '<p class="count-line" id="c-n" aria-live="polite"></p><ul class="guia" id="c-grid"></ul></div>';
       var qT; $('#c-q').addEventListener('input', function (e) { clearTimeout(qT); qT = setTimeout(function () { cst.q = e.target.value; gridCortes(); }, 120); });
@@ -415,28 +415,31 @@
     var list = cortes().filter(function (c) {
       if (cst.animal && c.animal !== cst.animal) return false;
       if (!q) return true;
-      return [c.nome, c.id].concat(Object.keys(c.nomes || {}).map(function (k) { return c.nomes[k]; })).some(function (n) { return norm(n).indexOf(q) >= 0; });
+      return [c.nome, c.id].concat(Object.keys(c.nomes || {}).map(function (k) { return c.nomes[k]; }), (c.mercado && c.mercado.rotulos) || []).some(function (n) { return norm(n).indexOf(q) >= 0; });
     });
     $('#c-n').textContent = list.length + (list.length === 1 ? ' corte' : ' cortes');
     $('#c-grid').innerHTML = list.length ? list.map(function (c, i) {
-      var on = has(c.id), art = (window.CUT_ART && window.CUT_ART[c.id]) || '';
-      return '<li class="gcard' + (on ? ' is-on' : '') + '" style="--i:' + Math.min(i, 10) + '" data-id="' + esc(c.id) + '">' +
-        '<button type="button" class="gcard__b" data-ficha="' + esc(c.id) + '" aria-label="Ficha: ' + esc(c.nome) + ', de onde vem"><span class="gcard__art" aria-hidden="true">' + art + '</span>' +
+      var art = (window.CUT_ART && window.CUT_ART[c.id]) || '', tb = tambem(c);
+      return '<li class="gcard" style="--i:' + Math.min(i, 10) + '" data-id="' + esc(c.id) + '">' +
+        '<button type="button" class="gcard__b" data-ficha="' + esc(c.id) + '" aria-label="' + esc(c.nome) + ': o que é, nomes no mercado e como fazer"><span class="gcard__art" aria-hidden="true">' + art + '</span>' +
         '<span class="gcard__k">' + esc(ANIMAL_NOME[c.animal] || '') + (CAT[c.categoria] ? ' · ' + CAT[c.categoria] : '') + '</span><b class="gcard__n">' + esc(c.nome) + '</b>' +
-        '<span class="gcard__m">' + (tempoMin(c) ? ic('clock') + durTxt(tempoMin(c)) : '') + '</span></button>' +
-        '<button type="button" class="gcard__add" data-levar="' + esc(c.id) + '" aria-pressed="' + on + '" aria-label="' + (on ? 'Tirar ' : 'Levar ') + esc(c.nome) + '">' + ic(on ? 'check' : 'plus') + '</button>' +
-        '<span class="gcard__stamp" aria-hidden="true">levar</span></li>';
+        (tb ? '<span class="gcard__t">também: ' + esc(tb) + '</span>' : '') +
+        '<span class="gcard__m">' + (tempoMin(c) ? ic('clock') + durTxt(tempoMin(c)) : '') + '</span></button></li>';
     }).join('') : '<li class="empty">' + dog() + '<p class="empty__t">Nenhum corte com esse nome</p><p class="empty__d">Tente o nome de outro país: vacío, ojo de bife, ribeye.</p></li>';
   }
-  function syncCortes() {
-    $$('#c-grid .gcard').forEach(function (li) {
-      var on = has(li.dataset.id), b = li.querySelector('.gcard__add'), c = corte(li.dataset.id);
-      if (li.classList.contains('is-on') === on) return;
-      li.classList.toggle('is-on', on); b.setAttribute('aria-pressed', on); b.innerHTML = ic(on ? 'check' : 'plus');
-      b.setAttribute('aria-label', (on ? 'Tirar ' : 'Levar ') + c.nome);
-      if (on) bump(li);
+  /* outros nomes do mesmo corte: rótulos de mercado primeiro, depois outros países */
+  function tambem(c) {
+    var seen = {}, out = [], base = norm(c.nome);
+    seen[base] = 1;
+    ((c.mercado && c.mercado.rotulos) || []).concat(['ar', 'uy', 'us'].map(function (k) { return (c.nomes || {})[k]; })).forEach(function (n) {
+      if (!n || out.length >= 3) return;
+      var k = norm(n);
+      if (seen[k] || k.indexOf(base) >= 0) return;
+      seen[k] = 1; out.push(n);
     });
+    return out.join(', ');
   }
+  function syncCortes() { /* o guia não tem botão de lista; a ficha cuida disso */ }
 
   /* ============ NA BRASA ============ */
   var timers = {}; // id -> { end, total, virou }
