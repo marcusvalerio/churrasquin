@@ -1,71 +1,101 @@
-/* churrasquin — app/main.js
- * Protótipo de ponta a ponta: abertura → onboarding (3 telas) → app com 5 abas
- * (Início, Planejar, Cortes, Na brasa, Receitas) + Lista (botão no topo).
- * Lógica reaproveitada da versão anterior: plano adultos/crianças/apetite, divisão por rendimento,
- * mixes, linha do tempo de trás pra frente, timers, ponto pelo termômetro, zonas, lista e WhatsApp.
+/* churrasquin — app/main.js (fase 2)
+ * Abertura curta → app com 5 abas (Início, Planejar, Cortes, Na brasa, Receitas) + Lista no topo.
+ * Início é uma home leve (banner de estado, Em alta, Curiosidades, Receitas da semana, Novos cortes,
+ * Seus churrascos). Planejar concentra o fluxo em 4 passos. Fim do churrasco vira lembrança com foto
+ * (ver app/memorias.js: as fotos ficam só no aparelho).
+ * Lógica herdada: plano adultos/crianças/apetite, divisão por rendimento, mixes, linha do tempo
+ * de trás pra frente, timers, ponto pelo termômetro, zonas, lista e WhatsApp.
  * Expõe window.Plan = { has, add, remove, toggle } (usado pela ficha do animal). */
 (function () {
   'use strict';
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var KEY = 'churrasquin.proto.v1';
+  var KEY = 'churrasquin.proto.v2';
   var REF = 0.72;
   var RM = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
   function reduced() { return !!RM.matches; }
   var ANIMAL_NOME = { boi: 'Boi', porco: 'Porco', cordeiro: 'Cordeiro', frango: 'Frango' };
   var CAT = { nobre: 'Nobre', tradicional: 'Tradicional', steak: 'Steak', popular: 'Popular', miudo: 'Miúdo' };
-  var AP_FALLBACK = { pouco: { label: 'Comem pouco', gramas: 300 }, confortavel: { label: 'Normal', gramas: 400 }, bem: { label: 'Comem bem', gramas: 500 } };
+  var AP_FALLBACK = { pouco: { label: 'Comem pouco', gramas: 300 }, confortavel: { label: 'Confortável', gramas: 400 }, bem: { label: 'Comem bem', gramas: 500 } };
   var MIXES = {
-    classico: { label: 'Clássico', desc: 'picanha, fraldinha, linguiça e frango', w: { picanha: 3, fraldinha: 2, 'linguica-toscana': 2, 'coxa-sobrecoxa': 1.5, 'coracao-frango': 1 } },
-    economico: { label: 'Econômico', desc: 'frango, linguiça, acém e costelinha', w: { 'coxa-sobrecoxa': 3, 'linguica-toscana': 2, acem: 2, 'costelinha-suina': 2, 'coracao-frango': 1 } },
-    parrilla: { label: 'Parrilla', desc: 'vacío, tira de asado, entraña e chorizo', w: { vazio: 3, 'tira-de-asado': 2, entrana: 1.5, chorizo: 1.5, morcilla: 0.5 } },
-    gaucho: { label: 'Gaúcho', desc: 'costela, picanha, salsichão e coração', w: { costela: 3, 'ponta-de-peito': 2, salsichao: 2, picanha: 2, 'coracao-frango': 1 } }
+    classico: { label: 'Clássico', desc: 'Picanha, fraldinha, linguiça e frango', w: { picanha: 3, fraldinha: 2, 'linguica-toscana': 2, 'coxa-sobrecoxa': 1.5, 'coracao-frango': 1 } },
+    economico: { label: 'Econômico', desc: 'Frango, linguiça, acém e costelinha', w: { 'coxa-sobrecoxa': 3, 'linguica-toscana': 2, acem: 2, 'costelinha-suina': 2, 'coracao-frango': 1 } },
+    parrilla: { label: 'Parrilla', desc: 'Vacío, tira de asado, entraña e chorizo', w: { vazio: 3, 'tira-de-asado': 2, entrana: 1.5, chorizo: 1.5, morcilla: 0.5 } },
+    gaucho: { label: 'Gaúcho', desc: 'Costela, ponta de peito, salsichão e picanha', w: { costela: 3, 'ponta-de-peito': 2, salsichao: 2, picanha: 2, 'coracao-frango': 1 } }
   };
   var SUGESTOES = ['picanha', 'fraldinha', 'maminha', 'costela', 'linguica-toscana', 'coxa-sobrecoxa', 'ancho', 'cupim', 'coracao-frango', 'vazio', 'pancetta-suina', 'entrana'];
+  var EM_ALTA = ['picanha', 'ancho', 'fraldinha', 'vazio', 'costela', 'cupim', 'tomahawk'];
+  var NOVOS = ['ponta-de-peito', 'salsichao', 'costela-minga'];
   var VIEWS = ['inicio', 'planejar', 'cortes', 'brasa', 'receitas'];
+  var DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+  var MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+  var PASSOS = [['turma', 'Turma'], ['cortes', 'Cortes'], ['compra', 'Compra'], ['hora', 'Quando']];
   var ABOUT = {
-    splash: 'Abertura: o selo carimba e a assinatura escreve churrasquin, com o espeto correndo no sublinhado.',
-    onb: 'Onboarding em 3 perguntas. As respostas já montam o plano: pessoas, cortes e hora de servir.',
-    inicio: 'Início: o churrasco de hoje num relance. Pessoas, kg, hora de servir e o próximo passo da brasa.',
-    planejar: 'Planejar: turma, apetite e cortes. A conta divide a carne pelo rendimento de cada peça.',
-    cortes: 'Cortes: guia impresso. Toque numa peça para abrir a ficha com o mapa do animal e o zoom na região.',
-    brasa: 'Na brasa: ordem de entrada de trás pra frente, timers reais com aviso de virar, termômetro e zonas de fogo.',
-    receitas: 'Receitas: farofas, molhos, maioneses. Ingredientes escalados pelo número de pessoas do plano.',
-    lista: 'Lista: carne, carvão e ingredientes das receitas numa lista só, pronta para mandar no WhatsApp.'
+    splash: 'Abertura: o verde de marca com as formas grandes e o nome. Dura pouco mais de um segundo.',
+    inicio: 'Início: banner do próximo churrasco, cortes em alta, curiosidades, receitas da semana e as lembranças com foto.',
+    planejar: 'Planejar: quatro passos. Turma, cortes, quanto comprar e quando servir. A conta divide a carne pelo rendimento de cada peça.',
+    cortes: 'Cortes: guia com busca por nome de qualquer país. A ficha mostra o mapa do animal e a região da peça.',
+    brasa: 'Na brasa: ordem de entrada de trás pra frente, timers com aviso de virar, termômetro e zonas de fogo.',
+    receitas: 'Receitas: ingredientes escalados pelo número de pessoas do plano.',
+    lista: 'Lista: carne, carvão e ingredientes numa lista só, pronta para mandar no WhatsApp.',
+    fim: 'Fim do churrasco: uma foto, uma nota e estrelas. Vira lembrança no Início e o plano recomeça.'
   };
 
-  /* ---------- ícones: biblioteca icons/ (sprite injetado no index.html, ids ic-*) ---------- */
+  /* ---------- ícones ---------- */
   var I = { plus: 'adicionar', check: 'check', x: 'remover', clock: 'relogio', fire: 'fogo-forte', people: 'turma', share: 'compartilhar',
-    copy: 'copiar', book: 'receitas', bag: 'lista-sacola', arrow: 'avancar', search: 'busca', info: 'info', play: 'play', stop: 'pause', thermo: 'termometro' };
-  function ic(n, cls) { return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-' + (I[n] || n) + '"/></svg>'; }
-  function dog(cls) { return '<svg class="dog ' + (cls || '') + '" viewBox="0 0 490 290" aria-hidden="true"><use href="#dog"/></svg>'; }
+    copy: 'copiar', book: 'receitas', bag: 'lista-sacola', arrow: 'avancar', search: 'busca', info: 'info', play: 'play', stop: 'pause', thermo: 'termometro', back: 'voltar' };
+  function ic(n, cls) { var id = n.indexOf('x-') === 0 ? n : 'ic-' + (I[n] || n); return '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true"><use href="#' + id + '"/></svg>'; }
+  function listaBtn(light) { return '<button type="button" class="iconbtn' + (light ? ' iconbtn--glass' : '') + '" data-open="lista" aria-label="Lista de compras, ' + listaCount() + ' itens">' + ic('bag') + '<span class="badge tnum" data-badge aria-hidden="true">' + listaCount() + '</span></button>'; }
 
   /* ---------- util ---------- */
   function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim(); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function kgN(g) { return (g / 1000).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
   function kgTxt(g) { return kgN(g) + ' kg'; }
+  function brl(n) { return Math.round(n).toLocaleString('pt-BR'); }
+  function curto(n) { return String(n || '').replace(/\s*\([^)]*\)/g, '').trim(); }
   function cortes() { return Array.isArray(window.CORTES) ? window.CORTES : []; }
   var byId = null;
   function corte(id) { if (!byId) { byId = {}; cortes().forEach(function (c) { byId[c.id] = c; }); } return byId[id]; }
   function apetites() { return window.APETITE && typeof window.APETITE === 'object' ? window.APETITE : AP_FALLBACK; }
   function R() { return window.ReceitasUI; }
+  function M() { return window.Memorias; }
+  function isoDia(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function diaDate(s) { var p = String(s || '').split('-'); return p.length === 3 ? new Date(+p[0], +p[1] - 1, +p[2]) : new Date(); }
+  function proxSabado() { var d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7)); return d; }
+  function hoje0() { var d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  function diaNome(d, cap) {
+    var dif = Math.round((new Date(d).setHours(0, 0, 0, 0) - hoje0()) / 864e5);
+    var s = dif === 0 ? 'hoje' : dif === 1 ? 'amanhã' : DIAS[d.getDay()].toLowerCase();
+    return cap ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+  function relTempo(ts) {
+    var d = Math.round((hoje0() - new Date(ts).setHours(0, 0, 0, 0)) / 864e5);
+    if (d <= 0) return 'hoje'; if (d === 1) return 'ontem'; if (d < 7) return 'há ' + d + ' dias';
+    if (d < 30) { var w = Math.round(d / 7); return 'há ' + w + (w === 1 ? ' semana' : ' semanas'); }
+    if (d < 365) { var m = Math.round(d / 30); return 'há ' + m + (m === 1 ? ' mês' : ' meses'); }
+    var y = Math.round(d / 365); return 'há ' + y + (y === 1 ? ' ano' : ' anos');
+  }
+  function dataCurta(ts) { var d = new Date(ts); return DIAS[d.getDay()] + ', ' + d.getDate() + ' ' + MESES[d.getMonth()].slice(0, 3); }
 
   /* ---------- estado ---------- */
-  var plan = { adultos: 10, criancas: 2, apetite: 'confortavel', itens: [], servir: '13:00', receitas: [], ok: {}, feitos: {}, onboarded: false };
+  function novoPlano() { return { adultos: 10, criancas: 2, apetite: 'confortavel', itens: [], servir: '13:00', dia: isoDia(proxSabado()), ativo: false, receitas: [], ok: {}, feitos: {}, passo: 0 }; }
+  var plan = novoPlano();
   function load() {
+    plan = novoPlano();
     try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && Array.isArray(s.itens)) plan = Object.assign(plan, s); } catch (e) {}
     plan.itens = plan.itens.filter(function (it) { return corte(it.id); });
     if (!apetites()[plan.apetite]) plan.apetite = Object.keys(apetites())[1] || Object.keys(apetites())[0];
-    if (!plan.itens.length) applyMix('classico', true);
+    if (!plan.ativo && diaDate(plan.dia) < hoje0()) plan.dia = isoDia(proxSabado());
+    if (!plan.itens.length && !plan.vazio) applyMix('classico', true);
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(plan)); } catch (e) {} }
   function has(id) { return plan.itens.some(function (it) { return it.id === id; }); }
-  function add(id) { if (!corte(id) || has(id)) return false; plan.itens.push({ id: id }); commit(); return true; }
-  function remove(id) { plan.itens = plan.itens.filter(function (it) { return it.id !== id; }); commit(); }
-  function toggle(id) { if (has(id)) { remove(id); return false; } add(id); stamp('Na lista'); return true; }
+  function add(id) { if (!corte(id) || has(id)) return false; plan.itens.push({ id: id }); plan.vazio = false; commit(); return true; }
+  function remove(id) { plan.itens = plan.itens.filter(function (it) { return it.id !== id; }); plan.vazio = !plan.itens.length; commit(); }
+  function toggle(id) { if (has(id)) { remove(id); toast(curto(corte(id).nome) + ' saiu do plano'); return false; } add(id); toast(curto(corte(id).nome) + ' entrou no plano'); return true; }
   function applyMix(k, quiet) {
-    var w = MIXES[k].w; plan.mix = k;
+    var w = MIXES[k].w; plan.mix = k; plan.vazio = false;
     plan.itens = Object.keys(w).filter(corte).map(function (id) { return { id: id, w: w[id] }; });
     if (!quiet) commit();
   }
@@ -90,33 +120,36 @@
     var totalG = linhas.reduce(function (s, l) { return s + l.g; }, 0);
     var pessoas = plan.adultos + plan.criancas;
     var carvao = linhas.length ? Math.max(3, Math.ceil(totalG / 1000)) : 0;
+    var pMin = 0, pMax = 0, semPreco = 0;
+    linhas.forEach(function (l) { if (l.c.precoKg) { pMin += l.g / 1000 * l.c.precoKg.min; pMax += l.g / 1000 * l.c.precoKg.max; } else semPreco++; });
     var extras = linhas.length ? [
-      { id: 'carvao', nome: 'Carvão', qtd: carvao + ' kg', obs: '~1 kg por kg de carne' },
+      { id: 'carvao', nome: 'Carvão', qtd: carvao + ' kg', obs: 'cerca de 1 kg por kg de carne' },
       { id: 'sal', nome: 'Sal grosso', qtd: totalG > 8000 ? '2 kg' : '1 kg' },
-      { id: 'gelo', nome: 'Gelo', qtd: Math.max(1, Math.ceil(pessoas / 6)) + ' saco(s) de 5 kg' },
+      { id: 'gelo', nome: 'Gelo', qtd: Math.max(1, Math.ceil(pessoas / 6)) + ' × 5 kg' },
       { id: 'acendedor', nome: 'Acendedor ou álcool gel', qtd: '1 un.' }
     ] : [];
-    return { linhas: linhas, totalG: totalG, pessoas: pessoas, porcoes: porcoes, alvo: alvo, extras: extras, carvao: carvao };
+    return { linhas: linhas, totalG: totalG, pessoas: pessoas, porcoes: porcoes, alvo: alvo, extras: extras, carvao: carvao, g: g,
+      preco: pMax ? { min: Math.round(pMin / 10) * 10, max: Math.round(pMax / 10) * 10, parcial: semPreco > 0 } : null };
   }
   function pessoasTxt() {
     return plan.adultos + (plan.adultos === 1 ? ' adulto' : ' adultos') + (plan.criancas ? ' e ' + plan.criancas + (plan.criancas === 1 ? ' criança' : ' crianças') : '');
   }
 
-  /* ---------- tempos, zonas, ponto (ofício do assador) ---------- */
+  /* ---------- tempos, zonas, ponto ---------- */
   var ZONAS = {
-    forte: { nome: 'Brasa forte', palmos: '1 palmo · ~20 cm', mao: '2–3 s', uso: 'Selar, cortes finos, coração, espetinho' },
-    media: { nome: 'Brasa média', palmos: '1,5 palmo · ~30 cm', mao: '4–5 s', uso: 'Peças médias, linguiça, frango com osso' },
-    branda: { nome: 'Fogo brando', palmos: '2–3 palmos · 40–60 cm', mao: '7–8 s', uso: 'Costela, cupim, peças inteiras' },
-    indireto: { nome: 'Indireto', palmos: 'lado sem brasa', mao: '10 s+', uso: 'Terminar sem queimar, segurar quente' }
+    forte: { nome: 'Brasa forte', palmos: '1 palmo, ~20 cm', mao: '2–3 s', uso: 'Selar, cortes finos, coração, espetinho', n: 4 },
+    media: { nome: 'Brasa média', palmos: '1,5 palmo, ~30 cm', mao: '4–5 s', uso: 'Peças médias, linguiça, frango com osso', n: 3 },
+    branda: { nome: 'Fogo brando', palmos: '2–3 palmos, 40–60 cm', mao: '7–8 s', uso: 'Costela, cupim, peças inteiras', n: 2 },
+    indireto: { nome: 'Indireto', palmos: 'lado sem brasa', mao: '10 s ou mais', uso: 'Terminar sem queimar, segurar quente', n: 1 }
   };
   var PONTOS = [
-    { nome: 'Selado', sub: 'azul, só a casca', min: 45, max: 49, cor: '#7a1a12' },
-    { nome: 'Mal passado', sub: 'centro vermelho', min: 50, max: 54, cor: '#b3261a' },
-    { nome: 'Ao ponto', sub: 'centro rosado', min: 57, max: 60, cor: '#d9573a' },
-    { nome: 'Ao ponto p/ bem', sub: 'rosado leve', min: 63, max: 65, cor: '#b87a52' },
-    { nome: 'Bem passado', sub: 'sem rosado', min: 70, max: 74, cor: '#6b5040' }
+    { nome: 'Selado', sub: 'só a casca', min: 45, max: 49 },
+    { nome: 'Mal passado', sub: 'centro vermelho', min: 50, max: 54 },
+    { nome: 'Ao ponto', sub: 'centro rosado', min: 57, max: 60 },
+    { nome: 'Ao ponto para bem', sub: 'rosado leve', min: 63, max: 65 },
+    { nome: 'Bem passado', sub: 'sem rosado', min: 70, max: 74 }
   ];
-  var SEGUROS = [['Frango', '74 °C na coxa, perto do osso'], ['Porco (lombo, copa)', '63 °C + 3 min de descanso'], ['Linguiça / moída', '71 °C no centro'], ['Costela de boi', '90–95 °C para desmanchar']];
+  var SEGUROS = [['Frango', '74 °C na coxa, perto do osso'], ['Porco (lombo, copa)', '63 °C e 3 min de descanso'], ['Linguiça e moída', '71 °C no centro'], ['Costela de boi', '90–95 °C para desmanchar']];
   function tempoMin(c) {
     var m = String((c && c.tempo) || '').match(/(\d+)(?:\s*[-–a]\s*(\d+))?\s*(min|h)/);
     if (!m) return 0; var v = +(m[2] || m[1]); return m[3] === 'h' ? v * 60 : v;
@@ -131,12 +164,12 @@
   function descanso(c) { return c.animal === 'boi' || c.animal === 'cordeiro' ? (tempoMin(c) >= 120 ? 15 : 5) : 0; }
   function hhmm(d) { return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
   function horaSel(id) {
-    var v = plan.servir || '13:00', o = [], has = false;
-    for (var m = 0; m < 1440; m += 15) { var h = String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); if (h === v) has = true; o.push(h); }
-    if (!has) { o.push(v); o.sort(); }
-    return '<select id="' + id + '" class="hsel" aria-label="Horário de servir (24 h)">' + o.map(function (h) { return '<option value="' + h + '"' + (h === v ? ' selected' : '') + '>' + h + '</option>'; }).join('') + '</select>';
+    var v = plan.servir || '13:00', o = [], hasV = false;
+    for (var m = 0; m < 1440; m += 15) { var h = String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); if (h === v) hasV = true; o.push(h); }
+    if (!hasV) { o.push(v); o.sort(); }
+    return '<span class="select"><select id="' + id + '" class="tnum" aria-label="Horário de servir">' + o.map(function (h) { return '<option value="' + h + '"' + (h === v ? ' selected' : '') + '>' + h + '</option>'; }).join('') + '</select>' + ic('x-chev', 'select__i') + '</span>';
   }
-  function servirDate() { var sv = (plan.servir || '13:00').split(':'), T = new Date(); T.setHours(+sv[0] || 13, +sv[1] || 0, 0, 0); return T; }
+  function servirDate() { var sv = (plan.servir || '13:00').split(':'), T = plan.ativo ? diaDate(plan.dia) : new Date(); T.setHours(+sv[0] || 13, +sv[1] || 0, 0, 0); return T; }
   function sequence(r) {
     var T = servirDate();
     var seq = r.linhas.map(function (l) {
@@ -150,16 +183,19 @@
   function proximo(r) {
     var s = sequence(r), now = Date.now();
     if (!s.seq.length) return null;
-    var ev = [{ t: s.acender, txt: 'Acender ' + r.carvao + ' kg de carvão', k: 'fogo' }].concat(s.seq.map(function (x) { return { t: x.entra, txt: x.l.c.nome + ' na ' + x.z.nome.toLowerCase(), k: x.z.k }; }), [{ t: s.T, txt: 'Servir', k: 'servir' }]);
+    var ev = [{ t: s.acender, txt: 'Acender ' + r.carvao + ' kg de carvão', k: 'fogo' }].concat(s.seq.map(function (x) { return { t: x.entra, txt: curto(x.l.c.nome) + ' na ' + x.z.nome.toLowerCase(), k: x.z.k, id: x.l.id, min: x.t }; }), [{ t: s.T, txt: 'Servir', k: 'servir' }]);
     for (var i = 0; i < ev.length; i++) if (ev[i].t.getTime() > now) return ev[i];
-    return { t: s.T, txt: 'Planejar o próximo churrasco', k: 'servir', passou: true };
+    return { t: s.T, txt: 'Hora de servir', k: 'servir', passou: true };
   }
   function faltaTxt(d) {
     var m = Math.round((d - Date.now()) / 60000); if (m <= 0) return 'agora';
-    if (m < 60) return 'em ' + m + ' min'; var h = Math.floor(m / 60), r = m % 60; return 'em ' + h + ' h' + (r ? ' ' + r : '');
+    if (m < 60) return 'em ' + m + ' min'; var h = Math.floor(m / 60), r = m % 60;
+    if (h >= 24) { var dd = Math.round(h / 24); return 'em ' + dd + (dd === 1 ? ' dia' : ' dias'); }
+    return 'em ' + h + ' h' + (r ? ' ' + r : '');
   }
+  function passouServir() { return plan.ativo && Date.now() >= servirDate().getTime(); }
 
-  /* ---------- movimento: contador que gira (odômetro, só transform) ---------- */
+  /* ---------- contador que gira (só transform) ---------- */
   function odo(el, text) {
     if (!el) return; text = String(text);
     if (el.dataset.v === text) return;
@@ -169,30 +205,17 @@
       el.innerHTML = text.split('').map(function (ch) {
         return /\d/.test(ch) ? '<span class="odo" aria-hidden="true"><span class="odo__s" style="transform:translateY(-' + (+ch * 10) + '%)">' + digits() + '</span></span>' : '<span class="odo__c" aria-hidden="true">' + esc(ch) + '</span>';
       }).join('');
-      if (!reduced() && old == null) roll(el, text, true);
       return;
     }
-    roll(el, text, false);
+    var spans = el.querySelectorAll('.odo__s'), k = 0;
+    text.split('').forEach(function (ch) { if (!/\d/.test(ch)) return; var s = spans[k++]; if (s) s.style.transform = 'translateY(-' + (+ch * 10) + '%)'; });
   }
   function digits() { var s = ''; for (var i = 0; i < 10; i++) s += '<span>' + i + '</span>'; return s; }
-  function roll(el, text, fromZero) {
-    var spans = el.querySelectorAll('.odo__s'), k = 0;
-    text.split('').forEach(function (ch) {
-      if (!/\d/.test(ch)) return; var s = spans[k++]; if (!s) return;
-      if (fromZero) { s.style.transition = 'none'; s.style.transform = 'translateY(0)'; void s.offsetWidth; s.style.transition = ''; }
-      s.style.transform = 'translateY(-' + (+ch * 10) + '%)';
-    });
-  }
 
-  /* ---------- carimbo e toast ---------- */
-  function stamp(txt) {
-    var fx = $('#stampfx'); fx.innerHTML = '<span class="stampfx__s">' + esc(txt) + '</span>';
-    fx.classList.remove('go'); void fx.offsetWidth; fx.classList.add('go');
-    try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) {}
-  }
+  /* ---------- toast ---------- */
   var toastT;
   function toast(msg, act) {
-    var t = $('#toast'); t.innerHTML = '<span>' + esc(msg) + '</span>' + (act ? '<button type="button" class="toast__a">' + esc(act.label) + '</button>' : '');
+    var t = $('#toast'); t.innerHTML = '<b>' + esc(msg) + '</b>' + (act ? '<button type="button" class="toast__a">' + esc(act.label) + '</button>' : '');
     if (act) t.querySelector('button').onclick = function () { act.fn(); t.classList.remove('on'); };
     t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('on'); }, act ? 4200 : 2600);
   }
@@ -201,109 +224,24 @@
   /* ============ ABERTURA ============ */
   function splash(done) {
     var s = $('#splash'); setAbout('splash');
-    var finish = function () { if (s.dataset.done) return; s.dataset.done = '1'; s.classList.add('out'); setTimeout(function () { s.hidden = true; done(); }, reduced() ? 0 : 420); };
-    $('#splash-skip').addEventListener('click', finish);
+    var fin = false, finish = function () { if (fin) return; fin = true; done(); s.classList.add('out'); setTimeout(function () { s.hidden = true; }, reduced() ? 0 : 360); };
     s.addEventListener('click', finish);
-    var start = function () { requestAnimationFrame(function () { s.classList.add('play'); }); setTimeout(finish, reduced() ? 600 : 2900); };
-    // a assinatura vem inline para o espeto do sublinhado poder deslizar sozinho
-    var img = $('.splash__sig', s), started = false, go = function () { if (!started) { started = true; start(); } };
-    setTimeout(go, 700);
-    if (img && window.fetch && location.protocol !== 'file:') {
-      fetch('brand/final/assinatura-script.svg').then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (t) {
-        if (started) return;
-        var d = document.createElement('div'); d.innerHTML = t; var svg = d.querySelector('svg'); if (!svg) return;
-        svg.setAttribute('class', 'splash__sig'); svg.setAttribute('aria-hidden', 'true'); svg.removeAttribute('role');
-        var gs = svg.querySelectorAll('g'), e = gs[gs.length - 1];
-        if (e && e.querySelector('rect')) { var w = document.createElementNS('http://www.w3.org/2000/svg', 'g'); e.parentNode.insertBefore(w, e); w.appendChild(e); w.setAttribute('class', 'sig-espeto'); }
-        img.parentNode.replaceChild(svg, img);
-      }).catch(function () {}).then(go);
-    } else go();
-  }
-
-  /* ============ ONBOARDING ============ */
-  var onbI = 0;
-  function onbHTML() {
-    var A = apetites();
-    return '' +
-      '<div class="onb__p" data-i="0"><p class="eyebrow onb__s">bora?</p><h1 class="onb__t">Quantos vêm?</h1><p class="onb__d">Criança conta meia porção. Dá pra mudar depois.</p>' +
-      stepperHTML('adultos', 'Adultos') + stepperHTML('criancas', 'Crianças') +
-      '<fieldset class="seg"><legend class="sr">Apetite da turma</legend>' + Object.keys(A).map(function (k) { return '<label><input type="radio" name="onb-ap" value="' + k + '"' + (plan.apetite === k ? ' checked' : '') + '><span>' + esc(A[k].label) + '<small>' + A[k].gramas + ' g</small></span></label>'; }).join('') + '</fieldset>' + dog('dog--onb') + '</div>' +
-      '<div class="onb__p" data-i="1"><p class="eyebrow onb__s">a turma</p><h1 class="onb__t">Do que a turma gosta?</h1><p class="onb__d">Escolha um estilo. A gente divide os quilos entre os cortes.</p>' +
-      '<div class="mixes mixes--grid" role="radiogroup" aria-label="Estilo do churrasco">' + Object.keys(MIXES).map(function (k, i) { return mixBtn(k, i); }).join('') + '</div></div>' +
-      '<div class="onb__p" data-i="2"><p class="eyebrow onb__s">relógio</p><h1 class="onb__t">Que horas sai?</h1><p class="onb__d">A gente calcula de trás pra frente quando acender e quando cada corte entra.</p>' +
-      '<div class="horas" role="radiogroup" aria-label="Horário de servir">' + ['12:00', '13:00', '14:00', '19:00', '20:00'].map(function (h) { return '<button type="button" class="hora" role="radio" data-hora="' + h + '" aria-checked="' + (plan.servir === h) + '">' + h + '</button>'; }).join('') + '</div>' +
-      '<label class="field"><span>Outro horário</span>' + horaSel('onb-hora') + '</label>' +
-      '<p class="onb__prev" id="onb-prev"></p></div>';
-  }
-  function mixBtn(k, i) {
-    var m = MIXES[k];
-    return '<button type="button" class="mix" role="radio" style="--i:' + i + '" data-mix="' + k + '" aria-checked="' + (plan.mix === k) + '"><b>' + esc(m.label) + '</b><small>' + esc(m.desc) + '</small><span class="mix__ok" aria-hidden="true">' + ic('check') + '</span></button>';
-  }
-  function stepperHTML(k, label) {
-    return '<div class="count" data-k="' + k + '"><span class="count__l">' + label + '</span><span class="stepper"><button type="button" class="stepper__b" data-d="-1" aria-label="Menos ' + label.toLowerCase() + '">−</button>' +
-      '<output class="count__v odo-host" data-odo="' + k + '" aria-live="polite"></output><button type="button" class="stepper__b" data-d="1" aria-label="Mais ' + label.toLowerCase() + '">+</button></span></div>';
-  }
-  function onboarding(done) {
-    var o = $('#onb'); o.hidden = false; setAbout('onb');
-    var tr = $('#onb-track'); tr.innerHTML = onbHTML();
-    var go = function (i) {
-      onbI = Math.max(0, Math.min(2, i));
-      tr.style.transform = 'translateX(' + (-onbI * 100) + '%)';
-      $$('.onb__p', tr).forEach(function (p, j) { p.classList.toggle('is-on', j === onbI); p.setAttribute('aria-hidden', j !== onbI); p.inert = j !== onbI; });
-      $$('.onb__dots i', o).forEach(function (d, j) { d.classList.toggle('on', j <= onbI); });
-      $('#onb-back').style.visibility = onbI ? 'visible' : 'hidden';
-      $('#onb-next').textContent = onbI === 2 ? 'Montar meu churrasco' : 'Continuar';
-      prevOnb();
-      var h = $('.onb__p.is-on .onb__t', tr); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
-    };
-    var end = function () {
-      plan.onboarded = true; commit(); o.classList.add('out');
-      setTimeout(function () { o.hidden = true; done(); stamp('Plano pronto'); }, reduced() ? 0 : 380);
-    };
-    o.addEventListener('click', function (e) {
-      var b = e.target.closest('button'); if (!b) return;
-      if (b.dataset.d) stepTap(b);
-      else if (b.dataset.mix) { applyMix(b.dataset.mix); $$('.mix', o).forEach(function (x) { x.setAttribute('aria-checked', x === b); }); bump(b); }
-      else if (b.dataset.hora) { plan.servir = b.dataset.hora; $('#onb-hora').value = plan.servir; $$('.hora', o).forEach(function (x) { x.setAttribute('aria-checked', x === b); }); commit(); prevOnb(); }
-      else if (b.id === 'onb-next') { if (onbI < 2) go(onbI + 1); else end(); }
-      else if (b.id === 'onb-back') go(onbI - 1);
-      else if (b.id === 'onb-skip') end();
-    });
-    o.addEventListener('change', function (e) {
-      if (e.target.name === 'onb-ap') { plan.apetite = e.target.value; commit(); }
-      if (e.target.id === 'onb-hora' && /^\d\d:\d\d$/.test(e.target.value)) { plan.servir = e.target.value; $$('.hora', o).forEach(function (x) { x.setAttribute('aria-checked', x.dataset.hora === plan.servir); }); commit(); prevOnb(); }
-    });
-    syncCounts(); go(0);
-  }
-  function prevOnb() {
-    var p = $('#onb-prev'); if (!p) return; var r = last, s = sequence(r);
-    p.innerHTML = s.acender ? ic('fire') + '<span>Acender às <b>' + hhmm(s.acender) + '</b> · ' + kgTxt(r.totalG) + ' de carne para ' + pessoasTxt() + '</span>' : '';
-  }
-  function stepTap(b) {
-    var k = b.closest('[data-k]').dataset.k;
-    plan[k] = Math.max(k === 'adultos' ? 1 : 0, Math.min(200, plan[k] + +b.dataset.d)); commit();
-  }
-  function syncCounts() {
-    $$('[data-odo="adultos"]').forEach(function (e) { odo(e, plan.adultos); });
-    $$('[data-odo="criancas"]').forEach(function (e) { odo(e, plan.criancas); });
-    $$('.count').forEach(function (c) { var m = c.querySelector('[data-d="-1"]'); if (m) m.disabled = plan[c.dataset.k] <= (c.dataset.k === 'adultos' ? 1 : 0); });
+    requestAnimationFrame(function () { requestAnimationFrame(function () { s.classList.add('play'); }); });
+    setTimeout(finish, reduced() ? 500 : 1300);
   }
 
   /* ============ NAVEGAÇÃO ============ */
   var cur = null;
   function setView(v, push) {
     if (VIEWS.indexOf(v) < 0) v = 'inicio';
-    if (v === cur) { var sc = $('#v-' + v); if (push && sc) sc.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' }); return; }
-    var from = cur ? $('#v-' + cur) : null, to = $('#v-' + v), dir = cur ? (VIEWS.indexOf(v) > VIEWS.indexOf(cur) ? 1 : -1) : 0;
+    if (v === cur) { var sc = $('#v-' + v); if (push && sc) sc.scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' }); render(v); return; }
+    var from = cur ? $('#v-' + cur) : null, to = $('#v-' + v);
     cur = v; render(v);
-    $$('.tab').forEach(function (t) { var on = t.dataset.tab === v; t.classList.toggle('is-on', on); if (on) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
-    var idx = VIEWS.indexOf(v); $('.tabbar').style.setProperty('--x', idx);
-    to.hidden = false; to.style.setProperty('--dir', dir); to.scrollTop = 0;
-    to.classList.remove('enter'); void to.offsetWidth; if (dir && !reduced()) to.classList.add('enter');
-    if (from) {
-      from.style.setProperty('--dir', dir); from.classList.add('leave');
-      setTimeout(function () { from.classList.remove('leave'); if (cur !== from.dataset.view) from.hidden = true; }, reduced() ? 0 : 320);
-    }
+    $$('.tab').forEach(function (t) { var on = t.dataset.tab === v; t.classList.toggle('on', on); if (on) t.setAttribute('aria-current', 'page'); else t.removeAttribute('aria-current'); });
+    $('.tabbar').style.setProperty('--x', VIEWS.indexOf(v));
+    if (from) from.hidden = true;
+    to.hidden = false; to.scrollTop = 0;
+    to.classList.remove('enter'); void to.offsetWidth; if (from && !reduced()) to.classList.add('enter');
     if (push && location.hash !== '#' + v) history.replaceState(null, '', '#' + v);
     setAbout(v);
   }
@@ -318,81 +256,181 @@
     if (v === 'brasa') renderBrasa();
     if (v === 'receitas') renderReceitas();
   }
+  function top(title, kicker) {
+    return '<header class="top"><div class="top__t">' + (kicker ? '<p class="eyebrow">' + esc(kicker) + '</p>' : '') + '<h1 class="h2">' + esc(title) + '</h1></div>' + listaBtn() + '</header>';
+  }
+  function secHead(t, link) { return '<div class="sec__h"><h2 class="h3">' + esc(t) + '</h2>' + (link || '') + '</div>'; }
 
   /* ============ INÍCIO ============ */
-  function renderInicio() {
-    var r = last, el = $('#v-inicio'), p = proximo(r), s = sequence(r);
-    var recs = plan.receitas.map(function (id) { return R().get(id); }).filter(Boolean);
-    var hora = new Date().getHours(), oi = hora < 12 ? 'bom dia' : hora < 18 ? 'boa tarde' : 'boa noite';
-    el.innerHTML = '<div class="pad cascade">' +
-      '<header class="hello" style="--i:0"><p class="hello__s">' + oi + ', assador</p><h1 class="h1">O churrasco de hoje</h1></header>' +
-      (r.linhas.length ? '<section class="hero" style="--i:1" aria-label="Resumo">' +
-        '<div class="hero__row"><div class="kpi"><span class="kpi__v odo-host" data-odo="h-pes"></span><span class="kpi__l">pessoas</span></div>' +
-        '<div class="kpi"><span class="kpi__v odo-host" data-odo="h-kg"></span><span class="kpi__l">kg de carne</span></div>' +
-        '<div class="kpi"><span class="kpi__v odo-host" data-odo="h-hr"></span><span class="kpi__l">servir</span></div></div>' +
-        '' +
-        '<p class="hero__s">' + esc(pessoasTxt()) + ' · ' + r.linhas.length + ' cortes · ' + r.carvao + ' kg de carvão</p></section>' +
-        (p ? '<button type="button" class="next" style="--i:2" data-go="' + (p.passou ? 'planejar' : 'brasa') + '"><span class="next__k">' + ic('clock') + (p.passou ? 'Churrasco servido às ' + hhmm(p.t) : 'Próximo passo · ' + faltaTxt(p.t)) + '</span><b class="next__t">' + esc(p.txt) + '</b>' + (p.passou ? '' : '<span class="next__h">' + hhmm(p.t) + '</span>') + ic('arrow', 'next__a') + '</button>' : '')
-        : '<section class="empty" style="--i:1">' + dog() + '<p class="empty__t">Nada planejado ainda</p><p class="empty__d">Diga quantos vêm e escolha os cortes. O resto a gente conta.</p><button type="button" class="btn btn--brasa" data-go="planejar">Planejar churrasco</button></section>') +
-      '<h2 class="h2" style="--i:3">Atalhos</h2><div class="atalhos" style="--i:4">' +
-      atalho('planejar', 'people', 'Ajustar turma', pessoasTxt()) + atalho('brasa', 'fire', 'Na brasa', s.acender ? 'acender às ' + hhmm(s.acender) : 'linha do tempo') +
-      atalho('receitas', 'book', 'Receitas', recs.length ? recs.length + ' escolhida' + (recs.length > 1 ? 's' : '') : 'farofa, molho, maionese') +
-      '<button type="button" class="atalho" data-open="lista">' + ic('bag') + '<b>Lista</b><small>' + listaCount() + ' itens · compartilhar</small></button></div>' +
-      (recs.length ? '<h2 class="h2" style="--i:5">Na mesa</h2><ul class="mini-list" style="--i:6">' + recs.map(function (x) { return '<li><button type="button" data-receita="' + esc(x.id) + '">' + R().icon(x.categoria) + '<span>' + esc(x.nome) + '</span>' + ic('arrow') + '</button></li>'; }).join('') + '</ul>' : '') +
-      '<p class="sig" style="--i:7"><span class="script">bom churrasco</span></p>' +
-      '</div>';
-    odo($('[data-odo="h-pes"]', el), r.pessoas); odo($('[data-odo="h-kg"]', el), kgN(r.totalG)); odo($('[data-odo="h-hr"]', el), plan.servir);
+  var thumbN = 0;
+  function art(c, cls) {
+    var a = window.CUT_ART && window.CUT_ART[c.id];
+    if (a) { var sfx = '-t' + (++thumbN); a = a.replace(/id="([^"]+)"/g, 'id="$1' + sfx + '"').replace(/url\(#([^)]+)\)/g, 'url(#$1' + sfx + ')').replace(/href="#([^"]+)"/g, 'href="#$1' + sfx + '"').replace(/role="img" aria-label="[^"]*"/, 'aria-hidden="true"'); }
+    return '<span class="photo ' + (cls || '') + '" aria-hidden="true">' + (a || ic('cortes')) + '</span>';
   }
-  function atalho(v, i, t, s) { return '<button type="button" class="atalho" data-go="' + v + '">' + ic(i) + '<b>' + t + '</b><small>' + esc(s) + '</small></button>'; }
+  function banner() {
+    var r = last, d = new Date().getDay();
+    if (plan.ativo && passouServir()) return '<button type="button" class="banner banner--fim" data-fim="1"><span class="banner__dot" aria-hidden="true">' + ic('x-camera') + '</span><span class="grow"><span class="banner__k">Churrasco servido</span><span class="banner__t">Como foi? Adicione uma foto</span></span>' + ic('x-chev', 'chev') + '</button>';
+    if (plan.ativo) {
+      var T = servirDate();
+      return '<button type="button" class="banner" data-go="planejar"><span class="banner__dot banner__dot--on" aria-hidden="true">' + ic('planejar') + '</span><span class="grow"><span class="banner__k">Seu churrasco · ' + esc(faltaTxt(T)) + '</span>' +
+        '<span class="banner__t tnum">' + esc(diaNome(T, true)) + ' ' + plan.servir + ' · ' + r.pessoas + ' pessoas · ' + kgTxt(r.totalG) + '</span></span>' + ic('x-chev', 'chev') + '</button>';
+    }
+    var t = d >= 1 && d <= 3 ? 'Bora marcar o próximo? Planeje o churrasco' : d === 4 || d === 5 ? 'Tá chegando o fim de semana. Planeje o churrasco' : 'Hoje é dia de churrasco. Planeje o seu';
+    return '<button type="button" class="banner" data-go="planejar"><span class="banner__dot" aria-hidden="true">' + ic('planejar') + '</span><span class="grow"><span class="banner__t">' + esc(t) + '</span></span>' + ic('x-chev', 'chev') + '</button>';
+  }
+  /* Curiosidades: frases tiradas de data/cortes.js (campos nota, mercado, pesoPeca, nomes). Nada de estatística inventada. */
+  function curiosidades() {
+    var out = [], c;
+    if ((c = corte('entrana'))) out.push({ id: c.id, t: 'Entraña é o diafragma do boi: uma peça interna, fina e comprida, rara em mercado comum.' });
+    if ((c = corte('ancho'))) out.push({ id: c.id, t: 'Ancho, ojo de bife e ribeye são o mesmo corte: o nome muda conforme o país.' });
+    if ((c = corte('picanha'))) out.push({ id: c.id, t: 'Picanha boa não passa de cerca de 1,5 kg. E a capa de gordura fica: ela protege e perfuma a carne.' });
+    if ((c = corte('chorizo'))) out.push({ id: c.id, t: 'O chorizo argentino vai cru para a brasa. O espanhol é curado e não serve para churrasco.' });
+    if ((c = corte('linguica-toscana'))) out.push({ id: c.id, t: 'Toscana de verdade é só carne suína, sem frango. Vale ler o rótulo.' });
+    if ((c = corte('vazio'))) out.push({ id: c.id, t: 'Vacío é a manta inteira que inclui a fraldinha, com membrana e gordura de um lado.' });
+    if ((c = corte('morcilla'))) out.push({ id: c.id, t: 'A morcilla já vem cozida: na grelha, é só esquentar.' });
+    var wk = Math.floor(Date.now() / (7 * 864e5)); // gira a ordem a cada semana
+    return out.slice(wk % out.length).concat(out.slice(0, wk % out.length));
+  }
+  function receitasSemana() {
+    var l = R().list().slice(), wk = Math.floor(Date.now() / (7 * 864e5)), cats = {}, out = [];
+    for (var k = 0; k < l.length && out.length < 3; k++) { var r = l[(wk * 5 + k * 7) % l.length]; if (!cats[r.categoria] && out.indexOf(r) < 0) { cats[r.categoria] = 1; out.push(r); } }
+    return out;
+  }
+  function renderInicio() {
+    var el = $('#v-inicio'), h = new Date(), hr = h.getHours();
+    var oi = hr < 5 ? 'Boa noite' : hr < 12 ? 'Bom dia' : hr < 18 ? 'Boa tarde' : 'Boa noite';
+    var cards = EM_ALTA.map(corte).filter(Boolean);
+    var novos = NOVOS.map(corte).filter(Boolean);
+    el.innerHTML =
+      '<header class="hero grain"><svg class="hero__shapes" aria-hidden="true"><use href="#arches"/></svg>' +
+        '<div class="hero__in"><div class="top top--hero"><span class="wordmark">churrasquin</span>' + listaBtn(true) + '</div>' +
+        '<p class="eyebrow eyebrow--ink">' + DIAS[h.getDay()] + ', ' + h.getDate() + ' de ' + MESES[h.getMonth()] + '</p>' +
+        '<p class="hero__t">' + oi + ',<br>assador.</p></div></header>' +
+      '<div class="pad home cascade">' +
+        '<div style="--i:0" class="banner-wrap">' + banner() + '</div>' +
+        '<section class="sec" style="--i:1" aria-label="Em alta">' + secHead('Em alta', '<button type="button" class="link" data-go="cortes">Ver cortes</button>') +
+          '<ul class="rail">' + cards.map(function (c) {
+            return '<li><button type="button" class="ccard" data-ficha="' + esc(c.id) + '">' + art(c, 'ccard__art') + '<span class="ccard__k">' + esc(ANIMAL_NOME[c.animal]) + (CAT[c.categoria] ? ' · ' + CAT[c.categoria] : '') + '</span><b class="ccard__n">' + esc(curto(c.nome)) + '</b><span class="ccard__m tnum">' + (tempoMin(c) ? durTxt(tempoMin(c)) : '') + '</span></button></li>';
+          }).join('') + '</ul></section>' +
+        '<section class="sec" style="--i:2" aria-label="Curiosidades">' + secHead('Curiosidades') +
+          '<ul class="rail rail--facts">' + curiosidades().map(function (f, i) {
+            var c = corte(f.id);
+            return '<li><article class="fact"><p class="fact__k">' + ic('info') + 'Você sabia</p><p class="fact__t">' + esc(f.t) + '</p><button type="button" class="link link--sm" data-ficha="' + esc(f.id) + '">Ver ' + esc(curto(c.nome).toLowerCase()) + '</button></article></li>';
+          }).join('') + '</ul></section>' +
+        '<section class="sec" style="--i:3" aria-label="Receitas da semana">' + secHead('Receitas da semana', '<button type="button" class="link" data-go="receitas">Ver todas</button>') +
+          '<ul class="list">' + receitasSemana().map(function (r, i) { return R().card(r, i, plan.receitas.indexOf(r.id) >= 0); }).join('') + '</ul></section>' +
+        '<section class="sec" style="--i:4" aria-label="Novos cortes">' + secHead('Novos no guia') +
+          '<ul class="list">' + novos.map(function (c) {
+            return '<li class="row row--btn"><button type="button" class="row__b" data-ficha="' + esc(c.id) + '">' + art(c, 'thumb') + '<span class="grow"><b class="t">' + esc(curto(c.nome)) + '</b><span class="s s--1">' + esc((c.mercado && c.mercado.escolha) || c.porque || '') + '</span></span><span class="chip brand chip--sm">Novo</span></button></li>';
+          }).join('') + '</ul></section>' +
+        '<section class="sec" style="--i:5" aria-label="Seus churrascos" id="memo-sec">' + secHead('Seus churrascos') + '<div id="memo"></div></section>' +
+      '</div>';
+    renderMemorias();
+  }
+  function renderMemorias() {
+    var box = $('#memo'); if (!box) return;
+    var l = M() ? M().list() : [];
+    if (!l.length) {
+      box.innerHTML = '<div class="card memo-empty"><span class="photo memo-empty__ph"><img src="brand/v6/foto/quintal.jpg" alt="" loading="lazy" decoding="async" onerror="this.remove()"></span>' +
+        '<div class="memo-empty__b"><p class="h3">Seu primeiro churrasco vai aparecer aqui</p><p class="s">Depois de servir, guarde uma foto da brasa ou da mesa. Fica só neste aparelho.</p>' +
+        '<button type="button" class="btn btn-s btn-sm" data-go="planejar">Planejar o primeiro</button></div></div>';
+      return;
+    }
+    box.innerHTML = '<ul class="rail rail--memo">' + l.map(function (m) {
+      var st = m.estrelas ? '<span class="stars" aria-label="' + m.estrelas + ' de 5 estrelas">' + [1, 2, 3, 4, 5].map(function (k) { return '<svg class="star' + (k <= m.estrelas ? ' on' : '') + '" viewBox="0 0 24 24" aria-hidden="true"><use href="#x-star"/></svg>'; }).join('') + '</span>' : '';
+      return '<li><article class="memo" data-memo="' + esc(m.id) + '"><span class="photo memo__ph is-loading">' + (m.foto ? '' : ic('x-camera')) + '</span>' +
+        '<div class="memo__b"><p class="memo__k">' + esc(relTempo(m.data)) + '</p><p class="memo__t">' + esc(dataCurta(m.data)) + '</p>' +
+        '<p class="memo__m tnum">' + m.pessoas + ' pessoas · ' + kgTxt(m.g || 0) + '</p>' + (m.nota ? '<p class="memo__n">“' + esc(m.nota) + '”</p>' : '') + st + '</div></article></li>';
+    }).join('') + '</ul>';
+    l.forEach(function (m) {
+      var ph = box.querySelector('[data-memo="' + m.id + '"] .memo__ph');
+      if (!m.foto) { ph.classList.remove('is-loading'); return; }
+      M().foto(m.id).then(function (u) {
+        if (!u) { ph.classList.remove('is-loading'); ph.innerHTML = ic('x-camera'); return; }
+        var img = new Image(); img.alt = 'Foto do churrasco de ' + dataCurta(m.data); img.decoding = 'async';
+        img.onload = function () { ph.classList.remove('is-loading'); ph.appendChild(img); };
+        img.onerror = function () { ph.classList.remove('is-loading'); ph.innerHTML = ic('x-camera'); };
+        img.src = u;
+      });
+    });
+  }
 
   /* ============ PLANEJAR ============ */
   function renderPlanejar() {
-    var el = $('#v-planejar'), A = apetites();
-    if (!el.dataset.built) {
-      el.dataset.built = '1';
-      el.innerHTML = '<div class="pad cascade">' +
-        '<header style="--i:0"><p class="eyebrow">Passo 1 · turma</p><h1 class="h1">Quantos vêm?</h1></header>' +
-        '<div class="card" style="--i:1">' + stepperHTML('adultos', 'Adultos') + stepperHTML('criancas', 'Crianças') +
-        '<fieldset class="seg"><legend class="sr">Apetite</legend>' + Object.keys(A).map(function (k) { return '<label><input type="radio" name="ap" value="' + k + '"><span>' + esc(A[k].label) + '<small>' + A[k].gramas + ' g</small></span></label>'; }).join('') + '</fieldset></div>' +
-        '<div class="total" style="--i:2" aria-live="polite"><span class="total__v"><span class="odo-host" data-odo="p-kg"></span><small>kg</small></span><span class="total__l" id="p-sub"></span></div>' +
-        '<header style="--i:3"><p class="eyebrow">Passo 2 · cortes</p><h2 class="h2 h2--flush">Estilo pronto</h2></header>' +
-        '<div class="mixes mixes--row" style="--i:4" role="radiogroup" aria-label="Estilo">' + Object.keys(MIXES).map(function (k, i) { return mixBtn(k, i); }).join('') + '</div>' +
-        '<h2 class="h2" style="--i:5">No plano</h2><ul class="picks" id="picks" style="--i:6"></ul>' +
-        '<p class="eyebrow" style="--i:7">Sugestões</p><div class="chips" id="sug" style="--i:8"></div>' +
-        '<header style="--i:9"><p class="eyebrow">Passo 3 · horário</p><h2 class="h2 h2--flush">Que horas sai?</h2></header>' +
-        '<label class="field" style="--i:10"><span>Servir às</span>' + horaSel('p-hora') + '</label>' +
-        '<button type="button" class="btn btn--brasa btn--full" style="--i:11" data-go="brasa">Ver a ordem na brasa ' + ic('arrow') + '</button>' +
-        '</div>';
+    var el = $('#v-planejar'), p = plan.passo || 0, r = last;
+    var head = top('Planejar', plan.ativo ? 'Churrasco marcado' : 'Passo ' + (p + 1) + ' de 4') +
+      (plan.ativo ? '<div class="card marcado"><span class="grow"><span class="label">' + esc(diaNome(servirDate(), true)) + ' · ' + plan.servir + '</span><b class="tnum">' + r.pessoas + ' pessoas · ' + kgTxt(r.totalG) + '</b></span><button type="button" class="btn btn-s btn-sm" data-fim="1">Encerrar</button></div>' : '') +
+      '<nav class="steps" aria-label="Passos do planejamento">' + PASSOS.map(function (s, i) { return '<button type="button" class="steps__b' + (i === p ? ' on' : '') + (i < p ? ' done' : '') + '" data-passo-go="' + i + '"' + (i === p ? ' aria-current="step"' : '') + '><i aria-hidden="true"></i><span>' + s[1] + '</span></button>'; }).join('') + '</nav>' +
+      '<div class="card kv kv--plan" aria-live="polite"><div><span class="label">Pessoas</span><b class="tnum" data-odo="p-pes"></b></div><div><span class="label">Carne</span><b class="tnum"><span data-odo="p-kg"></span> kg</b></div><div><span class="label">Carvão</span><b class="tnum"><span data-odo="p-cv"></span> kg</b></div></div>';
+    var body = '';
+    if (p === 0) {
+      var A = apetites();
+      body = '<h2 class="h3 step__t">Quantos vêm?</h2><p class="s step__d">Criança conta meia porção.</p>' +
+        '<div class="list">' + stepperRow('adultos', 'Adultos', 'a partir de 13 anos') + stepperRow('criancas', 'Crianças', 'meia porção') + '</div>' +
+        '<h2 class="h3 step__t">Como a turma come?</h2>' +
+        '<fieldset class="opts" role="radiogroup"><legend class="sr">Apetite</legend>' + Object.keys(A).map(function (k) {
+          return '<label class="opt"><input type="radio" class="sr" name="ap" value="' + k + '"' + (plan.apetite === k ? ' checked' : '') + '><span class="opt__b"><b>' + esc(A[k].label) + '</b><span class="s">' + esc(A[k].desc || '') + '</span></span><span class="opt__v tnum">' + A[k].gramas + ' g</span></label>';
+        }).join('') + '</fieldset>';
+    } else if (p === 1) {
+      body = '<h2 class="h3 step__t">Estilo do churrasco</h2><p class="s step__d">Um ponto de partida. Dá para tirar e pôr cortes.</p>' +
+        '<div class="chips chips--scroll" role="radiogroup" aria-label="Estilo">' + Object.keys(MIXES).map(function (k) { return '<button type="button" class="chip' + (plan.mix === k ? ' on' : '') + '" role="radio" aria-checked="' + (plan.mix === k) + '" data-mix="' + k + '">' + MIXES[k].label + '</button>'; }).join('') + '</div>' +
+        (plan.mix && MIXES[plan.mix] ? '<p class="s mix-d">' + esc(MIXES[plan.mix].desc) + '</p>' : '') +
+        '<h2 class="h3 step__t">No plano <span class="label tnum">' + r.linhas.length + '</span></h2><ul class="list" id="picks"></ul>' +
+        '<h2 class="h3 step__t">Adicionar</h2><div class="chips" id="sug"></div><button type="button" class="link" data-go="cortes">Ver todos os cortes</button>';
+    } else if (p === 2) {
+      body = '<h2 class="h3 step__t">Quanto comprar</h2>' +
+        '<div class="card total"><span class="label">Carne crua</span><b class="display tnum">' + kgN(r.totalG) + '<small> kg</small></b><span class="s">' + r.g + ' g por porção · ' + r.porcoes.toLocaleString('pt-BR') + ' porções</span>' +
+        (r.preco ? '<span class="preco tnum">Estimativa: R$ ' + brl(r.preco.min) + '–' + brl(r.preco.max) + (r.preco.parcial ? ' (sem alguns itens)' : '') + '. Preços médios, variam por região.</span>' : '') + '</div>' +
+        '<ul class="list">' + r.linhas.map(function (l) { return '<li class="row">' + art(l.c, 'thumb') + '<span class="grow"><b class="t">' + esc(curto(l.c.nome)) + '</b><span class="s">' + esc(ANIMAL_NOME[l.c.animal]) + (l.manual ? ' · ajustado' : '') + '</span></span><span class="val tnum">' + kgTxt(l.g) + '</span></li>'; }).join('') + '</ul>' +
+        '<h2 class="h3 step__t">Para a brasa</h2><ul class="list">' + r.extras.map(function (x) { return '<li class="row"><span class="grow"><b class="t">' + esc(x.nome) + '</b>' + (x.obs ? '<span class="s">' + esc(x.obs) + '</span>' : '') + '</span><span class="val tnum">' + esc(x.qtd) + '</span></li>'; }).join('') + '</ul>' +
+        '<button type="button" class="btn btn-s btn--full" data-open="lista">' + ic('bag') + 'Abrir lista de compras</button>';
+    } else {
+      var dias = [], b = hoje0();
+      for (var i = 0; i < 8; i++) { var d = new Date(b); d.setDate(b.getDate() + i); dias.push(d); }
+      var s = sequence(r), sel = plan.dia;
+      body = '<h2 class="h3 step__t">Que dia?</h2><div class="chips chips--scroll days" role="radiogroup" aria-label="Dia">' + dias.map(function (d) {
+          var k = isoDia(d), on = k === sel;
+          return '<button type="button" class="day' + (on ? ' on' : '') + '" role="radio" aria-checked="' + on + '" data-dia="' + k + '"><span>' + (i = Math.round((d - b) / 864e5), i === 0 ? 'Hoje' : i === 1 ? 'Amanhã' : DIAS[d.getDay()].slice(0, 3)) + '</span><b class="tnum">' + d.getDate() + '</b></button>';
+        }).join('') + '</div>' +
+        '<h2 class="h3 step__t">Que horas sai?</h2><label class="field"><span class="label">Servir às</span>' + horaSel('p-hora') + '</label>' +
+        (s.acender ? '<div class="list"><div class="row"><span class="ico ico--heat">' + ic('fire') + '</span><span class="grow"><b class="t">Acender às <span class="tnum">' + hhmm(s.acender) + '</span></b><span class="s">' + r.carvao + ' kg de carvão, 30–40 min até a brasa ficar branca</span></span></div>' +
+          '<div class="row"><span class="ico">' + ic('clock') + '</span><span class="grow"><b class="t">' + esc(curto(s.seq[0].l.c.nome)) + ' entra às <span class="tnum">' + hhmm(s.seq[0].entra) + '</span></b><span class="s">o corte mais demorado vai primeiro</span></span></div></div>' : '');
     }
-    fillPlanejar();
-  }
-  function fillPlanejar() {
-    var el = $('#v-planejar'); if (!el.dataset.built) return;
-    var r = last;
-    $$('input[name="ap"]', el).forEach(function (i) { i.checked = i.value === plan.apetite; });
-    $$('.mix', el).forEach(function (m) { m.setAttribute('aria-checked', plan.mix === m.dataset.mix); });
-    $('#p-hora').value = plan.servir;
-    odo($('[data-odo="p-kg"]', el), kgN(r.totalG));
-    var gp = r.porcoes ? Math.round(r.totalG / r.porcoes / 10) * 10 : 0;
-    $('#p-sub').textContent = 'de carne crua · ' + gp + ' g por porção · ' + r.carvao + ' kg de carvão';
-    var picks = $('#picks'), prev = {};
-    $$('.pick', picks).forEach(function (li) { prev[li.dataset.id] = 1; });
-    picks.innerHTML = r.linhas.length ? r.linhas.map(function (l) {
-      return '<li class="pick' + (prev[l.id] ? '' : ' is-new') + '" data-id="' + esc(l.id) + '">' + thumb(l.c) +
-        '<span class="pick__n"><b>' + esc(l.c.nome) + '</b><small>' + esc(ANIMAL_NOME[l.c.animal] || '') + (tempoMin(l.c) ? ' · ' + durTxt(tempoMin(l.c)) : '') + (l.manual ? ' · ajustado' : '') + '</small></span>' +
-        '<span class="qty"><button type="button" class="qty__b" data-act="dec" aria-label="Menos 250 g de ' + esc(l.c.nome) + '">−</button><output>' + kgTxt(l.g) + '</output><button type="button" class="qty__b" data-act="inc" aria-label="Mais 250 g de ' + esc(l.c.nome) + '">+</button></span>' +
-        '<button type="button" class="icon-btn" data-act="rm" aria-label="Tirar ' + esc(l.c.nome) + '">' + ic('x') + '</button></li>';
-    }).join('') : '<li class="empty empty--sm">' + dog() + '<p class="empty__d">Escolha um estilo ou toque nas sugestões.</p></li>';
-    $('#sug').innerHTML = SUGESTOES.filter(function (id) { return corte(id) && !has(id); }).slice(0, 8).map(function (id) {
-      return '<button type="button" class="chip" data-add="' + id + '">' + ic('plus') + esc(corte(id).nome) + '</button>';
-    }).join('');
+    var nav = '<div class="step__nav">' + (p > 0 ? '<button type="button" class="btn btn-s btn--sq" data-passo-go="' + (p - 1) + '" aria-label="Passo anterior">' + ic('back') + '</button>' : '') +
+      (p < 3 ? '<button type="button" class="btn btn-p grow" data-passo-go="' + (p + 1) + '"' + (p === 1 && !r.linhas.length ? ' disabled' : '') + '>Continuar</button>'
+        : '<button type="button" class="btn btn-p grow" data-marcar="1"' + (!r.linhas.length ? ' disabled' : '') + '>' + (plan.ativo ? 'Salvar alterações' : 'Marcar churrasco') + '</button>') + '</div>';
+    el.innerHTML = '<div class="pad">' + head + '<div class="step cascade" data-step="' + p + '">' + body + '</div>' + nav + '</div>';
+    if (p === 1) fillPicks();
     syncCounts();
   }
-  var thumbN = 0;
-  function thumb(c) {
-    var art = window.CUT_ART && window.CUT_ART[c.id];
-    if (art) { var sfx = '-t' + (++thumbN); art = art.replace(/id="([^"]+)"/g, 'id="$1' + sfx + '"').replace(/url\(#([^)]+)\)/g, 'url(#$1' + sfx + ')').replace(/href="#([^"]+)"/g, 'href="#$1' + sfx + '"'); }
-    return '<span class="thumb" aria-hidden="true">' + (art || ic('fire')) + '</span>';
+  function stepperRow(k, label, sub) {
+    return '<div class="row count" data-k="' + k + '"><span class="grow"><b class="t">' + label + '</b><span class="s">' + sub + '</span></span><span class="stepper"><button type="button" data-d="-1" aria-label="Menos ' + label.toLowerCase() + '">−</button>' +
+      '<output class="tnum" data-odo="' + k + '" aria-live="polite"></output><button type="button" data-d="1" aria-label="Mais ' + label.toLowerCase() + '">+</button></span></div>';
+  }
+  function fillPicks() {
+    var picks = $('#picks'); if (!picks) return; var r = last;
+    picks.innerHTML = r.linhas.length ? r.linhas.map(function (l) {
+      return '<li class="row pick" data-id="' + esc(l.id) + '">' + art(l.c, 'thumb') +
+        '<span class="grow"><b class="t">' + esc(curto(l.c.nome)) + '</b><span class="s">' + esc(ANIMAL_NOME[l.c.animal] || '') + (tempoMin(l.c) ? ' · ' + durTxt(tempoMin(l.c)) : '') + (l.manual ? ' · ajustado' : '') + '</span></span>' +
+        '<span class="qty"><button type="button" data-act="dec" aria-label="Menos 250 g de ' + esc(curto(l.c.nome)) + '">−</button><output class="tnum">' + kgN(l.g) + '</output><button type="button" data-act="inc" aria-label="Mais 250 g de ' + esc(curto(l.c.nome)) + '">+</button></span>' +
+        '<button type="button" class="iconbtn iconbtn--flat" data-act="rm" aria-label="Tirar ' + esc(curto(l.c.nome)) + '">' + ic('x') + '</button></li>';
+    }).join('') : '<li class="empty-row"><p class="s">Nenhum corte ainda. Escolha um estilo ou adicione abaixo.</p></li>';
+    var sug = $('#sug'); if (sug) sug.innerHTML = SUGESTOES.filter(function (id) { return corte(id) && !has(id); }).slice(0, 8).map(function (id) {
+      return '<button type="button" class="chip" data-add="' + id + '">' + ic('plus') + esc(curto(corte(id).nome)) + '</button>';
+    }).join('');
+  }
+  function syncCounts() {
+    var r = last;
+    $$('[data-odo="adultos"]').forEach(function (e) { odo(e, plan.adultos); });
+    $$('[data-odo="criancas"]').forEach(function (e) { odo(e, plan.criancas); });
+    $$('.count').forEach(function (c) { var m = c.querySelector('[data-d="-1"]'); if (m) m.disabled = plan[c.dataset.k] <= (c.dataset.k === 'adultos' ? 1 : 0); });
+    odo($('[data-odo="p-pes"]'), r.pessoas); odo($('[data-odo="p-kg"]'), kgN(r.totalG)); odo($('[data-odo="p-cv"]'), r.carvao);
+    $$('[data-badge]').forEach(function (b) { b.textContent = listaCount(); });
+  }
+  function stepTap(b) {
+    var k = b.closest('[data-k]').dataset.k;
+    plan[k] = Math.max(k === 'adultos' ? 1 : 0, Math.min(200, plan[k] + +b.dataset.d)); commit();
   }
 
   /* ============ CORTES ============ */
@@ -401,13 +439,13 @@
     var el = $('#v-cortes');
     if (!el.dataset.built) {
       el.dataset.built = '1';
-      el.innerHTML = '<div class="pad">' +
-        '<header class="cascade"><p class="eyebrow" style="--i:0">Guia de carnes</p><h1 class="h1" style="--i:1">Conheça cada corte</h1><p class="lede" style="--i:2">O que é, os nomes que aparecem na etiqueta do mercado e como fazer na brasa.</p></header>' +
-        '<label class="search">' + ic('search') + '<span class="sr">Buscar corte</span><input type="search" id="c-q" placeholder="picanha, maminha, bife de chorizo…" autocomplete="off"></label>' +
-        '<div class="chips chips--scroll" id="c-an" role="group" aria-label="Animal">' + [['', 'Todos'], ['boi', 'Boi'], ['porco', 'Porco'], ['cordeiro', 'Cordeiro'], ['frango', 'Frango']].map(function (a) { return '<button type="button" class="chip" data-an="' + a[0] + '" aria-pressed="' + (a[0] === cst.animal) + '">' + a[1] + '</button>'; }).join('') + '</div>' +
-        '<p class="count-line" id="c-n" aria-live="polite"></p><ul class="guia" id="c-grid"></ul></div>';
+      el.innerHTML = '<div class="pad">' + top('Cortes', 'Guia de carnes') +
+        '<label class="search">' + ic('search') + '<span class="sr">Buscar corte</span><input type="search" id="c-q" placeholder="Picanha, vacío, ribeye…" autocomplete="off" enterkeyhint="search"></label>' +
+        '<div class="chips chips--scroll" id="c-an" role="group" aria-label="Animal">' + [['', 'Todos'], ['boi', 'Boi'], ['porco', 'Porco'], ['cordeiro', 'Cordeiro'], ['frango', 'Frango']].map(function (a) { return '<button type="button" class="chip' + (a[0] === cst.animal ? ' on' : '') + '" data-an="' + a[0] + '" aria-pressed="' + (a[0] === cst.animal) + '">' + a[1] + '</button>'; }).join('') + '</div>' +
+        '<p class="label count-line tnum" id="c-n" aria-live="polite"></p><ul class="grid2" id="c-grid"></ul></div>';
       var qT; $('#c-q').addEventListener('input', function (e) { clearTimeout(qT); qT = setTimeout(function () { cst.q = e.target.value; gridCortes(); }, 120); });
     }
+    $$('[data-badge]', el).forEach(function (b) { b.textContent = listaCount(); });
     gridCortes();
   }
   function gridCortes() {
@@ -419,20 +457,18 @@
     });
     $('#c-n').textContent = list.length + (list.length === 1 ? ' corte' : ' cortes');
     $('#c-grid').innerHTML = list.length ? list.map(function (c, i) {
-      var art = (window.CUT_ART && window.CUT_ART[c.id]) || '', tb = tambem(c);
-      return '<li class="gcard" style="--i:' + Math.min(i, 10) + '" data-id="' + esc(c.id) + '">' +
-        '<button type="button" class="gcard__b" data-ficha="' + esc(c.id) + '" aria-label="' + esc(c.nome) + ': o que é, nomes no mercado e como fazer"><span class="gcard__art" aria-hidden="true">' + art + '</span>' +
-        '<span class="gcard__k">' + esc(ANIMAL_NOME[c.animal] || '') + (CAT[c.categoria] ? ' · ' + CAT[c.categoria] : '') + '</span><b class="gcard__n">' + esc(c.nome) + '</b>' +
-        (tb ? '<span class="gcard__t">também: ' + esc(tb) + '</span>' : '') +
-        '<span class="gcard__m">' + (tempoMin(c) ? ic('clock') + durTxt(tempoMin(c)) : '') + '</span></button></li>';
-    }).join('') : '<li class="empty">' + dog() + '<p class="empty__t">Nenhum corte com esse nome</p><p class="empty__d">Tente o nome de outro país: vacío, ojo de bife, ribeye.</p></li>';
+      var tb = tambem(c);
+      return '<li style="--i:' + Math.min(i, 8) + '"><button type="button" class="ccard ccard--grid" data-ficha="' + esc(c.id) + '" aria-label="' + esc(curto(c.nome)) + ': ficha do corte">' + art(c, 'ccard__art') +
+        '<span class="ccard__k">' + esc(ANIMAL_NOME[c.animal] || '') + (CAT[c.categoria] ? ' · ' + CAT[c.categoria] : '') + '</span><b class="ccard__n">' + esc(curto(c.nome)) + '</b>' +
+        '<span class="ccard__t">' + (tb ? 'também ' + esc(tb) : '&nbsp;') + '</span>' +
+        '<span class="ccard__m tnum">' + (tempoMin(c) ? durTxt(tempoMin(c)) : '') + (has(c.id) ? '<span class="dot-on" aria-label="no plano"></span>' : '') + '</span></button></li>';
+    }).join('') : '<li class="empty"><span class="empty__ic">' + ic('search') + '</span><p class="h3">Nenhum corte com esse nome</p><p class="s">Tente o nome de outro país: vacío, ojo de bife, ribeye.</p></li>';
   }
-  /* outros nomes do mesmo corte: rótulos de mercado primeiro, depois outros países */
   function tambem(c) {
-    var seen = {}, out = [], base = norm(c.nome);
+    var seen = {}, out = [], base = norm(curto(c.nome));
     seen[base] = 1;
     ((c.mercado && c.mercado.rotulos) || []).concat(['ar', 'uy', 'us'].map(function (k) { return (c.nomes || {})[k]; })).forEach(function (n) {
-      if (!n || out.length >= 3) return;
+      if (!n || out.length >= 2) return;
       n = String(n).replace(/\s*\([^)]*\)/g, '').trim();
       var k = norm(n);
       if (seen[k] || k.indexOf(base) >= 0) return;
@@ -440,45 +476,68 @@
     });
     return out.join(', ');
   }
-  function syncCortes() { /* o guia não tem botão de lista; a ficha cuida disso */ }
 
   /* ============ NA BRASA ============ */
-  var timers = {}; // id -> { end, total, virou }
+  var timers = {}; // id -> { end, total, virou, pausa }
+  function timerAtivo() {
+    var ids = Object.keys(timers); if (!ids.length) return null;
+    ids.sort(function (a, b) { return left(a) - left(b); }); return ids[0];
+  }
+  function left(id) { var t = timers[id]; return t.pausa != null ? t.pausa : Math.max(0, Math.round((t.end - Date.now()) / 1000)); }
+  function mmss(s) { return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
   function renderBrasa() {
     var el = $('#v-brasa'), r = last, s = sequence(r), seq = s.seq, T = s.T, acender = s.acender;
-    var html = '<div class="pad cascade"><header style="--i:0"><p class="eyebrow">Na brasa</p><h1 class="h1">Ordem da grelha</h1></header>' +
-      '<label class="field field--row" style="--i:1"><span>' + ic('clock') + 'Servir às</span>' + horaSel('b-hora') + '</label>';
+    var live = Object.keys(timers).length > 0;
+    var html = '<div class="pad"><header class="top"><div class="top__t"><p class="eyebrow tnum">Na brasa · ' + seq.length + (seq.length === 1 ? ' peça' : ' peças') + '</p><h1 class="h2">Linha do tempo</h1></div>' +
+      (live ? '<span class="chip heat chip--live"><i aria-hidden="true"></i>Ao vivo</span>' : listaBtn()) + '</header>';
     if (!seq.length) {
-      html += '<div class="empty" style="--i:2">' + dog() + '<p class="empty__t">Nada na grelha ainda</p><p class="empty__d">Escolha os cortes no Planejar. Aqui sai a ordem de entrada, com timers.</p><button type="button" class="btn btn--brasa" data-go="planejar">Planejar</button></div>';
+      html += '<div class="card empty"><span class="empty__ic">' + ic('grelha') + '</span><p class="h3">Nada na grelha ainda</p><p class="s">Escolha os cortes no Planejar. Aqui sai a ordem de entrada, com timers.</p><button type="button" class="btn btn-p btn-sm" data-go="planejar">Planejar</button></div>';
     } else {
+      var a = timerAtivo();
+      html += '<div class="cascade">';
+      if (a) {
+        var tm = timers[a], c = corte(a), lf = left(a), half = lf > tm.total / 2 && !tm.virou, x = seq.filter(function (q) { return q.l.id === a; })[0];
+        var C = 540.4, off = C * (1 - lf / tm.total);
+        html += '<section class="card hot" style="--i:0" aria-label="Timer ativo"><div class="ring"><svg width="192" height="192" viewBox="0 0 192 192" aria-hidden="true"><circle cx="96" cy="96" r="86" class="ring__bg"/><circle cx="96" cy="96" r="86" class="ring__fg" id="ring-fg" style="stroke-dasharray:' + C + ';stroke-dashoffset:' + off.toFixed(1) + '"/></svg>' +
+          '<div class="ring__in"><p class="eyebrow" id="ring-k">' + (half ? 'Virar em' : 'Tirar em') + '</p><p class="display tnum" id="ring-v" role="timer" aria-live="off">' + mmss(half ? Math.max(0, lf - Math.round(tm.total / 2)) : lf) + '</p><p class="label">' + esc(curto(c.nome)) + (tm.virou ? ' · lado 2' : ' · lado 1') + '</p></div></div>' +
+          '<div class="cells"><div class="cell"><span class="label">Zona</span><b>' + esc(x ? x.z.nome : '') + '</b></div><div class="cell"><span class="label">Tempo total</span><b class="tnum">' + durTxt(Math.round(tm.total / 60)) + '</b></div></div>' +
+          '<div class="hot__act"><button type="button" class="btn btn-s btn--sq" data-pausa="' + esc(a) + '" aria-label="' + (tm.pausa != null ? 'Retomar' : 'Pausar') + ' timer">' + ic(tm.pausa != null ? 'play' : 'stop') + '</button>' +
+          '<button type="button" class="btn btn-p grow" data-virei="' + esc(a) + '"' + (tm.virou ? ' data-tirar="1"' : '') + '>' + (tm.virou ? 'Tirei da grelha' : 'Virei') + '</button></div></section>';
+      } else {
+        var p = proximo(r);
+        html += '<section class="card next" style="--i:0"><p class="eyebrow">' + (p.passou ? 'Churrasco' : 'Próximo passo · ' + esc(faltaTxt(p.t))) + '</p><p class="display tnum">' + hhmm(p.t) + '</p><p class="h3">' + esc(p.txt) + '</p>' +
+          (p.passou ? '<button type="button" class="btn btn-p btn--full" data-fim="1">' + ic('x-camera') + 'Encerrar e guardar foto</button>' :
+            p.id ? '<button type="button" class="btn btn-p btn--full" data-timer="' + esc(p.id) + '" data-min="' + p.min + '">' + ic('play') + 'Iniciar timer · ' + durTxt(p.min) + '</button>' :
+            '<button type="button" class="btn btn-s btn--full" data-timer="' + esc(seq[0].l.id) + '" data-min="' + seq[0].t + '">' + ic('play') + 'Já acendi: iniciar ' + esc(curto(seq[0].l.c.nome)) + '</button>') + '</section>';
+      }
       var span = T - acender, pos = function (d) { return Math.max(0, Math.min(100, (d - acender) / span * 100)); };
-      html += '<section class="crono" style="--i:2" aria-label="Linha do tempo"><div class="crono__axis"><span>' + hhmm(acender) + '</span><span>' + hhmm(T) + '</span></div>' +
+      html += '<label class="field field--row" style="--i:1"><span class="label">' + ic('clock') + 'Servir às</span>' + horaSel('b-hora') + '</label>' +
+        '<section class="card crono" style="--i:2" aria-label="Linha do tempo"><div class="crono__axis label tnum"><span>' + hhmm(acender) + '</span><span>' + hhmm(T) + '</span></div>' +
         '<div class="crono__row"><span class="crono__n">Acender</span><span class="crono__track"><span class="crono__bar crono__bar--fogo" style="--l:0;--w:' + (pos(seq[0].entra) / 100) + '"></span></span></div>' +
-        seq.map(function (x, i) { return '<div class="crono__row" style="--j:' + (i + 1) + '"><span class="crono__n">' + esc(x.l.c.nome) + '</span><span class="crono__track"><span class="crono__bar crono__bar--' + x.z.k + '" style="--l:' + (pos(x.entra) / 100) + ';--w:' + (Math.max(2, pos(x.sai) - pos(x.entra)) / 100) + '"></span></span></div>'; }).join('') +
-        '<span class="crono__now" style="--p:' + (pos(new Date()) / 100) + '" aria-hidden="true"></span></section>' +
-        '<ol class="ordem" style="--i:3">' +
-        '<li class="ordem__i ordem__i--fogo"><time>' + hhmm(acender) + '</time><div class="ordem__b"><b>Acender o carvão</b><small>' + r.carvao + ' kg. Brasa pronta quando cobrir de cinza branca (30–40 min).</small></div></li>' +
+        seq.map(function (x) { return '<div class="crono__row"><span class="crono__n">' + esc(curto(x.l.c.nome)) + '</span><span class="crono__track"><span class="crono__bar crono__bar--' + x.z.k + (timers[x.l.id] ? ' is-hot' : '') + '" style="--l:' + (pos(x.entra) / 100) + ';--w:' + (Math.max(2, pos(x.sai) - pos(x.entra)) / 100) + '"></span></span></div>'; }).join('') +
+        (Date.now() > acender && Date.now() < T ? '<span class="crono__now" style="--p:' + (pos(new Date()) / 100) + '" aria-hidden="true"></span>' : '') + '</section>' +
+        '<h2 class="h3 sec__t" style="--i:3">Ordem da grelha</h2><ol class="list ordem" style="--i:3">' +
+        '<li class="row"><time class="ordem__h tnum">' + hhmm(acender) + '</time><span class="grow"><b class="t">Acender o carvão</b><span class="s">' + r.carvao + ' kg. Pronta quando cobrir de cinza branca.</span></span></li>' +
         seq.map(function (x) {
           var on = !!timers[x.l.id];
-          return '<li class="ordem__i" data-id="' + esc(x.l.id) + '"><time>' + hhmm(x.entra) + '</time><div class="ordem__b"><b>' + esc(x.l.c.nome) + '</b>' +
-            '<span class="ztag ztag--' + x.z.k + '">' + esc(x.z.nome) + '</span><small>' + kgTxt(x.l.g) + ' · ' + durTxt(x.t) + (x.d ? ' · descansa ' + x.d + ' min' : '') + '</small></div>' +
-            '<button type="button" class="timer' + (on ? ' is-on' : '') + '" data-timer="' + esc(x.l.id) + '" data-min="' + x.t + '" aria-label="' + (on ? 'Parar timer de ' : 'Iniciar timer de ') + esc(x.l.c.nome) + '">' +
-            '<svg class="timer__ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" class="timer__bg"/><circle cx="24" cy="24" r="21" class="timer__fg" pathLength="100"/></svg>' +
-            '<span class="timer__v">' + (on ? '' : durTxt(x.t)) + '</span><span class="timer__i">' + ic(on ? 'stop' : 'play') + '</span></button></li>';
+          return '<li class="row' + (on ? ' is-on' : '') + '" data-id="' + esc(x.l.id) + '"><time class="ordem__h tnum">' + hhmm(x.entra) + '</time><span class="grow"><b class="t">' + esc(curto(x.l.c.nome)) + '</b>' +
+            '<span class="s tnum">' + esc(x.z.nome) + ' · ' + kgTxt(x.l.g) + ' · ' + durTxt(x.t) + (x.d ? ' · descansa ' + x.d + ' min' : '') + '</span></span>' +
+            '<button type="button" class="tbtn' + (on ? ' on' : '') + '" data-timer="' + esc(x.l.id) + '" data-min="' + x.t + '" aria-label="' + (on ? 'Parar timer de ' : 'Iniciar timer de ') + esc(curto(x.l.c.nome)) + '" style="--p:' + (on ? (left(x.l.id) / timers[x.l.id].total).toFixed(3) : 1) + '">' +
+            '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" class="tbtn__bg"/><circle cx="24" cy="24" r="21" class="tbtn__fg" pathLength="100"/></svg>' + ic(on ? 'stop' : 'play') + '</button></li>';
         }).join('') +
-        '<li class="ordem__i ordem__i--servir"><time>' + hhmm(T) + '</time><div class="ordem__b"><b>Servir</b><small>Fatie contra a fibra, com a faca bem afiada.</small></div></li></ol>';
+        '<li class="row"><time class="ordem__h tnum">' + hhmm(T) + '</time><span class="grow"><b class="t">Servir</b><span class="s">Fatie contra a fibra, com a faca bem afiada.</span></span></li></ol></div>';
     }
-    html += '<h2 class="h2" style="--i:4">Ponto pelo termômetro</h2>' +
-      '<section class="termo card" style="--i:5"><div class="termo__g" aria-hidden="true"><span class="termo__tube"><span class="termo__fill" id="t-fill"></span></span><span class="termo__bulb"></span></div>' +
-      '<div class="termo__r"><p class="termo__v"><span id="t-v">57</span> °C</p><p class="termo__p" id="t-p">Ao ponto</p><p class="termo__s" id="t-s">centro rosado</p>' +
-      '<label class="range"><span class="sr">Temperatura no centro da peça</span><input type="range" id="t-in" min="40" max="80" value="57" step="1"></label></div>' +
-      '<ul class="termo__list">' + PONTOS.map(function (p) { return '<li style="--c:' + p.cor + '"><i aria-hidden="true"></i><b>' + p.nome + '</b><span>' + p.min + '–' + p.max + ' °C</span></li>'; }).join('') + '</ul>' +
-      '<p class="nota">Tire 2–3 °C antes do alvo: a carne continua subindo no descanso.</p>' +
-      '<dl class="seguro">' + SEGUROS.map(function (x) { return '<div><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>'; }).join('') + '</dl></section>' +
-      '<h2 class="h2" style="--i:6">Zonas de fogo</h2>' +
-      '<section class="card zonas-c" style="--i:7"><div class="grelha" aria-hidden="true"><span class="grelha__z z-forte"></span><span class="grelha__z z-media"></span><span class="grelha__z z-branda"></span><span class="grelha__z z-indireto"></span></div>' +
-      '<ul class="zonas">' + Object.keys(ZONAS).map(function (k) { var z = ZONAS[k]; return '<li class="zona zona--' + k + '"><b>' + z.nome + '</b><span>' + z.palmos + ' · mão aguenta ' + z.mao + '</span><small>' + z.uso + '</small></li>'; }).join('') + '</ul>' +
-      '<p class="nota">Monte a brasa em degrau: um lado alto e forte, outro baixo, e uma área sem brasa para o indireto.</p></section></div>';
+    html += '<h2 class="h3 sec__t">Ponto pelo termômetro</h2>' +
+      '<section class="card termo"><div class="termo__top"><p class="display tnum"><span id="t-v">57</span><small> °C</small></p><div><p class="h3" id="t-p">Ao ponto</p><p class="s" id="t-s">centro rosado</p></div></div>' +
+      '<div class="termo__bar" aria-hidden="true"><i id="t-fill"></i></div>' +
+      '<label class="range"><span class="sr">Temperatura no centro da peça</span><input type="range" id="t-in" min="40" max="80" value="57" step="1"></label>' +
+      '<ul class="termo__list">' + PONTOS.map(function (p) { return '<li><b>' + p.nome + '</b><span class="tnum">' + p.min + '–' + p.max + ' °C</span></li>'; }).join('') + '</ul>' +
+      '<p class="s nota">Tire 2–3 °C antes do alvo: a carne continua subindo no descanso.</p></section>' +
+      '<ul class="list seguro">' + SEGUROS.map(function (x) { return '<li class="row"><span class="grow t">' + x[0] + '</span><span class="s tnum">' + x[1] + '</span></li>'; }).join('') + '</ul>' +
+      '<h2 class="h3 sec__t">Zonas de fogo</h2>' +
+      '<ul class="list zonas">' + Object.keys(ZONAS).map(function (k) { var z = ZONAS[k]; return '<li class="row row--top"><span class="heat-m" aria-label="intensidade ' + z.n + ' de 4">' + [1, 2, 3, 4].map(function (j) { return '<i class="' + (j <= z.n ? 'on' : '') + '"></i>'; }).join('') + '</span><span class="grow"><b class="t">' + z.nome + '</b><span class="s tnum">' + z.palmos + ' · a mão aguenta ' + z.mao + '</span><span class="s s--3">' + z.uso + '</span></span></li>'; }).join('') + '</ul>' +
+      '<p class="s nota">Monte a brasa em degrau: um lado alto e forte, outro baixo, e uma área sem brasa para o indireto.</p>' +
+      (plan.ativo || seq.length ? '<button type="button" class="btn btn-s btn--full fim-btn" data-fim="1">' + ic('x-camera') + 'Encerrar churrasco</button>' : '') + '</div>';
     el.innerHTML = html;
     termo(57);
     tickTimers();
@@ -486,24 +545,26 @@
   function termo(v) {
     var p = PONTOS.reduce(function (a, b) { return v >= b.min - 2 ? b : a; }, PONTOS[0]);
     var f = $('#t-fill'); if (!f) return;
-    f.style.transform = 'scaleY(' + ((v - 40) / 40).toFixed(3) + ')'; f.style.background = p.cor;
+    f.style.transform = 'scaleX(' + ((v - 40) / 40).toFixed(3) + ')';
     $('#t-v').textContent = v; $('#t-p').textContent = v < 45 ? 'Ainda cru' : p.nome; $('#t-s').textContent = v < 45 ? 'continue na brasa' : p.sub;
     $$('.termo__list li').forEach(function (li, i) { li.classList.toggle('on', PONTOS[i] === p && v >= 45); });
   }
   var tickT;
   function tickTimers() {
-    var now = Date.now(), any = false;
+    var any = false;
     Object.keys(timers).forEach(function (id) {
-      var tm = timers[id], left = Math.max(0, Math.round((tm.end - now) / 1000)), c = corte(id);
+      var tm = timers[id], lf = left(id), c = corte(id);
       any = true;
-      if (!tm.virou && left <= tm.total / 2) { tm.virou = true; alerta('Hora de virar: ' + c.nome); }
-      if (left <= 0) { delete timers[id]; alerta('Tirar da grelha: ' + c.nome); if (cur === 'brasa') renderBrasa(); return; }
-      var b = document.querySelector('.timer[data-timer="' + id + '"]');
-      if (b) {
-        b.querySelector('.timer__v').textContent = Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0');
-        b.style.setProperty('--p', (left / tm.total).toFixed(4));
-      }
+      if (!tm.virou && !tm.avisou && lf <= tm.total / 2) { tm.avisou = true; alerta('Hora de virar: ' + curto(c.nome)); if (cur === 'brasa') renderBrasa(); }
+      if (lf <= 0) { delete timers[id]; alerta('Tirar da grelha: ' + curto(c.nome)); if (cur === 'brasa') renderBrasa(); return; }
+      var b = document.querySelector('.tbtn[data-timer="' + id + '"]'); if (b) b.style.setProperty('--p', (lf / tm.total).toFixed(4));
     });
+    var a = timerAtivo(), v = $('#ring-v');
+    if (a && v) {
+      var tm = timers[a], lf = left(a), half = lf > tm.total / 2 && !tm.virou;
+      v.textContent = mmss(half ? Math.max(0, lf - Math.round(tm.total / 2)) : lf);
+      var fg = $('#ring-fg'); if (fg) fg.style.strokeDashoffset = (540.4 * (1 - lf / tm.total)).toFixed(1);
+    }
     clearTimeout(tickT); if (any) tickT = setTimeout(tickTimers, 1000);
   }
   function alerta(msg) { toast(msg); try { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {} }
@@ -514,18 +575,19 @@
     var el = $('#v-receitas');
     if (!el.dataset.built) {
       el.dataset.built = '1';
-      el.innerHTML = '<div class="pad"><header class="cascade"><p class="eyebrow" style="--i:0">Receitas da mesa</p><h1 class="h1" style="--i:1">O que vai junto</h1>' +
-        '<p class="lead" style="--i:2">Quantidades para <b id="r-n"></b>, do seu plano.</p></header>' +
-        '<div class="chips chips--scroll" id="r-cat" role="group" aria-label="Categoria">' + R().CATS.map(function (c) { return '<button type="button" class="chip" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === rst.cat) + '">' + c[1] + '</button>'; }).join('') + '</div>' +
-        '<ul class="rlist" id="r-list"></ul></div>';
+      el.innerHTML = '<div class="pad">' + top('Receitas', 'O que vai junto') +
+        '<p class="s lede">Quantidades para <b class="tnum" id="r-n"></b>, do seu plano.</p>' +
+        '<div class="chips chips--scroll" id="r-cat" role="group" aria-label="Categoria">' + R().CATS.map(function (c) { return '<button type="button" class="chip' + (c[0] === rst.cat ? ' on' : '') + '" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === rst.cat) + '">' + c[1] + '</button>'; }).join('') + '</div>' +
+        '<ul class="list cascade" id="r-list"></ul></div>';
     }
+    $$('[data-badge]', el).forEach(function (b) { b.textContent = listaCount(); });
     $('#r-n').textContent = last.pessoas + ' pessoas';
     listReceitas();
   }
   function listReceitas() {
     var l = R().list().filter(function (r) { return !rst.cat || r.categoria === rst.cat; });
-    $('#r-list').innerHTML = l.length ? l.map(function (r, i) { return R().card(r, Math.min(i, 10), plan.receitas.indexOf(r.id) >= 0); }).join('') :
-      '<li class="empty">' + dog() + '<p class="empty__t">Nada nessa categoria</p></li>';
+    $('#r-list').innerHTML = l.length ? l.map(function (r, i) { return R().card(r, Math.min(i, 8), plan.receitas.indexOf(r.id) >= 0); }).join('') :
+      '<li class="empty-row"><p class="s">Nada nessa categoria.</p></li>';
   }
   var sheetR = null;
   function openReceita(id, n) {
@@ -536,13 +598,14 @@
   }
   function fichaReceita() {
     var r = R().get(sheetR.id);
-    return R().ficha(r, sheetR.n, { corteNome: function (id) { var c = corte(id); return c ? c.nome : null; }, naLista: plan.receitas.indexOf(r.id) >= 0, feitos: plan.feitos[r.id] || {} });
+    return R().ficha(r, sheetR.n, { corteNome: function (id) { var c = corte(id); return c ? curto(c.nome) : null; }, naLista: plan.receitas.indexOf(r.id) >= 0, feitos: plan.feitos[r.id] || {} });
   }
   function refreshReceita() {
     var r = R().get(sheetR.id), body = $('#sheet-body');
     var ings = R().escalar(r, sheetR.n);
     $$('.ings li', body).forEach(function (li, i) { var g = ings[i]; if (!g) return; var q = li.querySelector('.ings__q'); q.textContent = g.txt || R().fmtQ(g.q, g.un); bump(q); });
     odo($('[data-odo="porcoes"]', body), sheetR.n);
+    var m = $('[data-porc="-1"]', body); if (m) m.disabled = sheetR.n <= 1;
   }
 
   /* ============ LISTA ============ */
@@ -559,12 +622,12 @@
     });
     return order.map(function (k) { var a = agg[k]; a.qtd = a.q ? R().fmtQ(a.q, a.un) : (a.txt || 'a gosto'); return a; });
   }
-  function listaCount() { return last.linhas.length + last.extras.length + receitaIngs().length; }
+  function listaCount() { return last ? last.linhas.length + last.extras.length + receitaIngs().length : 0; }
   function shareText() {
     var r = last, L = [];
-    L.push('🔥 Churrasco para ' + pessoasTxt() + ' · servir às ' + plan.servir);
+    L.push('Churrasco para ' + pessoasTxt() + ' · ' + (plan.ativo ? diaNome(servirDate()) + ', ' : '') + 'servir às ' + plan.servir);
     L.push(''); L.push('*Carne (' + kgTxt(r.totalG) + ')*');
-    r.linhas.forEach(function (l) { L.push('• ' + l.c.nome + ' — ' + kgTxt(l.g)); });
+    r.linhas.forEach(function (l) { L.push('• ' + curto(l.c.nome) + ' — ' + kgTxt(l.g)); });
     if (r.extras.length) { L.push(''); L.push('*Brasa*'); r.extras.forEach(function (x) { L.push('• ' + x.nome + ' — ' + x.qtd); }); }
     var ri = receitaIngs();
     if (ri.length) { L.push(''); L.push('*Receitas (' + plan.receitas.map(function (id) { var x = R().get(id); return x ? x.nome : ''; }).filter(Boolean).join(', ') + ')*'); ri.forEach(function (x) { L.push('• ' + x.item + ' — ' + x.qtd); }); }
@@ -572,18 +635,65 @@
     return L.join('\n');
   }
   function listaHTML() {
-    var r = last, ri = receitaIngs();
-    var row = function (id, nome, q, sub) { var ok = !!plan.ok[id]; return '<li><label class="check"><input type="checkbox" data-ok="' + esc(id) + '"' + (ok ? ' checked' : '') + '><span class="check__box" aria-hidden="true"></span><span class="check__n">' + esc(nome) + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</span><span class="check__q">' + esc(q) + '</span></label></li>'; };
-    if (!r.linhas.length && !ri.length) return '<div class="empty">' + dog() + '<h2 class="empty__t" id="sheet-t">Sua lista está vazia</h2><p class="empty__d">Monte o plano e escolha receitas: a lista sai pronta.</p><button type="button" class="btn btn--brasa" data-go="planejar">Planejar</button></div>';
-    return '<article class="ficha ficha--lista"><p class="ficha__k">' + ic('bag') + 'Lista de compras</p><h2 class="ficha__t" id="sheet-t">Pro churrasco de ' + esc(pessoasTxt()) + '</h2>' +
-      '<div class="share"><a class="btn btn--zap" id="share-zap" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(shareText()) + '">' + ic('share') + 'Mandar no WhatsApp</a>' +
-      '<button type="button" class="btn btn--line" id="share-copy">' + ic('copy') + 'Copiar</button>' + (navigator.share ? '<button type="button" class="btn btn--line" id="share-native">' + ic('share') + 'Compartilhar</button>' : '') + '</div>' +
-      (r.linhas.length ? '<h3 class="ficha__h">Carne <span>' + kgTxt(r.totalG) + '</span></h3><ul class="checks">' + r.linhas.map(function (l) { return row('c:' + l.id, l.c.nome, kgTxt(l.g), ANIMAL_NOME[l.c.animal]); }).join('') + '</ul>' : '') +
-      (r.extras.length ? '<h3 class="ficha__h">Brasa</h3><ul class="checks">' + r.extras.map(function (x) { return row('x:' + x.id, x.nome, x.qtd, x.obs); }).join('') + '</ul>' : '') +
-      (ri.length ? '<h3 class="ficha__h">Receitas</h3><ul class="checks">' + ri.map(function (x) { return row(x.id, x.item, x.qtd, x.de.join(', ')); }).join('') + '</ul>' : '<button type="button" class="link" data-go="receitas">+ Escolher farofa, molho, maionese</button>') +
+    var r = last, ri = receitaIngs(), feitos = 0, tot = 0;
+    var row = function (id, nome, q, sub) { var ok = !!plan.ok[id]; tot++; if (ok) feitos++; return '<li><label class="row"><input type="checkbox" class="sr" data-ok="' + esc(id) + '"' + (ok ? ' checked' : '') + '><span class="check" aria-hidden="true"></span><span class="grow"><b class="t">' + esc(nome) + '</b>' + (sub ? '<span class="s">' + esc(sub) + '</span>' : '') + '</span><span class="val tnum">' + esc(q) + '</span></label></li>'; };
+    if (!r.linhas.length && !ri.length) return '<div class="empty"><span class="empty__ic">' + ic('bag') + '</span><h2 class="h3" id="sheet-t">Sua lista está vazia</h2><p class="s">Monte o plano e escolha receitas: a lista sai pronta.</p><button type="button" class="btn btn-p btn-sm" data-go="planejar">Planejar</button></div>';
+    var carne = r.linhas.map(function (l) { return row('c:' + l.id, curto(l.c.nome), kgTxt(l.g), ANIMAL_NOME[l.c.animal]); }).join('');
+    var brasa = r.extras.map(function (x) { return row('x:' + x.id, x.nome, x.qtd, x.obs); }).join('');
+    var rec = ri.map(function (x) { return row(x.id, x.item, x.qtd, x.de.join(', ')); }).join('');
+    return '<article class="ficha"><p class="eyebrow">Lista de compras</p><h2 class="h1" id="sheet-t">Para ' + esc(pessoasTxt()) + '</h2>' +
+      '<div class="prog"><span class="label">Comprado</span><span class="label tnum">' + feitos + ' de ' + tot + '</span></div><div class="bar"><i style="transform:scaleX(' + (tot ? feitos / tot : 0).toFixed(3) + ')"></i></div>' +
+      '<div class="share"><a class="btn btn-p grow" id="share-zap" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(shareText()) + '">' + ic('share') + 'Mandar no WhatsApp</a>' +
+      '<button type="button" class="btn btn-s btn--sq" id="share-copy" aria-label="Copiar lista">' + ic('copy') + '</button>' + (navigator.share ? '<button type="button" class="btn btn-s btn--sq" id="share-native" aria-label="Compartilhar">' + ic('share') + '</button>' : '') + '</div>' +
+      (r.linhas.length ? '<div class="sec__h sec__h--sheet"><h3 class="eyebrow">Carne</h3><span class="label tnum">' + kgTxt(r.totalG) + '</span></div><ul class="list">' + carne + '</ul>' +
+        (r.preco ? '<p class="preco tnum">Estimativa: R$ ' + brl(r.preco.min) + '–' + brl(r.preco.max) + '. Preços médios de mercado.</p>' : '') : '') +
+      (brasa ? '<div class="sec__h sec__h--sheet"><h3 class="eyebrow">Brasa</h3></div><ul class="list">' + brasa + '</ul>' : '') +
+      (rec ? '<div class="sec__h sec__h--sheet"><h3 class="eyebrow">Receitas</h3></div><ul class="list">' + rec + '</ul>' : '<button type="button" class="link" data-go="receitas">Escolher farofa, molho, maionese</button>') +
       '</article>';
   }
   function openLista() { openSheet(listaHTML(), 'lista'); setAbout('lista'); }
+
+  /* ============ FIM DO CHURRASCO ============ */
+  var fim = null;
+  function fimHTML() {
+    var r = last, T = plan.ativo ? servirDate() : new Date();
+    return '<article class="ficha fim"><p class="eyebrow">Fim do churrasco</p><h2 class="h1" id="sheet-t">Como foi?</h2>' +
+      '<p class="s tnum">' + esc(dataCurta(T)) + ' · ' + r.pessoas + ' pessoas · ' + kgTxt(r.totalG) + '</p>' +
+      '<label class="drop' + (fim.url ? ' has' : '') + '" id="fim-drop"><input type="file" class="sr" id="fim-file" accept="image/*" capture="environment">' +
+        (fim.url ? '<img src="' + fim.url + '" alt="Prévia da foto escolhida"><span class="drop__chg">' + ic('x-camera') + 'Trocar foto</span>' :
+          '<span class="drop__ic">' + ic('x-camera') + '</span><b class="t">Adicione uma foto</b><span class="s">da brasa, da mesa ou da turma</span>') + '</label>' +
+      (fim.err ? '<p class="hint hint--e" role="alert">' + esc(fim.err) + '</p>' : '<p class="hint">A foto fica só neste aparelho. Nada é enviado.</p>') +
+      '<fieldset class="rate"><legend class="label">Nota do churrasco</legend><div class="rate__s">' + [1, 2, 3, 4, 5].map(function (k) {
+        return '<label class="rate__b"><input type="radio" class="sr" name="fim-st" value="' + k + '"' + (fim.estrelas === k ? ' checked' : '') + '><svg class="star' + (k <= fim.estrelas ? ' on' : '') + '" viewBox="0 0 24 24" aria-hidden="true"><use href="#x-star"/></svg><span class="sr">' + k + (k === 1 ? ' estrela' : ' estrelas') + '</span></label>';
+      }).join('') + '</div></fieldset>' +
+      '<label class="field"><span class="label">Uma linha sobre o dia <span class="s--3">(opcional)</span></span><input type="text" id="fim-nota" maxlength="80" placeholder="A costela desmanchou" value="' + esc(fim.nota || '') + '" autocomplete="off"></label>' +
+      '<button type="button" class="btn btn-p btn--full" id="fim-ok"' + (fim.busy ? ' disabled' : '') + '>' + (fim.busy ? 'Guardando…' : fim.file ? 'Guardar lembrança' : 'Guardar sem foto') + '</button>' +
+      '<p class="s s--3 fim__d">O plano recomeça do zero depois de guardar. A turma e os cortes ficam como ponto de partida.</p></article>';
+  }
+  function openFim() {
+    if (fim && fim.url) URL.revokeObjectURL(fim.url);
+    fim = { file: null, url: null, estrelas: 0, nota: '', busy: false, err: '' };
+    openSheet(fimHTML(), 'fim'); setAbout('fim');
+  }
+  function redrawFim() { var n = $('#fim-nota'); if (n) fim.nota = n.value; $('#sheet-body').innerHTML = fimHTML(); }
+  function salvarFim() {
+    if (!fim || fim.busy) return;
+    var n = $('#fim-nota'); if (n) fim.nota = n.value.trim();
+    fim.busy = true; redrawFim();
+    var r = last, T = plan.ativo ? servirDate() : new Date();
+    var meta = { data: T.getTime(), pessoas: r.pessoas, g: r.totalG, cortes: r.linhas.map(function (l) { return l.id; }), nota: fim.nota || '', estrelas: fim.estrelas || 0 };
+    var go = function (res) {
+      Object.keys(timers).forEach(function (k) { delete timers[k]; });
+      plan.ativo = false; plan.ok = {}; plan.feitos = {}; plan.receitas = []; plan.passo = 0; plan.dia = isoDia(proxSabado());
+      if (fim.url) URL.revokeObjectURL(fim.url);
+      var semFoto = fim.file && res && !res.fotoOk;
+      fim = null; closeSheet(); commit(); setView('inicio', true); renderInicio();
+      toast(semFoto ? 'Lembrança guardada, mas sem foto: o aparelho não deixou salvar' : 'Lembrança guardada');
+      var first = $('#memo .memo'); if (first && !reduced()) first.classList.add('memo--new');
+    };
+    if (!M()) return go(null);
+    M().add(meta, fim.file).then(go, function () { fim.busy = false; fim.err = 'Não deu para guardar agora. Tente de novo.'; redrawFim(); });
+  }
 
   /* ============ SHEET ============ */
   var sheetKind = null, sheetRet = null;
@@ -593,14 +703,13 @@
     sheetKind = kind; $('#sheet-body').innerHTML = html; $('#sheet-body').scrollTop = 0;
     sh.hidden = false; sc.hidden = false; sh.dataset.kind = kind;
     void sh.offsetWidth; sh.classList.add('on'); sc.classList.add('on');
-    $('.app').classList.add('has-sheet');
     setTimeout(function () { $('#sheet-x').focus({ preventScroll: true }); }, 30);
   }
   function closeSheet() {
     if (!sheetKind) return; sheetKind = null; sheetR = null;
     var sh = $('#sheet'), sc = $('#scrim');
-    sh.classList.remove('on'); sc.classList.remove('on'); $('.app').classList.remove('has-sheet');
-    setTimeout(function () { if (!sheetKind) { sh.hidden = true; sc.hidden = true; } }, reduced() ? 0 : 380);
+    sh.classList.remove('on'); sc.classList.remove('on');
+    setTimeout(function () { if (!sheetKind) { sh.hidden = true; sc.hidden = true; } }, reduced() ? 0 : 400);
     if (sheetRet && sheetRet.focus && document.contains(sheetRet)) sheetRet.focus({ preventScroll: true });
     setAbout(cur);
   }
@@ -609,11 +718,9 @@
   var last = null;
   function commit() {
     save(); last = compute();
-    var n = $('#lista-n'), c = listaCount(); if (n) { n.textContent = c; n.dataset.n = c; }
     syncCounts();
-    if (cur === 'planejar') fillPlanejar();
-    if (cur === 'cortes') syncCortes();
-    if (cur === 'inicio' && $('#app') && !$('#app').hidden) renderInicio();
+    if (cur === 'planejar') { if (plan.passo === 1 && $('#picks')) { fillPicks(); var h = $('#v-planejar .step__t .label'); if (h) h.textContent = last.linhas.length; var nx = $('#v-planejar [data-passo-go="2"].btn'); if (nx) nx.disabled = !last.linhas.length; } else if (plan.passo !== 0) renderPlanejar(); }
+    if (cur === 'inicio' && !$('#app').hidden) renderInicio();
     if (sheetKind === 'lista') { var y = $('#sheet-body').scrollTop; $('#sheet-body').innerHTML = listaHTML(); $('#sheet-body').scrollTop = y; }
   }
 
@@ -623,45 +730,67 @@
     setView(location.hash.slice(1) || 'inicio');
   }
   function init() {
+    var params = new URLSearchParams(location.search);
+    if (params.has('reset')) { try { localStorage.removeItem(KEY); localStorage.removeItem('churrasquin.proto.v1'); } catch (e) {} if (M()) M().reset(); }
     load(); last = compute();
     var steps = $('#about-steps');
-    if (steps) steps.innerHTML = [['splash', 'Abertura'], ['onb', 'Onboarding'], ['inicio', 'Início'], ['planejar', 'Planejar'], ['cortes', 'Cortes'], ['brasa', 'Na brasa'], ['receitas', 'Receitas'], ['lista', 'Lista']].map(function (s) { return '<li data-k="' + s[0] + '">' + s[1] + '</li>'; }).join('');
+    if (steps) steps.innerHTML = [['splash', 'Abertura'], ['inicio', 'Início'], ['planejar', 'Planejar'], ['cortes', 'Cortes'], ['brasa', 'Na brasa'], ['receitas', 'Receitas'], ['lista', 'Lista'], ['fim', 'Fim do churrasco']].map(function (s) { return '<li data-k="' + s[0] + '">' + s[1] + '</li>'; }).join('');
 
     var app = $('#app');
     app.addEventListener('click', function (e) {
-      var t = e.target.closest('.tab[data-tab]'); if (t) { e.preventDefault(); setView(t.dataset.tab, true); return; }
+      var t = e.target.closest('.tab[data-tab]'); if (t) { e.preventDefault(); if (sheetKind) closeSheet(); setView(t.dataset.tab, true); return; }
       var g = e.target.closest('[data-go]'); if (g) { e.preventDefault(); if (sheetKind) closeSheet(); setView(g.dataset.go, true); return; }
       var b = e.target.closest('button'); if (!b) return;
-      if (b.dataset.open === 'lista' || b.id === 'open-lista') { openLista(); return; }
+      if (b.dataset.open === 'lista') { openLista(); return; }
       if (b.id === 'sheet-x') { closeSheet(); return; }
+      if (b.dataset.fim) { openFim(); return; }
+      if (b.id === 'fim-ok') { salvarFim(); return; }
       if (b.dataset.d) { stepTap(b); return; }
-      if (b.dataset.mix) { var prev = plan.itens.slice(), pm = plan.mix; applyMix(b.dataset.mix); bump(b); toast('Estilo ' + MIXES[b.dataset.mix].label + ' aplicado', { label: 'Desfazer', fn: function () { plan.itens = prev; plan.mix = pm; commit(); } }); return; }
-      if (b.dataset.add) { add(b.dataset.add); stamp('No plano'); return; }
+      if (b.dataset.passoGo != null) { plan.passo = +b.dataset.passoGo; save(); renderPlanejar(); $('#v-planejar').scrollTop = 0; var st = $('#v-planejar .step'); if (st && !reduced()) { st.classList.remove('enter'); void st.offsetWidth; st.classList.add('enter'); } return; }
+      if (b.dataset.marcar) {
+        var era = plan.ativo; plan.ativo = true; plan.passo = 0; commit();
+        toast(era ? 'Plano atualizado' : 'Churrasco marcado: ' + diaNome(servirDate()) + ', ' + plan.servir);
+        setView('inicio', true); return;
+      }
+      if (b.dataset.dia) { plan.dia = b.dataset.dia; save(); renderPlanejar(); var nd = $('[data-dia="' + plan.dia + '"]'); if (nd) nd.focus({ preventScroll: true }); return; }
+      if (b.dataset.mix) { var prev = plan.itens.slice(), pm = plan.mix; applyMix(b.dataset.mix); renderPlanejar(); toast('Estilo ' + MIXES[b.dataset.mix].label, { label: 'Desfazer', fn: function () { plan.itens = prev; plan.mix = pm; commit(); renderPlanejar(); } }); return; }
+      if (b.dataset.add) { add(b.dataset.add); return; }
       if (b.dataset.act && b.closest('.pick')) {
         var id = b.closest('.pick').dataset.id, it = plan.itens.filter(function (x) { return x.id === id; })[0], cl = last.linhas.filter(function (l) { return l.id === id; })[0];
         if (b.dataset.act === 'inc') it.g = cl.g + 250; else if (b.dataset.act === 'dec') it.g = Math.max(250, cl.g - 250);
-        else if (b.dataset.act === 'rm') { var c = corte(id); remove(id); toast(c.nome + ' saiu do plano', { label: 'Desfazer', fn: function () { add(id); } }); return; }
+        else if (b.dataset.act === 'rm') { var c = corte(id); remove(id); toast(curto(c.nome) + ' saiu do plano', { label: 'Desfazer', fn: function () { add(id); } }); return; }
         commit(); var again = $('.pick[data-id="' + id + '"] [data-act="' + b.dataset.act + '"]'); if (again) again.focus(); return;
       }
-      if (b.dataset.an != null) { cst.animal = b.dataset.an; $$('#c-an .chip').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); gridCortes(); return; }
+      if (b.dataset.an != null) { cst.animal = b.dataset.an; $$('#c-an .chip').forEach(function (x) { x.setAttribute('aria-pressed', x === b); x.classList.toggle('on', x === b); }); gridCortes(); return; }
       if (b.dataset.ficha || b.dataset.corte) { var cid = b.dataset.ficha || b.dataset.corte; if (window.Animal) window.Animal.open(cid); return; }
-      if (b.dataset.levar) { var lid = b.dataset.levar, on = toggle(lid); if (!on) toast(corte(lid).nome + ' saiu da lista', { label: 'Desfazer', fn: function () { add(lid); } }); bump($('#lista-n')); return; }
       if (b.dataset.timer) {
         var tid = b.dataset.timer, tc = corte(tid);
-        if (timers[tid]) { delete timers[tid]; toast('Timer de ' + tc.nome + ' parado'); }
-        else { var secs = +b.dataset.min * 60; timers[tid] = { end: Date.now() + secs * 1000, total: secs, virou: false }; toast('Timer de ' + tc.nome + ' rodando: aviso para virar na metade'); }
-        renderBrasa(); var tb = $('.timer[data-timer="' + tid + '"]'); if (tb) tb.focus(); return;
+        if (timers[tid]) { delete timers[tid]; toast('Timer de ' + curto(tc.nome) + ' parado'); }
+        else { var secs = +b.dataset.min * 60; timers[tid] = { end: Date.now() + secs * 1000, total: secs, virou: false }; toast(curto(tc.nome) + ' na grelha. Aviso para virar na metade.'); }
+        if (cur !== 'brasa') setView('brasa', true); else renderBrasa(); return;
       }
-      if (b.dataset.cat != null && b.closest('#r-cat')) { rst.cat = b.dataset.cat; $$('#r-cat .chip').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); listReceitas(); return; }
+      if (b.dataset.virei) {
+        var vid = b.dataset.virei, tv = timers[vid]; if (!tv) return;
+        if (b.dataset.tirar) { delete timers[vid]; toast(curto(corte(vid).nome) + ' fora da grelha'); }
+        else { tv.virou = true; toast('Lado 2: ' + curto(corte(vid).nome)); }
+        renderBrasa(); return;
+      }
+      if (b.dataset.pausa) {
+        var pt = timers[b.dataset.pausa]; if (!pt) return;
+        if (pt.pausa != null) { pt.end = Date.now() + pt.pausa * 1000; pt.pausa = null; } else pt.pausa = left(b.dataset.pausa);
+        renderBrasa(); return;
+      }
+      if (b.dataset.cat != null && b.closest('#r-cat')) { rst.cat = b.dataset.cat; $$('#r-cat .chip').forEach(function (x) { x.setAttribute('aria-pressed', x === b); x.classList.toggle('on', x === b); }); listReceitas(); return; }
       if (b.dataset.receita) { openReceita(b.dataset.receita); return; }
       if (b.dataset.porc && sheetR) { sheetR.n = Math.max(1, Math.min(200, sheetR.n + +b.dataset.porc)); refreshReceita(); return; }
       if (b.dataset.act === 'rc-lista' && sheetR) {
         var rid = sheetR.id, i = plan.receitas.indexOf(rid);
         if (i >= 0) { plan.receitas.splice(i, 1); toast('Ingredientes saíram da lista'); }
-        else { plan.receitas.push(rid); stamp('Na lista'); }
+        else { plan.receitas.push(rid); toast('Ingredientes na lista'); }
         commit(); var onL = plan.receitas.indexOf(rid) >= 0;
-        b.setAttribute('aria-pressed', onL); b.textContent = onL ? '✓ Ingredientes na lista' : '+ Adicionar ingredientes à lista';
-        bump($('#lista-n')); if (cur === 'receitas') listReceitas(); return;
+        b.setAttribute('aria-pressed', onL); b.textContent = onL ? 'Ingredientes na lista' : 'Adicionar ingredientes à lista';
+        b.classList.toggle('btn-b', onL); b.classList.toggle('btn-p', !onL);
+        if (cur === 'receitas') listReceitas(); return;
       }
       if (b.id === 'share-copy') { var tx = shareText(), ok = function () { toast('Lista copiada'); }; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tx).then(ok, function () { fallbackCopy(tx); ok(); }); else { fallbackCopy(tx); ok(); } return; }
       if (b.id === 'share-native') { navigator.share({ title: 'Churrasco', text: shareText() }).catch(function () {}); return; }
@@ -669,17 +798,24 @@
     app.addEventListener('change', function (e) {
       var t = e.target;
       if (t.name === 'ap') { plan.apetite = t.value; commit(); }
-      else if ((t.id === 'p-hora' || t.id === 'b-hora') && /^\d\d:\d\d$/.test(t.value)) { plan.servir = t.value; commit(); if (t.id === 'b-hora') renderBrasa(); }
-      else if (t.dataset.ok) { plan.ok[t.dataset.ok] = t.checked; save(); }
+      else if ((t.id === 'p-hora' || t.id === 'b-hora') && /^\d\d:\d\d$/.test(t.value)) { plan.servir = t.value; commit(); if (t.id === 'b-hora') renderBrasa(); else renderPlanejarDia(); }
+      else if (t.dataset.ok) { plan.ok[t.dataset.ok] = t.checked; save(); var y = $('#sheet-body').scrollTop; $('#sheet-body').innerHTML = listaHTML(); $('#sheet-body').scrollTop = y; var nb = $('[data-ok="' + t.dataset.ok + '"]'); if (nb) nb.focus({ preventScroll: true }); }
       else if (t.dataset.passo != null && sheetR) { var f = plan.feitos[sheetR.id] = plan.feitos[sheetR.id] || {}; f[t.dataset.passo] = t.checked; save(); }
+      else if (t.id === 'fim-file' && fim) {
+        var file = t.files && t.files[0]; if (!file) return;
+        if (!/^image\//.test(file.type)) { fim.err = 'Esse arquivo não é uma imagem.'; redrawFim(); return; }
+        if (fim.url) URL.revokeObjectURL(fim.url);
+        fim.file = file; fim.url = URL.createObjectURL(file); fim.err = ''; redrawFim();
+      }
+      else if (t.name === 'fim-st' && fim) { fim.estrelas = +t.value; $$('.rate .star').forEach(function (s, k) { s.classList.toggle('on', k < fim.estrelas); }); }
     });
     app.addEventListener('input', function (e) { if (e.target.id === 't-in') termo(+e.target.value); });
     $('#scrim').addEventListener('click', closeSheet);
     document.addEventListener('keydown', function (e) {
       if (!sheetKind) return;
-      if (e.key === 'Escape' && !(window.Animal && document.querySelector('.anm-root.anm-show'))) { e.preventDefault(); closeSheet(); }
+      if (e.key === 'Escape' && !document.querySelector('.anm-root.anm-show')) { e.preventDefault(); closeSheet(); }
       if (e.key === 'Tab') {
-        var f = $$('#sheet button, #sheet a[href], #sheet input').filter(function (n) { return n.getClientRects().length; });
+        var f = $$('#sheet button, #sheet a[href], #sheet input, #sheet select').filter(function (n) { return n.getClientRects().length || n.type === 'radio' || n.type === 'checkbox'; });
         if (!f.length) return; var a = document.activeElement;
         if (e.shiftKey && a === f[0]) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && a === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
       }
@@ -692,16 +828,17 @@
       sh.addEventListener('touchend', function () { if (y0 == null) return; sh.style.transform = ''; if (dy > 110) closeSheet(); y0 = null; });
     })();
 
-    window.Plan = { has: has, add: function (id) { var r = add(id); if (r) stamp('Na lista'); return r; }, remove: remove, toggle: toggle };
-    document.addEventListener('corte:levar', function (e) { var id = e.detail && e.detail.id; if (corte(id) && !has(id)) { add(id); stamp('Na lista'); } });
+    window.Plan = { has: has, add: function (id) { return add(id); }, remove: remove, toggle: toggle };
+    document.addEventListener('corte:levar', function (e) { var id = e.detail && e.detail.id; if (corte(id) && !has(id)) add(id); });
     window.addEventListener('hashchange', function () { if (!$('#app').hidden) setView(location.hash.slice(1)); });
+    // passou a hora de servir com o app aberto: o Início troca o banner sozinho
+    setInterval(function () { if (cur === 'inicio' && !sheetKind && plan.ativo) { var bw = $('.banner-wrap'); if (bw) bw.innerHTML = banner(); } }, 60000);
 
-    var params = new URLSearchParams(location.search);
-    if (params.has('reset')) { try { localStorage.removeItem(KEY); } catch (e) {} load(); last = compute(); }
-    var skipIntro = params.has('direto');
-    if (skipIntro) { $('#splash').hidden = true; plan.onboarded = true; startApp(); return; }
-    splash(function () { if (plan.onboarded && !params.has('onb')) startApp(); else onboarding(startApp); });
+    if (params.has('direto')) { $('#splash').hidden = true; startApp(); return; }
+    splash(startApp);
   }
+  /* o passo 4 redesenha só o dia/horário (sem perder o foco do select) */
+  function renderPlanejarDia() { var a = document.activeElement && document.activeElement.id; renderPlanejar(); if (a) { var n = document.getElementById(a); if (n) n.focus({ preventScroll: true }); } }
   function fallbackCopy(t) {
     var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
     document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove();

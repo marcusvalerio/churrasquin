@@ -73,34 +73,33 @@
   function icon(c) { return '<svg class="rc-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-' + (CAT_ICO[c] ? c : 'acompanhamento') + '"/></svg>'; }
 
   function card(r, i, on) {
-    return '<li class="rcard' + (on ? ' is-on' : '') + '" style="--i:' + i + '" data-cat="' + esc(r.categoria) + '">' +
-      '<button type="button" class="rcard__b" data-receita="' + esc(r.id) + '">' +
-      '<span class="rcard__ico">' + icon(r.categoria) + '</span>' +
-      '<span class="rcard__txt"><span class="rcard__k">' + esc(cat1(r.categoria)) + (tempo(r) ? ' · ' + esc(tempo(r)) : '') + '</span>' +
-      '<b class="rcard__n">' + esc(r.nome) + '</b><span class="rcard__d">' + esc(r.resumo || '') + '</span></span>' +
-      '<span class="rcard__ok" aria-hidden="true">na lista</span></button></li>';
+    return '<li class="row row--btn" style="--i:' + i + '"><button type="button" class="row__b" data-receita="' + esc(r.id) + '">' +
+      '<span class="ico">' + icon(r.categoria) + '</span>' +
+      '<span class="grow"><span class="s">' + esc(cat1(r.categoria)) + (tempo(r) ? ' · ' + esc(tempo(r)) : '') + '</span>' +
+      '<b class="t">' + esc(r.nome) + '</b><span class="s s--1">' + esc(r.resumo || '') + '</span></span>' +
+      (on ? '<span class="chip brand chip--sm">Na lista</span>' : '<svg class="i chev" viewBox="0 0 24 24" aria-hidden="true"><use href="#x-chev"/></svg>') + '</button></li>';
   }
 
   /* ctx: { corteNome(id) -> nome|null, naLista: bool, feitos: {idx:true} } */
   function ficha(r, n, ctx) {
     var ings = escalar(r, n), feitos = ctx.feitos || {};
-    var comb = (r.combinaCom || []).map(function (id) { var nm = ctx.corteNome(id); return nm ? '<button type="button" class="chip chip--cut" data-corte="' + esc(id) + '">' + esc(nm) + '</button>' : ''; }).join('');
-    return '<article class="ficha ficha--receita" data-id="' + esc(r.id) + '">' +
-      '<p class="ficha__k">' + icon(r.categoria) + esc(cat1(r.categoria)) + (dif(r) ? ' · ' + esc(dif(r)) : '') + (tempo(r) ? ' · ' + esc(tempo(r)) : '') + '</p>' +
-      '<h2 class="ficha__t" id="sheet-t">' + esc(r.nome) + '</h2>' +
-      (r.resumo ? '<p class="ficha__d">' + esc(r.resumo) + '</p>' : '') +
-      '<div class="porcoes"><span class="porcoes__l">Para <b class="odo-host" data-odo="porcoes">' + n + '</b> pessoas<small>receita original: ' + base(r) + '</small></span>' +
-      '<span class="stepper stepper--sm"><button type="button" class="stepper__b" data-porc="-1" aria-label="Menos uma pessoa">−</button><button type="button" class="stepper__b" data-porc="1" aria-label="Mais uma pessoa">+</button></span></div>' +
-      '<h3 class="ficha__h">Ingredientes</h3><ul class="ings" aria-live="polite">' + ings.map(function (g, i) {
-        return '<li style="--i:' + i + '"><span class="ings__q">' + esc(g.txt || fmtQ(g.q, g.un)) + '</span><span class="ings__i">' + esc(g.item) + '</span></li>';
+    var comb = (r.combinaCom || []).map(function (id) { var nm = ctx.corteNome(id); return nm ? '<button type="button" class="chip" data-corte="' + esc(id) + '">' + esc(nm) + '</button>' : ''; }).join('');
+    return '<article class="ficha" data-id="' + esc(r.id) + '">' +
+      '<p class="eyebrow">' + esc(cat1(r.categoria)) + (dif(r) ? ' · ' + esc(dif(r)) : '') + (tempo(r) ? ' · ' + esc(tempo(r)) : '') + '</p>' +
+      '<h2 class="h1" id="sheet-t">' + esc(r.nome) + '</h2>' +
+      (r.resumo ? '<p class="muted">' + esc(r.resumo) + '</p>' : '') +
+      '<div class="card porcoes"><span class="grow"><span class="label">Para</span><b class="porcoes__v tnum"><span data-odo="porcoes">' + n + '</span> pessoas</b><span class="s">Receita original rende ' + base(r) + '</span></span>' +
+      '<span class="stepper"><button type="button" data-porc="-1" aria-label="Menos uma pessoa"' + (n <= 1 ? ' disabled' : '') + '>−</button><button type="button" data-porc="1" aria-label="Mais uma pessoa">+</button></span></div>' +
+      '<h3 class="eyebrow eyebrow--sec">Ingredientes</h3><ul class="list ings" aria-live="polite">' + ings.map(function (g, i) {
+        return '<li class="row"><span class="grow t">' + esc(g.item) + '</span><span class="val ings__q">' + esc(g.txt || fmtQ(g.q, g.un)) + '</span></li>';
       }).join('') + '</ul>' +
-      '<button type="button" class="btn btn--brasa btn--full" data-act="rc-lista" aria-pressed="' + !!ctx.naLista + '">' + (ctx.naLista ? '✓ Ingredientes na lista' : '+ Adicionar ingredientes à lista') + '</button>' +
-      '<h3 class="ficha__h">Modo de fazer</h3><ol class="passos">' + (r.passos || []).map(function (p, i) {
+      '<button type="button" class="btn ' + (ctx.naLista ? 'btn-b' : 'btn-p') + ' btn--full" data-act="rc-lista" aria-pressed="' + !!ctx.naLista + '">' + (ctx.naLista ? 'Ingredientes na lista' : 'Adicionar ingredientes à lista') + '</button>' +
+      '<h3 class="eyebrow eyebrow--sec">Modo de fazer</h3><ol class="list passos">' + (r.passos || []).map(function (p, i) {
         var t = typeof p === 'string' ? p : (p.txt || p.texto || '');
-        return '<li><label class="check"><input type="checkbox" data-passo="' + i + '"' + (feitos[i] ? ' checked' : '') + '><span class="check__box" aria-hidden="true"></span><span class="check__n"><b>' + (i + 1) + '.</b> ' + esc(t) + '</span></label></li>';
+        return '<li><label class="row row--top"><input type="checkbox" class="sr" data-passo="' + i + '"' + (feitos[i] ? ' checked' : '') + '><span class="check" aria-hidden="true"></span><span class="grow t t--n"><span class="step-n tnum">' + (i + 1) + '</span>' + esc(t) + '</span></label></li>';
       }).join('') + '</ol>' +
-      (r.dica ? '<p class="dica"><span class="dica__k">Dica</span>' + esc(r.dica) + '</p>' : '') +
-      (comb ? '<h3 class="ficha__h">Combina com</h3><div class="chips">' + comb + '</div>' : '') +
+      (r.dica ? '<p class="dica"><b>Dica.</b> ' + esc(r.dica) + '</p>' : '') +
+      (comb ? '<h3 class="eyebrow eyebrow--sec">Combina com</h3><div class="chips">' + comb + '</div>' : '') +
       '</article>';
   }
 
