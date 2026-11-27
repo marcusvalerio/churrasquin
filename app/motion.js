@@ -29,8 +29,8 @@
     return el.animate(kf, opt);
   }
   function dpr() { return Math.min(window.devicePixelRatio || 1, 2); }
-  function fit(cv, w, h) {
-    var d = dpr(), W = Math.round(w * d), H = Math.round(h * d);
+  function fit(cv, w, h, sc) {
+    var d = sc || dpr(), W = Math.round(w * d), H = Math.round(h * d);
     if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
     var c = cv.getContext('2d'); c.setTransform(d, 0, 0, d, 0, 0); return c;
   }
@@ -93,10 +93,14 @@
   var F = { ph: 3.8, spd: .35, intro: null, hero: null, cv: null, c: null };
   var SLOW = .35; // topo vivo: a mesma onda, a ~1/3 da velocidade
 
+  // perf: medidas do topo em cache (ler offsetTop a cada quadro força layout); renova no resize
+  var dimsC = null;
+  window.addEventListener('resize', function () { dimsC = null; }, { passive: true });
   function heroDims(hero) {
+    if (dimsC && dimsC.el === hero) return dimsC;
     var home = hero.parentNode.querySelector('.home');
     var top = home ? home.offsetTop - hero.offsetTop : hero.offsetHeight - 36;
-    return { W: hero.clientWidth, h: hero.offsetHeight, B: top + 10 };
+    return (dimsC = { el: hero, W: hero.clientWidth, h: hero.offsetHeight, B: top + 10 });
   }
   function drawHero(dt) {
     var hero = F.hero, cv = F.cv; if (!hero || !cv) return;
@@ -108,13 +112,14 @@
       else if (t < 3) { var u = fole((t - 1.45) / 1.4); A = lerp(-120, H * .75, u); amp = lerp(54, 16, u); }
       else { var v = fole(clamp((t - 3) / .8)); A = lerp(H * .75, -130, v); B = lerp(H + 80, d.B, v); amp = lerp(16, 12, v); }
       if (cv.style.height !== H + 'px') cv.style.height = H + 'px';
-      var c = fit(cv, d.W, H);
+      var c = fit(cv, d.W, H, .75);
       wave(c, d.W, H, A, B, amp, F.ph);
       var k = fole(clamp((t - 3) / .7)), L0 = I.L0, L1 = I.L1;
       var L = { x: lerp(L0.x, L1.x, k), y: lerp(L0.y, L1.y, k), s: lerp(L0.s, L1.s, k) };
       if (!I.handed) logo(c, L, t < 3 ? clamp((t - 1.9) / .6) : 1);
     } else {
-      wave(fit(cv, d.W, d.h), d.W, d.h, -130, d.B, 12, F.ph);
+      // topo ocioso: meia resolução (o CSS amplia; a onda é macia, não perde nada)
+      wave(fit(cv, d.W, d.h, .5), d.W, d.h, -130, d.B, 12, F.ph);
     }
   }
   function heroRunner() {
@@ -124,8 +129,11 @@
     }
     return (F.r = run({ el: F.cv, alive: function () { return F.cv && F.cv.isConnected; }, frame: function (dt) {
       var I = F.intro;
-      if (I) { I.t += dt * (I.skip && I.t < 3 ? 4 : 1); F.ph = I.t; step(I); }
-      else { F.spd = lerp(F.spd, SLOW, clamp(dt * 1.6)); F.ph += dt * F.spd; }
+      if (I) { I.t += dt * (I.skip && I.t < 3 ? 4 : 1); F.ph = I.t; step(I); drawHero(dt); return; }
+      F.spd = lerp(F.spd, SLOW, clamp(dt * 1.6)); F.ph += dt * F.spd;
+      // ocioso: 30 fps bastam para uma onda lenta; rolado para baixo, não desenha
+      F.acc = (F.acc || 0) + dt; if (F.acc < 1 / 31) return; F.acc = 0;
+      var sc = F.hero && F.hero.parentNode; if (sc && sc.scrollTop > F.hero.offsetHeight * .6) return;
       drawHero(dt);
     } }));
   }

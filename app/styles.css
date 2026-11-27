@@ -158,7 +158,7 @@ label.row{cursor:pointer}
 .cascade>*{animation:up var(--d-cena) var(--brasa) both;animation-delay:calc(var(--i,0) * 60ms)}
 @keyframes up{from{opacity:0;transform:translateY(12px)}}
 /* barra: pílula flutuante clara, indicador verde que desliza (transform), ícone ativo preenchido, rótulos 12 px */
-.tabbar{position:absolute;left:var(--margin-m);right:var(--margin-m);bottom:max(var(--safe-b),16px);z-index:30;display:grid;grid-template-columns:repeat(5,1fr);height:var(--tab-h);padding:var(--s-1);background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-radius:var(--r-pill);box-shadow:var(--e-2),inset 0 0 0 1px rgba(20,20,19,.06);transition:transform var(--d-3) var(--ease),opacity var(--d-2) var(--ease)}
+.tabbar{position:absolute;left:var(--margin-m);right:var(--margin-m);bottom:max(var(--safe-b),16px);z-index:30;display:grid;grid-template-columns:repeat(5,1fr);height:var(--tab-h);padding:var(--s-1);background:rgba(255,255,255,.97);border-radius:var(--r-pill);box-shadow:var(--e-2),inset 0 0 0 1px rgba(20,20,19,.06);transition:transform var(--d-3) var(--ease),opacity var(--d-2) var(--ease)}
 .tabbar.away{transform:translateY(calc(100% + 40px));opacity:0;pointer-events:none}
 .tab{position:relative;z-index:1;min-width:44px;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:500 12px/16px var(--font);color:var(--n-700);white-space:nowrap;transition:color var(--d-2) var(--ease)}
 .tab .i{width:22px;height:22px;--ic-body-opacity:0;transition:transform var(--d-2) var(--ease)}
@@ -202,12 +202,12 @@ label.row{cursor:pointer}
 .top--hero{padding-top:var(--s-4);margin-bottom:var(--s-10)}
 .wordmark{font:600 24px/28px var(--font);letter-spacing:-.02em;color:var(--n-50)}
 .eyebrow--ink{color:rgba(244,244,242,.82)}
-.hero .iconbtn--glass{background:rgba(244,244,242,.14);color:var(--n-50);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.hero .iconbtn--glass{background:rgba(244,244,242,.18);color:var(--n-50)}
 .hero .badge{background:#F4F2EE;color:#111111;box-shadow:0 0 0 2px #2A0C06}
 .hero__t{margin-top:var(--s-2);font:600 40px/44px var(--font);letter-spacing:-.03em;color:var(--n-50)}
 /* a folha clara que sobe com mola sobre o fogo */
 .home{position:relative;z-index:3;margin-top:-36px;padding-top:var(--s-5);background:var(--bg);border-radius:var(--r-xl) var(--r-xl) 0 0}
-#v-inicio>.hero,#v-inicio>.home{will-change:transform}
+
 /* puxar para atualizar: a chama cresce no vão que abre acima do topo */
 .ptr{position:absolute;left:0;right:0;top:0;height:160px;background:var(--n-1000);pointer-events:none}
 .ptr__f{position:absolute;left:50%;top:20px;width:48px;height:64px;margin-left:-24px;transform-origin:50% 100%;opacity:0}
@@ -473,3 +473,7 @@ label.row{cursor:pointer}
   .is-loading::after,.flick{animation:none}
   .app.intro .home,.app.intro .tabbar{transform:none}
 }
+
+/* perf: o canvas do topo roda em meia resolução e é ampliado pelo CSS; seções fora da tela não pintam */
+.hero__fire{image-rendering:auto;transform:translateZ(0)}
+.view>.home>*:nth-child(n+3){content-visibility:auto;contain-intrinsic-size:auto 320px}
