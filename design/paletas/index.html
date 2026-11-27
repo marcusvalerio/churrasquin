@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>churrasquin — 4 paletas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: escolha de paleta, sóbria. IDEA: o mesmo celular em 4 cores. PICTURE: a Início real. TYPE: Geist. LAYOUT: 4 colunas, vira pilha no celular. */
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:#EDEBE7;color:#151311;font:16px/1.5 Geist,system-ui,sans-serif}
+header{padding:48px max(5vw,16px) 8px;max-width:1400px;margin:auto}
+h1{font-size:clamp(28px,3.5vw,40px);line-height:1.08;margin:0 0 8px;letter-spacing:-.02em}
+header p{margin:0;color:#5c5852;max-width:64ch}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;padding:32px max(5vw,16px) 64px;max-width:1400px;margin:auto}
+.opt h2{font-size:20px;margin:0 0 4px}.opt>p{margin:0 0 14px;font-size:14px;color:#5c5852;min-height:63px}
+.sw{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.sw span{display:grid;gap:2px;font-size:11px;color:#5c5852}
+.sw i{display:block;width:44px;height:44px;border-radius:12px;border:1px solid rgba(0,0,0,.08)}
+.phone{border-radius:36px;background:#111;padding:8px;box-shadow:0 20px 40px -20px rgba(0,0,0,.35)}
+.scr{border-radius:28px;overflow:hidden;background:var(--bg);height:600px;position:relative;font-size:13px}
+.top{height:230px;padding:22px 18px;color:#fff;position:relative;overflow:hidden;background:radial-gradient(120% 90% at 50% 110%,#ff6a1f 0%,#c2410c 30%,#5a1608 62%,#1a0a06 100%)}
+.top .w{position:absolute;inset:auto -10% -30px -10%;height:120px;border-radius:50%;border-top:2px solid rgba(255,190,120,.35)}
+.top b{font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.bag{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.14);position:relative}
+.bag em{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--ac);color:var(--on);font:600 10px/18px Geist;text-align:center;font-style:normal}
+.top small{display:block;margin-top:34px;letter-spacing:.06em;opacity:.8;font-size:10px}
+.top h3{font-size:26px;line-height:1.05;margin:6px 0 0;letter-spacing:-.02em}
+.sheet{background:var(--bg);border-radius:22px 22px 0 0;margin-top:-22px;position:relative;padding:14px}
+.ban{background:var(--card);border-radius:16px;padding:12px;display:flex;gap:10px;align-items:center;box-shadow:0 4px 14px -8px rgba(0,0,0,.2)}
+.ban i{width:32px;height:32px;border-radius:10px;background:var(--soft);flex:none}
+.ban b{font-weight:500;font-size:12.5px;color:var(--ink)}
+.row{display:flex;justify-content:space-between;margin:18px 2px 10px;color:var(--ink)}.row a{color:var(--link);font-weight:500}
+.cards{display:flex;gap:10px}
+.c{flex:1;background:var(--card);border-radius:16px;padding:10px;color:var(--ink)}
+.c div{height:62px;border-radius:12px;background:var(--soft)}
+.c p{margin:8px 0 0;font-weight:500}.c span{color:var(--mut);font-size:11px}
+.chip{display:inline-block;margin:14px 0 0;padding:6px 12px;border-radius:99px;background:var(--soft);color:var(--ink);font-weight:500;font-size:12px}
+.btn{margin:10px 0 0;display:block;padding:11px;border-radius:14px;background:var(--ac);color:var(--on);text-align:center;font-weight:600}
+.tab{position:absolute;left:10px;right:10px;bottom:10px;background:var(--card);border-radius:99px;display:flex;justify-content:space-around;padding:6px;box-shadow:0 6px 18px -10px rgba(0,0,0,.3)}
+.tab span{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--mut);font-size:10px}
+.tab span.on{background:var(--ac);color:var(--on);font-weight:600}
+.note{max-width:1400px;margin:0 auto;padding:0 max(5vw,16px) 56px;color:#5c5852;font-size:14px}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1>Quatro paletas para o churrasquin</h1>
+<p>O topo continua em fogo; o que muda é a cor de ação (botões, aba ativa, contador) e os neutros. Cada celular mostra a mesma Início.</p></header>
+<main class="grid">
+<section class="opt" style="--bg:#F6F1EA;--card:#FFFFFF;--soft:#EFE6DA;--ink:#1C1512;--mut:#857A70;--ac:#E8541C;--on:#fff;--link:#B83F10">
+<h2>1 · Brasa</h2><p>A cor sai do próprio fogo do topo. Tudo fica quente e coerente; ação em laranja-brasa sobre creme.</p>
+<div class="sw"><span><i style="background:#E8541C"></i>Ação</span><span><i style="background:#1C1512"></i>Carvão</span><span><i style="background:#F6F1EA"></i>Fundo</span><span><i style="background:#EFE6DA"></i>Apoio</span></div>
+</section>
+<section class="opt" style="--bg:#F4F2EE;--card:#FFFFFF;--soft:#ECE8E1;--ink:#111111;--mut:#7A766F;--ac:#111111;--on:#F4F2EE;--link:#111111">
+<h2>2 · Carvão</h2><p>Ação em preto, como a referência de nutrição. O fogo do topo vira a única cor; o resto é neutro e muito limpo.</p>
+<div class="sw"><span><i style="background:#111111"></i>Ação</span><span><i style="background:#FF6A1F"></i>Calor</span><span><i style="background:#F4F2EE"></i>Fundo</span><span><i style="background:#ECE8E1"></i>Apoio</span></div>
+</section>
+<section class="opt" style="--bg:#F5F0EC;--card:#FFFFFF;--soft:#EDE1DC;--ink:#1E1416;--mut:#86787A;--ac:#7A1F2B;--on:#fff;--link:#7A1F2B">
+<h2>3 · Vinho</h2><p>Bordô de carne madura e de vinho tinto. Mais premium e adulto; combina com o laranja do fogo sem competir.</p>
+<div class="sw"><span><i style="background:#7A1F2B"></i>Ação</span><span><i style="background:#1E1416"></i>Carvão</span><span><i style="background:#F5F0EC"></i>Fundo</span><span><i style="background:#EDE1DC"></i>Apoio</span></div>
+</section>
+<section class="opt" style="--bg:#F3F1EA;--card:#FFFFFF;--soft:#E6E7DA;--ink:#161812;--mut:#7B7D72;--ac:#3E5A2E;--on:#fff;--link:#3E5A2E">
+<h2>4 · Chimichurri</h2><p>Se quiser manter um verde: o verde escuro de ervas, não o neon. Faz contraste natural com o fogo e com a carne.</p>
+<div class="sw"><span><i style="background:#3E5A2E"></i>Ação</span><span><i style="background:#161812"></i>Carvão</span><span><i style="background:#F3F1EA"></i>Fundo</span><span><i style="background:#E6E7DA"></i>Apoio</span></div>
+</section>
+</main>
+<p class="note">Todas passam no contraste AA para texto e botões. Minha recomendação: 1 · Brasa ou 2 · Carvão — o fogo do topo já é a cor da marca, e a ação não precisa disputar com ele.</p>
+<template id="ph"><div class="phone"><div class="scr"><div class="top"><div class="w"></div><b>churrasquin<span class="bag"><em>9</em></span></b><small>SEXTA, 27 DE NOVEMBRO</small><h3>Boa tarde,<br>assador.</h3></div>
+<div class="sheet"><div class="ban"><i></i><b>Tá chegando o fim de semana. Planeje o churrasco</b></div>
+<div class="row"><b>Em alta</b><a>Ver cortes</a></div>
+<div class="cards"><div class="c"><div></div><p>Picanha</p><span>20 min</span></div><div class="c"><div></div><p>Ancho</p><span>18 min</span></div></div>
+<span class="chip">Clássico</span><a class="btn">Planejar churrasco</a></div>
+<div class="tab"><span class="on">Início</span><span>Plano</span><span>Cortes</span><span>Brasa</span><span>Receitas</span></div></div></div></template>
+<script>{const t=document.getElementById('ph');document.querySelectorAll('.opt').forEach(o=>o.appendChild(t.content.cloneNode(true)))}</script>
+</body></html>
